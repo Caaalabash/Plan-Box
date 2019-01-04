@@ -5,10 +5,6 @@ import testAvatar from '../../assets/mock/avatar.jpeg'
 
 export default class TaskCard extends Component {
 
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     const { taskId, taskDesc, taskOwner, taskTotalTime, taskUseTime } = this.props
     const taskProgress = (taskUseTime / taskTotalTime * 100).toFixed(1) + '%'
