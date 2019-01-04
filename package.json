@@ -115,5 +115,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "sass-resources-loader": "^2.0.0"
   }
 }
