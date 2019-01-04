@@ -12,7 +12,7 @@ import {
 
 import './index.scss'
 import TaskCard from '../TaskCard'
-import MockCardData from '../../assets/mock/TaskCard'
+import MockCardData from 'assets/mock/TaskCard.js'
 
 const Panel = Collapse.Panel
 
