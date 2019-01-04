@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Link, Route } from 'react-router-dom'
-import { Layout, Menu, Breadcrumb } from 'antd';
-import "antd/dist/antd.less";
+import { Layout, Menu, Breadcrumb } from 'antd'
+import 'antd/dist/antd.less'
 
 import Sprint from '../Sprint'
-
-import './index.scss';
+import Backlog from '../Backlog'
+import './index.scss'
 
 const { Header, Content, Sider } = Layout
 
 export default class AppLayout extends Component {
+
   render() {
     return (
       <Layout>
@@ -37,6 +38,9 @@ export default class AppLayout extends Component {
               <Menu.Item key="1">
                 <Link to="/sprint">活动的Sprint</Link>
               </Menu.Item>
+              <Menu.Item key="2">
+                <Link to="/backlog">Backlog</Link>
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
@@ -50,11 +54,13 @@ export default class AppLayout extends Component {
             }}
             >
               <Route path="/sprint" component={Sprint} />
+              <Route path="/backlog" component={Backlog} />
             </Content>
           </Layout>
         </Layout>
       </Layout>
-    );
+    )
   }
+
 }
 

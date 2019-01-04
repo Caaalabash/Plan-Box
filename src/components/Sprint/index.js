@@ -1,6 +1,6 @@
 import React from 'react'
 import { Collapse } from 'antd'
-import { fromEvent } from 'rxjs'
+import { fromEvent, Subscription } from 'rxjs'
 import {
   pluck,
   filter,
@@ -14,48 +14,53 @@ import './index.scss'
 
 const Panel = Collapse.Panel
 
-class Sprint extends React.Component {
+export default class Sprint extends React.Component {
+
   componentDidMount() {
     const dragStart$ = fromEvent(document, 'dragstart')
     const drop$ = fromEvent(document, 'drop')
     const dragOver$ = fromEvent(document, 'dragover')
     const dragEnter$ = fromEvent(document, 'dragenter')
     const dragLeave$ = fromEvent(document, 'dragleave')
+    this.sub = new Subscription()
     const canDrop = e => e.target.classList.contains('task-column')
 
-    dragEnter$
-      .pipe(
-        merge(dragLeave$),
-        filter(canDrop),
-        tap(e => e.target.classList.toggle('dragover'))
-      )
-      .subscribe()
+    const enterSub = dragEnter$.pipe(
+      merge(dragLeave$),
+      filter(canDrop),
+      tap(e => e.target.classList.toggle('dragover'))
+    )
+    .subscribe()
 
-    dragOver$
-      .pipe(
-        filter(canDrop),
-        tap(e => e.preventDefault())
-      )
-      .subscribe()
+    const overSub = dragOver$.pipe(
+      filter(canDrop),
+      tap(e => e.preventDefault())
+    )
+    .subscribe()
 
-    dragStart$
-      .pipe(
-        pluck('target'),
-        switchMap(origin => {
-          return drop$.pipe(
-            take(1),
-            pluck('target'),
-            tap(target => {
-              origin.parentNode.removeChild(origin)
-              target.appendChild(origin)
-              target.classList.remove('dragover')
-            })
-          )
-        })
-      )
-      .subscribe()
+    const startSub = dragStart$.pipe(
+      pluck('target'),
+      switchMap(origin => {
+        return drop$.pipe(
+          take(1),
+          pluck('target'),
+          tap(target => {
+            origin.parentNode.removeChild(origin)
+            target.appendChild(origin)
+            target.classList.remove('dragover')
+          })
+        )
+      })
+    )
+    .subscribe()
 
+    this.sub.add(enterSub)
+    this.sub.add(overSub)
+    this.sub.add(startSub)
+  }
 
+  componentWillUnmount() {
+    this.sub.unsubscribe()
   }
 
   render() {
@@ -86,6 +91,5 @@ class Sprint extends React.Component {
       </Collapse>
     )
   }
-}
 
-export default Sprint
+}
