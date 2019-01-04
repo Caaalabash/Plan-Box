@@ -11,6 +11,8 @@ import {
 } from 'rxjs/operators'
 
 import './index.scss'
+import TaskCard from '../TaskCard'
+import MockCardData from '../../assets/mock/TaskCard'
 
 const Panel = Collapse.Panel
 
@@ -78,9 +80,7 @@ export default class Sprint extends React.Component {
           </ul>
           <div className="task-content">
             <div className="task-column">
-              <div className="task" draggable>
-                测试卡片
-              </div>
+              <TaskCard {...MockCardData} />
             </div>
             <div className="task-column"> </div>
             <div className="task-column"> </div>
