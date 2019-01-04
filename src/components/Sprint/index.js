@@ -10,37 +10,42 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import './index.scss'
 import TaskCard from '../TaskCard'
-import MockCardData from 'assets/mock/TaskCard.js'
+import { restrictDropDistance } from 'utils/tool'
+import './index.scss'
+import SwimPool from 'assets/mock/SwimPool'
 
 const Panel = Collapse.Panel
+const canDrop = e => e.target.classList.contains('can-drop')
 
 export default class Sprint extends React.Component {
 
+  constructor() {
+    super()
+    this.state = {
+      dropArr: [],
+    }
+  }
+
   componentDidMount() {
     const dragStart$ = fromEvent(document, 'dragstart')
+    const dragEnd$ = fromEvent(document, 'dragend')
     const drop$ = fromEvent(document, 'drop')
     const dragOver$ = fromEvent(document, 'dragover')
     const dragEnter$ = fromEvent(document, 'dragenter')
     const dragLeave$ = fromEvent(document, 'dragleave')
     this.sub = new Subscription()
-    const canDrop = e => e.target.classList.contains('task-column')
 
-    const enterSub = dragEnter$.pipe(
-      merge(dragLeave$),
-      filter(canDrop),
-      tap(e => e.target.classList.toggle('dragover'))
-    )
-    .subscribe()
-
-    const overSub = dragOver$.pipe(
-      filter(canDrop),
-      tap(e => e.preventDefault())
-    )
-    .subscribe()
-
+    // 拖动开始流
     const startSub = dragStart$.pipe(
+      // 根据拖动目标所在泳道获得可拖动范围, 设置dropArr state
+      tap(e => {
+        console.log()
+        this.setState({
+          dropArr: restrictDropDistance(e)
+        })
+      }),
+      // 结合drop$流移动节点
       pluck('target'),
       switchMap(origin => {
         return drop$.pipe(
@@ -49,16 +54,37 @@ export default class Sprint extends React.Component {
           tap(target => {
             origin.parentNode.removeChild(origin)
             target.appendChild(origin)
-            target.classList.remove('dragover')
           })
         )
       })
-    )
-    .subscribe()
+    ).subscribe()
+
+    // 拖动结束流: 重置 dropArr state
+    const endSub = dragEnd$.pipe(
+      tap(() => {
+        this.setState({
+          dropArr: []
+        })
+      })
+    ).subscribe()
+
+    // 设定类似于hover样式
+    const enterSub = dragEnter$.pipe(
+      merge(dragLeave$),
+      filter(canDrop),
+      tap(e => e.target.classList.toggle('dragover'))
+    ).subscribe()
+
+    // 设定可释放范围
+    const overSub = dragOver$.pipe(
+      filter(canDrop),
+      tap(e => e.preventDefault())
+    ).subscribe()
 
     this.sub.add(enterSub)
     this.sub.add(overSub)
     this.sub.add(startSub)
+    this.sub.add(endSub)
   }
 
   componentWillUnmount() {
@@ -79,13 +105,22 @@ export default class Sprint extends React.Component {
             <li className="task-progress">已完成</li>
           </ul>
           <div className="task-content">
-            <div className="task-column">
-              <TaskCard {...MockCardData} />
-            </div>
-            <div className="task-column"> </div>
-            <div className="task-column"> </div>
-            <div className="task-column"> </div>
-            <div className="task-column"> </div>
+            {
+              SwimPool.swimlane.map(obj => {
+                const dynamicClassName = ~this.state.dropArr.indexOf(obj.key) ? 'can-drop' : ''
+                return (
+                  <div
+                    className={`${dynamicClassName} task-column`}
+                    key={obj.key}
+                    data-column-key={obj.key}
+                  >
+                    {
+                      obj.task.map(o => <TaskCard key={o.taskId} {...o} />)
+                    }
+                  </div>
+                )
+              })
+            }
           </div>
         </Panel>
       </Collapse>
