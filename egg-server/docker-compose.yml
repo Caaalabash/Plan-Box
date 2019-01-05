@@ -1,0 +1,15 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: plan-box-backend
+    ports:
+      - 7777:7777
+    volumes:
+      - /etc/localtime:/etc/localtime
+    network_mode: bridge
+    restart: unless-stopped
+    external_links:
+      - myMongoDB

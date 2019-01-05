@@ -21,6 +21,12 @@
 # editor
 .idea
 
+# egg-server
+/egg-server/node_modules
+/egg-server/logs
+/egg-server/run
+/egg-server/.idea
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
