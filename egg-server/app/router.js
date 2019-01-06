@@ -1,5 +1,6 @@
-'use strict';
-
 module.exports = app => {
-  const { router, controller } = app;
+  app.router.prefix('/api/plan-box')
+  require('./router/sprint')(app)
+  require('./router/task')(app)
+  require('./router/issue')(app)
 };
