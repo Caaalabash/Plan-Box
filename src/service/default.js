@@ -12,11 +12,12 @@ export default class BaseModule {
       if (response.status === 200) {
         if (!response.data.errno) {
           response.data.msg && message.success(response.data.msg)
+          return response.data
         } else {
           response.data.msg && message.error(response.data.msg)
+          return Promise.reject(null)
         }
       }
-      return response.data
     }, error => {
       message.error('响应出错')
       return Promise.reject(error)

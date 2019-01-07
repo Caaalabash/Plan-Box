@@ -8,9 +8,18 @@ module.exports = app => {
     desc: String,
     startTime: String,
     endTime: String,
-    storyPoint: Number,
-    finishedStoryPoint: Number,
-    status: String,
+    storyPoint: {
+      type: Number,
+      default: 0,
+    },
+    finishedStoryPoint: {
+      type: Number,
+      default: 0,
+    },
+    status: {
+      type: Number,
+      default: 0,
+    },
     team: {
       pm: String,
       rd: String,

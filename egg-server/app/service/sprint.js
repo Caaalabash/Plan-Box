@@ -5,11 +5,11 @@ class SprintService extends require('egg').Service {
     this.SprintModel = ctx.model.Sprint
   }
   /**
-   * 查找某个范围内的所有Sprint任务周期, 暂定查询status: active
+   * 查找某个范围内的所有Sprint任务周期, 暂定查询status: 1
    *
    */
-  async getSprintByFilter({ status = '1' }) {
-    const [_, doc] = await this.toPromise(this.SprintModel.find({status}))
+  async getSprintByFilter() {
+    const [_, doc] = await this.toPromise(this.SprintModel.find({}))
     if (!doc) {
       return {
         errno: this.config.errorCode,

@@ -4,6 +4,8 @@ import Service from 'service'
 
 import './index.scss'
 import SprintPanelHeader from '../SprintPanelHeader'
+import LiteForm from '../LiteForm'
+import SprintFormConfig from 'assets/config/sprint-form'
 
 const Panel = Collapse.Panel
 
@@ -41,7 +43,29 @@ export default class Backlog extends Component {
   }
 
   handleSubmit = () => {
-    this.toggleModule(false)
+    const form = this.formRef.props.form
+    form.validateFields((err, value) => {
+      if (err) return
+      const payload = {
+        id: value.id,
+        title: value.title,
+        desc: value.desc,
+        status: 1,
+        startTime: value.range[0].valueOf(),
+        endTime: value.range[1].valueOf(),
+      }
+      Service.setSprint(payload).then(res => {
+        this.setState({
+          activeSprint: [...this.state.activeSprint, res.data]
+        })
+        this.toggleModule(false)
+      })
+    })
+
+  }
+
+  recordFormRef = ref => {
+    this.formRef = ref
   }
 
   render() {
@@ -68,6 +92,7 @@ export default class Backlog extends Component {
           onOk={this.handleSubmit}
           onCancel={this.toggleModule.bind(this, false)}
         >
+          <LiteForm formList={SprintFormConfig} wrappedComponentRef={this.recordFormRef}/>
         </Modal>
         {content}
       </div>
