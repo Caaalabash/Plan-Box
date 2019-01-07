@@ -10,6 +10,7 @@ module.exports = app => {
     title: String,
     desc: String,
     storyPoint: Number,
+    status: String,
     team: {
       pm: String,
       rd: String,

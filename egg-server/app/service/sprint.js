@@ -5,6 +5,25 @@ class SprintService extends require('egg').Service {
     this.SprintModel = ctx.model.Sprint
   }
   /**
+   * 查找某个范围内的所有Sprint任务周期, 暂定查询status: active
+   *
+   */
+  async getSprintByFilter({ status = '1' }) {
+    const [_, doc] = await this.toPromise(this.SprintModel.find({status}))
+    if (!doc) {
+      return {
+        errno: this.config.errorCode,
+        data: {},
+        msg: '未查询到进行中的Sprint',
+      }
+    }
+    return {
+      errno: this.config.successCode,
+      data: doc,
+      msg: '',
+    }
+  }
+  /**
    * 查询某个Sprint任务周期, 根据_id/id查询
    *
    * @description 通过_id查找单个文档时, 使用findById而不是findOne({_id: id})

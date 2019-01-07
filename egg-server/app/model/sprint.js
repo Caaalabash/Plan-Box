@@ -10,6 +10,7 @@ module.exports = app => {
     endTime: String,
     storyPoint: Number,
     finishedStoryPoint: Number,
+    status: String,
     team: {
       pm: String,
       rd: String,
