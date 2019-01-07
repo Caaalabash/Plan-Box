@@ -14,7 +14,7 @@ export default new class apiManager extends BaseModule {
   deleteSprint(query) {
     return this.delete(`sprint${query}`)
   }
-  getSprintByFilter(query='') {
+  getSprintByFilter(query = '') {
     return this.get(`sprint/filter${query}`)
   }
 }()
