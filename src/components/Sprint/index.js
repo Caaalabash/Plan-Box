@@ -16,7 +16,6 @@ import './index.scss'
 import SwimPool from 'assets/mock/SwimPool'
 
 const Panel = Collapse.Panel
-const canDrop = e => e.target.classList.contains('can-drop')
 
 export default class Sprint extends React.Component {
 
@@ -34,6 +33,7 @@ export default class Sprint extends React.Component {
     const dragOver$ = fromEvent(document, 'dragover')
     const dragEnter$ = fromEvent(document, 'dragenter')
     const dragLeave$ = fromEvent(document, 'dragleave')
+    const canDrop = e => e.target.classList.contains('can-drop')
     this.sub = new Subscription()
 
     // 拖动开始流

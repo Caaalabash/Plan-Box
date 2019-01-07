@@ -1,9 +1,6 @@
 import BaseModule from './default'
 
-export default class apiManager extends BaseModule {
-  constructor() {
-    super()
-  }
+export default new class apiManager extends BaseModule {
   // Sprint
   getSprint(query) {
     return this.get(`sprint${query}`)
@@ -17,4 +14,7 @@ export default class apiManager extends BaseModule {
   deleteSprint(query) {
     return this.delete(`sprint${query}`)
   }
-}
+  getSprintByFilter(query='') {
+    return this.get(`sprint/filter${query}`)
+  }
+}()

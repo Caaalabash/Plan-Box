@@ -36,10 +36,10 @@ export default class AppLayout extends Component {
               style={{ height: '100%', borderRight: 0 }}
             >
               <Menu.Item key="1">
-                <Link to="/sprint">活动的Sprint</Link>
+                <Link to="/backlog">Backlog</Link>
               </Menu.Item>
               <Menu.Item key="2">
-                <Link to="/backlog">Backlog</Link>
+                <Link to="/sprint">活动的Sprint</Link>
               </Menu.Item>
             </Menu>
           </Sider>
@@ -53,8 +53,8 @@ export default class AppLayout extends Component {
               background: '#fff', padding: 24, margin: 0, minHeight: 280,
             }}
             >
-              <Route path="/sprint" component={Sprint} />
               <Route path="/backlog" component={Backlog} />
+              <Route path="/sprint" component={Sprint} />
             </Content>
           </Layout>
         </Layout>

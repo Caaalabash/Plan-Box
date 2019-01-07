@@ -10,10 +10,10 @@ export default class BaseModule {
     this.$http.interceptors.response.use(response => {
       // 如果状态码正确并且含有msg字段,代表需要使用Message组件提示
       if (response.status === 200) {
-        if (response.data.errno) {
+        if (!response.data.errno) {
           response.data.msg && message.success(response.data.msg)
         } else {
-          message.error(response.data.msg)
+          response.data.msg && message.error(response.data.msg)
         }
       }
       return response.data
