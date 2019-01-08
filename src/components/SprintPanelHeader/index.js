@@ -6,16 +6,19 @@ import './index.scss'
 export default function SprintPanelHeader(props) {
   const {onOperate, ...sprint} = props
 
+  const handleClick = e => {
+    e.domEvent && e.domEvent.stopPropagation()
+    onOperate(sprint, e)
+  }
   const menu = (
-    <Menu onClick={onOperate.bind(this, sprint)}>
+    <Menu onClick={ e => handleClick(e)}>
       <Menu.Item key="update">修改</Menu.Item>
       <Menu.Item key="delete">删除</Menu.Item>
-      <Menu.Item key="add">增加任务</Menu.Item>
+      { sprint.status !== 2 && <Menu.Item key="add">增加任务</Menu.Item> }
       { sprint.status === 0 && <Menu.Item key="begin">开始Sprint</Menu.Item> }
       { sprint.status === 1 && <Menu.Item key="close">关闭Sprint</Menu.Item> }
     </Menu>
   )
-
   const statusLabel = sprint.status === 0
     ? '未开始'
     : sprint.status === 1 ? '活跃' : '关闭'

@@ -9,13 +9,13 @@ class SprintService extends require('egg').Service {
    *
    */
   async getSprintByFilter({ status }) {
-    let query = status ? { status } : {}
+    let query = status !== 'all' ? { status } : {}
     const [_, doc] = await this.toPromise(this.SprintModel.find(query))
     if (!doc) {
       return {
         errno: this.config.errorCode,
         data: {},
-        msg: '未查询到进行中的Sprint',
+        msg: '未查询相应的Sprint',
       }
     }
     return {

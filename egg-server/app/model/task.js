@@ -12,9 +12,18 @@ module.exports = app => {
     storyPoint: Number,
     status: String,
     team: {
-      pm: String,
-      rd: String,
-      qa: String,
+      pm: {
+        type: String,
+        default: '',
+      },
+      rd: {
+        type: String,
+        default: ''
+      },
+      qa:  {
+        type: String,
+        default: ''
+      },
     },
     issue: [{
       priority: Number,
@@ -27,9 +36,18 @@ module.exports = app => {
       issueType: String,
       status: String,
       team: {
-        pm: String,
-        rd: String,
-        qa: String,
+        pm: {
+          type: String,
+          default: '',
+        },
+        rd: {
+          type: String,
+          default: ''
+        },
+        qa:  {
+          type: String,
+          default: ''
+        },
       },
     }]
   })

@@ -5,55 +5,106 @@ import Service from 'service'
 import './index.scss'
 import SprintPanelHeader from '../SprintPanelHeader'
 import LiteForm from '../LiteForm'
-import SprintFormConfig from 'assets/config/sprint-form'
+import { createSprintFormConfig } from 'assets/config/sprint-form'
 
 const Panel = Collapse.Panel
+const processPayload = formData => {
+  return Object.keys(formData).reduce((payload, key) => {
+    switch (key) {
+      case 'range':
+        [payload.startTime, payload.endTime] = formData[key].map(moment => moment.valueOf())
+        break
+      case  'pm':
+        payload.team = {}
+        payload.team.pm = formData[key]
+        break
+      default:
+        payload[key] = formData[key]
+        break
+    }
+    return payload
+  }, {})
+}
 
 export default class Backlog extends Component {
 
   constructor() {
     super()
     this.state = {
+      // 当前筛选下的Sprint列表
       sprintList: [],
+      // 弹窗显隐藏
       modelVisible: false,
-      defaultSprintStatus: ''
+      // 当前筛选状态
+      defaultSprintStatus: 'all'
     }
+    // 表单内容
+    this.formContent = []
+    // 上一次操作指令
+    this.lastOperate = 'create'
+    // 操作的Sprint对象
+    this.operateSprintIndex = -1
   }
 
   componentDidMount() {
     this.getSprintList()
   }
 
+  // 计算属性
+  get modalTitle () {
+    switch (this.lastOperate) {
+      case 'update': return '更新当前Sprint任务周期'
+      case 'add': return '为当前Sprint添加子任务'
+      default: return '创建新的Sprint任务周期'
+    }
+  }
+  // 记录表单引用
   recordFormRef = ref => {
     this.formRef = ref
   }
-
+  // 切换弹窗状态
   toggleModule = status => {
+    // 避免额外的render
+    if(status === this.state.modelVisible) return
     this.setState({ modelVisible: status })
   }
-
+  // 新建按钮处理函数
+  handleBtnClick = () => {
+    this.formContent = createSprintFormConfig()
+    this.lastOperate = 'create'
+    this.toggleModule(true)
+  }
+  // 处理菜单点击事件
   handleOperate = (sprint, {key}) => {
     const { sprintList } = this.state
+    this.lastOperate = key
+    this.operateSprintIndex = sprintList.findIndex(currentSprint => currentSprint._id === sprint._id)
     // 删除Sprint 成功后从State中移除
     if (key === 'delete') {
       Service.deleteSprint(`?_id=${sprint._id}`).then(() => {
-        const newActiveSprint = sprintList.filter(currentSprint => sprint._id !== currentSprint._id)
         this.setState({
-          sprintList: newActiveSprint
+          sprintList: sprintList.filter(currentSprint => sprint._id !== currentSprint._id)
         })
       })
     }
     // 修改Sprint状态, 找到修改Sprint在原列表的索引
     else if (key === 'begin' || key === 'close') {
       const status = key === 'begin' ? '1' : '2'
-      Service.updateSprint({...sprint, status}).then(res => {
-        const index = sprintList.findIndex(currentSprint => currentSprint._id === sprint._id)
-        const newList = sprintList.slice(0)
-        newList[index].status = + status
+      Service.updateSprint({_id: sprint._id, status}).then(res => {
+        sprintList[this.operateSprintIndex].status = +status
         this.setState({
-          sprintList: newList
+          sprintList,
         })
       })
+    }
+    // 修改Sprint, 打开弹窗
+    else if (key === 'update') {
+      this.formContent = createSprintFormConfig(sprint)
+      this.toggleModule(true)
+    }
+    // 添加子任务, 打开弹窗
+    else if (key === 'add') {
+      this.toggleModule(true)
     }
   }
 
@@ -72,35 +123,36 @@ export default class Backlog extends Component {
   }
 
   handleSubmit = () => {
+    const { sprintList } = this.state
     const form = this.formRef.props.form
+
     form.validateFields((err, value) => {
       if (err) return
-      const payload = {
-        id: value.id,
-        title: value.title,
-        desc: value.desc,
-        status: 0,
-        startTime: value.range[0].valueOf(),
-        endTime: value.range[1].valueOf(),
-      }
-      Service.setSprint(payload).then(res => {
-        this.setState({
-          sprintList: [...this.state.sprintList, res.data]
+      const payload = processPayload(value)
+      if (this.lastOperate === 'create') {
+        Service.setSprint(payload).then(res => {
+          this.setState({ sprintList: [...sprintList, res.data] })
+          this.toggleModule(false)
         })
-        this.toggleModule(false)
-      })
+      } else {
+        Service.updateSprint({...payload, _id: sprintList[this.operateSprintIndex]._id}).then(res => {
+          sprintList[this.operateSprintIndex] = res.data
+          this.setState({ sprintList })
+          this.toggleModule(false)
+        })
+      }
     })
   }
 
   render() {
-    let content = null
     const { sprintList, modelVisible, defaultSprintStatus } = this.state
-    if (sprintList.length) {
-      // render时经过一次过滤, 过滤掉sprint状态与当前状态不一致的数据
-      content = sprintList.filter(sprint => {
-        if (defaultSprintStatus === '') return true
 
-        return sprint.status === +defaultSprintStatus
+    let content = null
+    if (sprintList.length) {
+      // 过滤掉sprint状态与当前筛选状态不一致的数据
+      content = sprintList.filter(sprint => {
+        if (defaultSprintStatus === 'all') return true
+        return sprint.status === + defaultSprintStatus
       }).map(sprint => {
         return (
           <Collapse defaultActiveKey={['1']} key={sprint._id}>
@@ -121,20 +173,20 @@ export default class Backlog extends Component {
             buttonStyle="solid"
             onChange={this.handleRadioChange}
           >
-            <Radio.Button value="">全部</Radio.Button>
+            <Radio.Button value="all">全部</Radio.Button>
             <Radio.Button value="0">未开始</Radio.Button>
             <Radio.Button value="1">进行中</Radio.Button>
             <Radio.Button value="2">已完成</Radio.Button>
           </Radio.Group>
-          <Button className="create-sprint" icon="plus" onClick={this.toggleModule.bind(this, true)}>新建Sprint</Button>
+          <Button className="create-sprint" icon="plus" onClick={this.handleBtnClick}>新建Sprint</Button>
         </div>
         <Modal
-          title="新建一个Sprint任务周期"
+          title={this.modalTitle}
           visible={modelVisible}
           onOk={this.handleSubmit}
           onCancel={this.toggleModule.bind(this, false)}
         >
-          <LiteForm formList={SprintFormConfig} wrappedComponentRef={this.recordFormRef}/>
+          <LiteForm formList={this.formContent} wrappedComponentRef={this.recordFormRef}/>
         </Modal>
         {content}
       </div>

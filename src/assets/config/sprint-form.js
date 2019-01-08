@@ -1,8 +1,8 @@
-export default [
+export const createSprintFormConfig = (sprintDefault = {}) => [
   {
     key: 'id',
     label: '当前周期',
-    initialValue: '',
+    initialValue: sprintDefault.id || '',
     rules: [
       { required: true, message: '请输入当前Sprint名称' }
     ],
@@ -14,7 +14,7 @@ export default [
   {
     key: 'title',
     label: 'Sprint摘要',
-    initialValue: '',
+    initialValue: sprintDefault.title || '',
     rules: [
       { required: true, message: '请输入当前Sprint摘要' }
     ],
@@ -24,10 +24,12 @@ export default [
     },
   },
   {
-    key: 'desc',
-    label: 'Sprint描述',
-    initialValue: '',
-    rules: [],
+    key: 'pm',
+    label: '负责人',
+    initialValue: sprintDefault.team ? sprintDefault.team.pm : '',
+    rules: [
+      { required: true, message: '请指定背锅位' }
+    ],
     componentOptions: {
       type: 'input',
     },
@@ -42,6 +44,15 @@ export default [
     componentOptions: {
       type: 'datepicker',
       size: 'default'
+    },
+  },
+  {
+    key: 'desc',
+    label: 'Sprint描述',
+    initialValue: sprintDefault.desc || '',
+    rules: [],
+    componentOptions: {
+      type: 'input',
     },
   },
 ]

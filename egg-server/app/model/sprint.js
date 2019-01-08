@@ -21,9 +21,18 @@ module.exports = app => {
       default: 0,
     },
     team: {
-      pm: String,
-      rd: String,
-      qa: String,
+      pm: {
+        type: String,
+        default: '',
+      },
+      rd: {
+        type: String,
+        default: ''
+      },
+      qa:  {
+        type: String,
+        default: ''
+      },
     },
     task: [{
       id: String,
