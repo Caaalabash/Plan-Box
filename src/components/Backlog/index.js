@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Collapse, Button, Modal, Radio } from 'antd'
 import Service from 'service'
-
-import './index.scss'
 import SprintPanelHeader from '../SprintPanelHeader'
 import LiteForm from '../LiteForm'
 import { createSprintFormConfig } from 'assets/config/sprint-form'
+
+import './index.scss'
 
 const Panel = Collapse.Panel
 const processPayload = formData => {
@@ -28,23 +28,14 @@ const processPayload = formData => {
 
 export default class Backlog extends Component {
 
-  constructor() {
-    super()
-    this.state = {
-      // 当前筛选下的Sprint列表
-      sprintList: [],
-      // 弹窗显隐藏
-      modelVisible: false,
-      // 当前筛选状态
-      defaultSprintStatus: 'all'
-    }
-    // 表单内容
-    this.formContent = []
-    // 上一次操作指令
-    this.lastOperate = 'create'
-    // 操作的Sprint对象
-    this.operateSprintIndex = -1
+  state = {
+    sprintList: [],
+    modelVisible: false,
+    defaultSprintStatus: 'all'
   }
+  formContent = []
+  lastOperate = 'create'
+  operateSprintIndex = -1
 
   componentDidMount() {
     this.getSprintList()

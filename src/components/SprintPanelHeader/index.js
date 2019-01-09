@@ -10,6 +10,9 @@ export default function SprintPanelHeader(props) {
     e.domEvent && e.domEvent.stopPropagation()
     onOperate(sprint, e)
   }
+  const statusLabel = sprint.status === 0
+    ? '未开始'
+    : sprint.status === 1 ? '活跃' : '关闭'
   const menu = (
     <Menu onClick={ e => handleClick(e)}>
       <Menu.Item key="update">修改</Menu.Item>
@@ -19,9 +22,6 @@ export default function SprintPanelHeader(props) {
       { sprint.status === 1 && <Menu.Item key="close">关闭Sprint</Menu.Item> }
     </Menu>
   )
-  const statusLabel = sprint.status === 0
-    ? '未开始'
-    : sprint.status === 1 ? '活跃' : '关闭'
 
   return (
     <div className="sprint-meta">

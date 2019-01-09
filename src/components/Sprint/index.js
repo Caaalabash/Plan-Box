@@ -19,11 +19,8 @@ const Panel = Collapse.Panel
 
 export default class Sprint extends React.Component {
 
-  constructor() {
-    super()
-    this.state = {
-      dropArr: [],
-    }
+  state = {
+    dropArr: [],
   }
 
   componentDidMount() {
