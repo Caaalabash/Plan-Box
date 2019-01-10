@@ -3,7 +3,6 @@ module.exports = app => {
   const Schema = mongoose.Schema
 
   const sprintSchema = new Schema({
-    id: String,
     title: String,
     desc: String,
     startTime: String,
@@ -35,7 +34,6 @@ module.exports = app => {
       },
     },
     task: [{
-      id: String,
       title: String,
     }]
   })

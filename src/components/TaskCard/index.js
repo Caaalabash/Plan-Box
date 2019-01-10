@@ -6,13 +6,13 @@ import testAvatar from 'assets/mock/avatar.jpeg'
 export default class TaskCard extends Component {
 
   render() {
-    const { taskId, taskDesc, taskOwner, taskTotalTime, taskUseTime } = this.props
+    const { taskTitle, taskDesc, taskOwner, taskTotalTime, taskUseTime } = this.props
     const taskProgress = (taskUseTime / taskTotalTime * 100).toFixed(1) + '%'
 
     return (
       <div className="task" draggable>
         <div className="task-inner-content">
-          <span className="task-id">{taskId}</span>
+          <span className="task-title">{taskTitle}</span>
           <span className="task-desc">{taskDesc}</span>
           <span className="task-owner">{taskOwner}</span>
           <span className="task-progress">{taskProgress}</span>

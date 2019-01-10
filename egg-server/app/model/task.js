@@ -6,7 +6,6 @@ module.exports = app => {
     relateSprint: String,
     priority: Number,
     sequence: Number,
-    id: String,
     title: String,
     desc: String,
     storyPoint: Number,
@@ -27,7 +26,6 @@ module.exports = app => {
     },
     issue: [{
       priority: Number,
-      id: String,
       title: String,
       desc: String,
       storyPoint: Number,
