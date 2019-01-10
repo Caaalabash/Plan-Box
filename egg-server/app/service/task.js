@@ -3,6 +3,7 @@ class TaskService extends require('egg').Service {
     super(ctx)
     this.toPromise =  ctx.helper.to
     this.TaskModel = ctx.model.Task
+    this.SprintModel = ctx.model.Sprint
   }
   /**
    * 查询某个Task相关信息, 根据_id查询
@@ -25,29 +26,48 @@ class TaskService extends require('egg').Service {
   /**
    * 创建新的Task, 创建前检查是否存在相同title
    *
-   * @todo 创建新的task同时在对应sprint task中添加部分内容
+   * @description 1. 检查是否存在重复子任务 2. 检查所属周期是否存在 3. 创建Task文档 4. 更新Sprint文档
    */
-  async setTask(data) {
-    const [err, isExist] = await this.toPromise(this.TaskModel.findOne({title: data.title}))
-    if (!isExist && !err) {
-      const [_, doc] = await this.toPromise(this.TaskModel.create(data))
-      if (doc) {
-        return {
-          errno: this.config.successCode,
-          data: doc,
-          msg: '创建成功'
-        }
+  async setTask({relateId, ...data}) {
+    const [checkErr, isExist] = await this.toPromise(this.TaskModel.findOne({title: data.title}))
+    if (isExist) {
+      return {
+        errno: this.config.errorCode,
+        data: {},
+        msg: '当前Task已存在'
       }
+    }
+    const [sprintErr, sprintDoc] = await this.toPromise(this.SprintModel.findById(relateId))
+    if (!sprintDoc) {
+      return {
+        errno: this.config.errorCode,
+        data: {},
+        msg: '所属Sprint已不存在'
+      }
+    }
+    const [createErr, taskDoc] = await this.toPromise(this.TaskModel.create(data))
+    if (!taskDoc) {
       return {
         errno: this.config.errorCode,
         data: {},
         msg: '创建失败'
       }
-    } else {
+    }
+    const [updateErr, doc] = await this.toPromise(this.SprintModel.update({_id: relateId}, {
+      $push: {
+        task: {
+          _id: taskDoc._id,
+          title: data.title,
+          storyPoint: data.storyPoint,
+          team: data.team.rd,
+        },
+      }
+    }))
+    if (!updateErr) {
       return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '当前Task已存在'
+        errno: this.config.successCode,
+        data: taskDoc,
+        msg: '创建成功'
       }
     }
   }
@@ -59,8 +79,21 @@ class TaskService extends require('egg').Service {
       'new': true,
       upsert: true,
     }
+    const shouldUpdateSprint = data.title || (data.team && data.team.rd) || data.storyPoint
     const {_id, ...update} = data
     const [e, doc] = await this.toPromise(this.TaskModel.findByIdAndUpdate(_id, update, options))
+    if(shouldUpdateSprint) {
+      this.toPromise(this.SprintModel.updateOne({_id: data.relateId, "task._id": data._id}, {
+        $set: {
+          "task.$": {
+            _id: _id,
+            title: doc.title,
+            storyPoint: doc.storyPoint,
+            team: doc.team.rd
+          }
+        }
+      }))
+    }
     if(!doc) {
       return {
         errno: this.config.errorCode,
@@ -77,11 +110,19 @@ class TaskService extends require('egg').Service {
   /**
    * 删除某个Task, 根据_id来删除
    *
-   * @todo 删除Task需要删除对应Sprint中的task
+   * @description 删除Task文档的同时, 删除Sprint对应周期中的Task
    */
-  async deleteSprint({_id}) {
-    const [_, doc] = await this.toPromise(this.TaskModel.findByIdAndRemove(_id))
-    if(!doc) {
+  async deleteTask({_id, relateId}) {
+    const deleteTaskPromise = this.toPromise(this.TaskModel.findOneAndDelete({_id}))
+    const deleteSprintPromise = this.toPromise(this.SprintModel.updateOne({_id: relateId}, {
+      $pull: {
+        task: {
+          _id
+        }
+      }
+    }))
+    const [taskResult, sprintResult] = await Promise.all([deleteTaskPromise, deleteSprintPromise])
+    if(taskResult[0] || sprintResult[0]) {
       return {
         errno: this.config.errorCode,
         data: {},
@@ -90,7 +131,7 @@ class TaskService extends require('egg').Service {
     }
     return {
       errno: this.config.successCode,
-      data: doc,
+      data: {},
       msg: '删除成功'
     }
   }

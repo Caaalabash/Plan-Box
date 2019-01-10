@@ -4,12 +4,21 @@ module.exports = app => {
 
   const taskSchema = new Schema({
     relateSprint: String,
-    priority: Number,
-    sequence: Number,
     title: String,
     desc: String,
     storyPoint: Number,
-    status: String,
+    priority: {
+      type: Number,
+      default: 0,
+    },
+    sequence: {
+      type: Number,
+      default: 0,
+    },
+    status: {
+      type: Number,
+      default: 0,
+    },
     team: {
       pm: {
         type: String,

@@ -1,6 +1,7 @@
 module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
+  const ObjectId = mongoose.Types.ObjectId
 
   const sprintSchema = new Schema({
     title: String,
@@ -34,7 +35,10 @@ module.exports = app => {
       },
     },
     task: [{
+      _id: ObjectId,
       title: String,
+      team: String,
+      storyPoint: Number,
     }]
   })
 
