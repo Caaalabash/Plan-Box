@@ -3,7 +3,7 @@ import { Collapse, Button, Modal, Radio } from 'antd'
 import Service from 'service'
 import SprintPanelHeader from '../SprintPanelHeader'
 import LiteForm from '../LiteForm'
-import { createSprintFormConfig } from 'assets/config/sprint-form'
+import { createSprintFormConfig, taskFormConfig } from 'assets/config/sprint-form'
 
 import './index.scss'
 
@@ -14,16 +14,21 @@ const processPayload = formData => {
       case 'range':
         [payload.startTime, payload.endTime] = formData[key].map(moment => moment.valueOf())
         break
-      case  'pm':
-        payload.team = {}
+      case 'pm':
         payload.team.pm = formData[key]
+        break
+      case 'rd':
+        payload.team.rd = formData[key]
+        break
+      case 'qa':
+        payload.team.qa = formData[key]
         break
       default:
         payload[key] = formData[key]
         break
     }
     return payload
-  }, {})
+  }, { team: {} })
 }
 
 export default class Backlog extends Component {
@@ -95,6 +100,7 @@ export default class Backlog extends Component {
     }
     // 添加子任务, 打开弹窗
     else if (key === 'add') {
+      this.formContent = taskFormConfig
       this.toggleModule(true)
     }
   }
@@ -125,7 +131,16 @@ export default class Backlog extends Component {
           this.setState({ sprintList: [...sprintList, res.data] })
           this.toggleModule(false)
         })
-      } else {
+      }
+      else if (this.lastOperate === 'add') {
+        const relateSprint = sprintList[this.operateSprintIndex]._id
+        Service.setTask({ relateSprint, ...payload }).then(res => {
+          sprintList[this.operateSprintIndex].task.push(res.data)
+          this.setState({ sprintList })
+          this.toggleModule(false)
+        })
+      }
+      else {
         Service.updateSprint({...payload, _id: sprintList[this.operateSprintIndex]._id}).then(res => {
           sprintList[this.operateSprintIndex] = res.data
           this.setState({ sprintList })

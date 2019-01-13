@@ -28,7 +28,7 @@ class TaskService extends require('egg').Service {
    *
    * @description 1. 检查是否存在重复子任务 2. 检查所属周期是否存在 3. 创建Task文档 4. 更新Sprint文档
    */
-  async setTask({relateId, ...data}) {
+  async setTask({relateSprint, ...data}) {
     const [, isExist] = await this.toPromise(this.TaskModel.findOne({title: data.title}))
     if (isExist) {
       return {
@@ -37,7 +37,7 @@ class TaskService extends require('egg').Service {
         msg: '当前Task已存在'
       }
     }
-    const [, sprintDoc] = await this.toPromise(this.SprintModel.findById(relateId))
+    const [, sprintDoc] = await this.toPromise(this.SprintModel.findById(relateSprint))
     if (!sprintDoc) {
       return {
         errno: this.config.errorCode,
@@ -45,7 +45,7 @@ class TaskService extends require('egg').Service {
         msg: '所属Sprint已不存在'
       }
     }
-    const [, taskDoc] = await this.toPromise(this.TaskModel.create(data))
+    const [, taskDoc] = await this.toPromise(this.TaskModel.create({relateSprint, ...data}))
     if (!taskDoc) {
       return {
         errno: this.config.errorCode,
@@ -53,7 +53,7 @@ class TaskService extends require('egg').Service {
         msg: '创建失败'
       }
     }
-    const [updateErr, ] = await this.toPromise(this.SprintModel.update({_id: relateId}, {
+    const [updateErr, ] = await this.toPromise(this.SprintModel.update({_id: relateSprint}, {
       $push: {
         task: {
           _id: taskDoc._id,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Radio, Select, DatePicker } from 'antd'
+import { Form, Input, Radio, Select, DatePicker, InputNumber } from 'antd'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -20,8 +20,10 @@ const getFormComponent = ({ type = 'input', ...options }) => {
           { options.list.map(radio => <Radio value={radio.value}>{radio.label}</Radio>) }
         </RadioGroup>
       )
-    case 'datepicker':
-      return <RangePicker {...options}/>
+    case 'date-picker':
+      return <RangePicker {...options} />
+    case 'input-number':
+      return <InputNumber {...options} />
     default:
       return <Input {...options} />
   }

@@ -8,10 +8,6 @@ module.exports = app => {
     desc: String,
     startTime: String,
     endTime: String,
-    storyPoint: {
-      type: Number,
-      default: 0,
-    },
     finishedStoryPoint: {
       type: Number,
       default: 0,
@@ -40,6 +36,10 @@ module.exports = app => {
       team: String,
       storyPoint: Number,
     }]
+  }, { toJSON: { virtuals: true } })
+
+  sprintSchema.virtual('storyPoint').get(function() {
+    return this.task.reduce((acc ,task) => acc += task.storyPoint, 0)
   })
 
   return mongoose.model('Sprint', sprintSchema)

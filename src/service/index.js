@@ -17,4 +17,17 @@ export default new class apiManager extends BaseModule {
   getSprintByFilter(query = '') {
     return this.get(`sprint/filter${query}`)
   }
+  // Task
+  getTask(query) {
+    return this.get(`task${query}`)
+  }
+  setTask(data) {
+    return this.post('task', data)
+  }
+  updateTask(data) {
+    return this.put('task', data)
+  }
+  deleteTask(query) {
+    return this.delete(`task${query}`)
+  }
 }()
