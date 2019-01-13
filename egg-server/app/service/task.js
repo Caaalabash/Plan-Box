@@ -9,8 +9,8 @@ class TaskService extends require('egg').Service {
    * 查询某个Task相关信息, 根据_id查询
    */
   async getTask({_id}) {
-    const [_, doc] = await this.toPromise(this.TaskModel.findById(_id))
-    if(!doc) {
+    const findResult = await this.toPromise(this.TaskModel.findById(_id))
+    if(!findResult[1]) {
       return {
         errno: this.config.errorCode,
         data: {},
@@ -19,7 +19,7 @@ class TaskService extends require('egg').Service {
     }
     return {
       errno: this.config.successCode,
-      data: doc,
+      data: findResult[1],
       msg: '查询成功'
     }
   }
@@ -29,7 +29,7 @@ class TaskService extends require('egg').Service {
    * @description 1. 检查是否存在重复子任务 2. 检查所属周期是否存在 3. 创建Task文档 4. 更新Sprint文档
    */
   async setTask({relateId, ...data}) {
-    const [checkErr, isExist] = await this.toPromise(this.TaskModel.findOne({title: data.title}))
+    const [, isExist] = await this.toPromise(this.TaskModel.findOne({title: data.title}))
     if (isExist) {
       return {
         errno: this.config.errorCode,
@@ -37,7 +37,7 @@ class TaskService extends require('egg').Service {
         msg: '当前Task已存在'
       }
     }
-    const [sprintErr, sprintDoc] = await this.toPromise(this.SprintModel.findById(relateId))
+    const [, sprintDoc] = await this.toPromise(this.SprintModel.findById(relateId))
     if (!sprintDoc) {
       return {
         errno: this.config.errorCode,
@@ -45,7 +45,7 @@ class TaskService extends require('egg').Service {
         msg: '所属Sprint已不存在'
       }
     }
-    const [createErr, taskDoc] = await this.toPromise(this.TaskModel.create(data))
+    const [, taskDoc] = await this.toPromise(this.TaskModel.create(data))
     if (!taskDoc) {
       return {
         errno: this.config.errorCode,
@@ -53,7 +53,7 @@ class TaskService extends require('egg').Service {
         msg: '创建失败'
       }
     }
-    const [updateErr, doc] = await this.toPromise(this.SprintModel.update({_id: relateId}, {
+    const [updateErr, ] = await this.toPromise(this.SprintModel.update({_id: relateId}, {
       $push: {
         task: {
           _id: taskDoc._id,
@@ -77,11 +77,11 @@ class TaskService extends require('egg').Service {
   async updateTask(data) {
     const options = {
       'new': true,
-      upsert: true,
+      'upsert': true,
     }
     const shouldUpdateSprint = data.title || (data.team && data.team.rd) || data.storyPoint
     const {_id, ...update} = data
-    const [e, doc] = await this.toPromise(this.TaskModel.findByIdAndUpdate(_id, update, options))
+    const [, doc] = await this.toPromise(this.TaskModel.findByIdAndUpdate(_id, update, options))
     if(shouldUpdateSprint) {
       this.toPromise(this.SprintModel.updateOne({_id: data.relateId, "task._id": data._id}, {
         $set: {
