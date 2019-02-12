@@ -6,10 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: plan-box-backend
     ports:
-      - 7777:7777
+      - 7778:7778
     volumes:
       - /etc/localtime:/etc/localtime
-    network_mode: bridge
+    network_mode: host
     restart: unless-stopped
-    external_links:
-      - myMongoDB

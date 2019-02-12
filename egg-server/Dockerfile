@@ -10,8 +10,10 @@ RUN npm install
 
 ENV NODE_ENV prod
 
+ENV PORT 7778
+
 COPY . /app
 
-EXPOSE 7777
+EXPOSE 7778
 
 CMD ["npm", "run", "start:prod"]

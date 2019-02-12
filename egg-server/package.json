@@ -22,7 +22,7 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-egg-api",
+    "start": "egg-scripts start --title=egg-server-egg-api",
     "start:prod": "npm start -- --env prod",
     "stop": "egg-scripts stop --title=egg-server-egg-api",
     "dev": "egg-bin dev",
