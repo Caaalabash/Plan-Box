@@ -3,8 +3,8 @@ import { Link, Route } from 'react-router-dom'
 import { Layout, Menu, Breadcrumb } from 'antd'
 import 'antd/dist/antd.less'
 
-import Sprint from '../Sprint'
-import Backlog from '../Backlog'
+import Sprint from 'pages/Sprint'
+import Backlog from 'pages/Backlog'
 import './index.scss'
 
 const { Header, Content, Sider } = Layout

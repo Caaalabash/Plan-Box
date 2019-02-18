@@ -10,10 +10,10 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import TaskCard from '../TaskCard'
+import TaskCard from 'components/TaskCard'
 import { restrictDropDistance } from 'utils/tool'
-import './index.scss'
 import SwimPool from 'assets/mock/SwimPool'
+import './index.scss'
 
 const Panel = Collapse.Panel
 

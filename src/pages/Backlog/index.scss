@@ -1,11 +1,11 @@
 .backlog-operate {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
   .filter-sprint {
     margin-right: auto;
   }
   .create-sprint {
     margin-right: 20px;
   }
-  margin-bottom: 20px;
 }

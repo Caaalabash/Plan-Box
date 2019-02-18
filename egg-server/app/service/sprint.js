@@ -1,8 +1,9 @@
 class SprintService extends require('egg').Service {
   constructor(ctx) {
     super(ctx)
-    this.toPromise =  ctx.helper.to
+    this.toPromise = ctx.helper.to
     this.SprintModel = ctx.model.Sprint
+    this.TaskModel = ctx.model.Task
   }
   /**
    * 查找某个范围内的所有Sprint任务周期, 仅能根据Sprint状态查询
@@ -97,12 +98,16 @@ class SprintService extends require('egg').Service {
   }
   /**
    * 删除某个Sprint任务周期, 根据_id来删除
+   * 同时需要删除task表中对应任务周期的子任务
    *
    * @description findByIdAndRemove(id)相当于findOneAndRemove({_id: id})
    */
   async deleteSprint({_id}) {
-    const deleteResult = await this.toPromise(this.SprintModel.findByIdAndRemove(_id))
-    if(!deleteResult[1]) {
+    const deleteTask = this.toPromise(this.TaskModel.deleteMany({ relateSprint: _id }))
+    const deleteSprint = this.toPromise(this.SprintModel.findByIdAndRemove(_id))
+    const [[err1, ], [err2,]] = await Promise.all([deleteTask, deleteSprint])
+
+    if(err1 || err2) {
       return {
         errno: this.config.errorCode,
         data: {},
@@ -111,7 +116,7 @@ class SprintService extends require('egg').Service {
     }
     return {
       errno: this.config.successCode,
-      data: deleteResult[1],
+      data: {},
       msg: '删除成功'
     }
   }

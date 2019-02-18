@@ -6,11 +6,11 @@ class TaskService extends require('egg').Service {
     this.SprintModel = ctx.model.Sprint
   }
   /**
-   * 查询某个Task相关信息, 根据_id查询
+   * 根据 Task 的 relateSprint 进行查询
    */
-  async getTask({_id}) {
-    const findResult = await this.toPromise(this.TaskModel.findById(_id))
-    if(!findResult[1]) {
+  async getTask({ id }) {
+    const [e, result] = await this.toPromise(this.TaskModel.find({ relateSprint: id }))
+    if(e || !result) {
       return {
         errno: this.config.errorCode,
         data: {},
@@ -19,30 +19,29 @@ class TaskService extends require('egg').Service {
     }
     return {
       errno: this.config.successCode,
-      data: findResult[1],
-      msg: '查询成功'
+      data: result,
+      msg: ''
     }
   }
   /**
-   * 创建新的Task, 创建前检查是否存在相同title
-   *
+   * 创建新的 Task, 创建前检查对应 Sprint 下是否存在相同 title
    * @description 1. 检查是否存在重复子任务 2. 检查所属周期是否存在 3. 创建Task文档 4. 更新Sprint文档
    */
   async setTask({relateSprint, ...data}) {
-    const [, isExist] = await this.toPromise(this.TaskModel.findOne({title: data.title}))
-    if (isExist) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '当前Task已存在'
-      }
-    }
     const [, sprintDoc] = await this.toPromise(this.SprintModel.findById(relateSprint))
     if (!sprintDoc) {
       return {
         errno: this.config.errorCode,
         data: {},
         msg: '所属Sprint已不存在'
+      }
+    }
+    const [, isExist] = await this.toPromise(this.TaskModel.findOne({ relateSprint, title: data.title}))
+    if (isExist) {
+      return {
+        errno: this.config.errorCode,
+        data: {},
+        msg: '当前Task已存在'
       }
     }
     const [, taskDoc] = await this.toPromise(this.TaskModel.create({relateSprint, ...data}))

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import './index.scss'
 import testAvatar from 'assets/mock/avatar.jpeg'
+import './index.scss'
 
 export default class TaskCard extends Component {
 

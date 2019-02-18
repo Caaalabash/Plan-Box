@@ -18,8 +18,8 @@ export default new class apiManager extends BaseModule {
     return this.get(`sprint/filter${query}`)
   }
   // Task
-  getTask(query) {
-    return this.get(`task${query}`)
+  getTaskBySprintId(sprintId) {
+    return this.get(`task?id=${sprintId}`)
   }
   setTask(data) {
     return this.post('task', data)
