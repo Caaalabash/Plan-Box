@@ -14,3 +14,32 @@ export function restrictDropDistance(event) {
     default: return []
   }
 }
+/**
+ * 将任务优先级状态转为文字形式
+ * @param {string|number} value - 任务优先级代号
+ * @returns {string} - 对应文字
+ * @description 0, 1, 2, 3 分别代表 建议, 重要, 紧急, 致命
+ */
+export function translatePriority(value) {
+  switch (+value) {
+    case 1: return '重要'
+    case 2: return '紧急'
+    case 3: return '致命'
+    default: return '建议'
+  }
+}
+/**
+ * 处理子任务的排序
+ * @param {array} tasks - 子任务列表
+ * @returns {array} - 处理后的子任务列表
+ * @description 创建子任务时, 默认排序值为0
+ */
+export function setSequence(tasks) {
+  return tasks.map((task, index) => {
+    if (task.sequence === 0) {
+      task.sequence = ++index
+    }
+    return task
+  })
+}
+

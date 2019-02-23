@@ -4,10 +4,36 @@ import Service from 'service'
 
 import SprintPanelHeader from 'components/SprintPanelHeader'
 import LiteForm from 'components/LiteForm'
+import DraggableTable from 'components/DraggableTable'
 import { createSprintFormConfig, taskFormConfig } from 'assets/config/sprint-form'
+import { translatePriority, setSequence } from 'utils/tool'
 import './index.scss'
 
 const Panel = Collapse.Panel
+const TableHeader = [
+  {
+    title: '子任务',
+    key: 'title',
+  },
+  {
+    title: '任务描述',
+    key: 'desc',
+  },
+  {
+    title: '故事点',
+    key: 'storyPoint',
+  },
+  {
+    title: '优先级',
+    key: 'priority',
+    handler: translatePriority
+  },
+  {
+    title: '负责人',
+    key: 'team',
+    handler: obj => obj.rd
+  }
+]
 
 const processPayload = formData => {
   return Object.keys(formData).reduce((payload, key) => {
@@ -146,10 +172,16 @@ export default class Backlog extends Component {
     })
   }
   // 展开折叠面板时获取当前Sprint的子任务列表
-  handleCollapseChange = ([sprintId]) => {
-    // key参数代表当前面板展开的panel数组, 本组件每个面板仅含有一个panel
-    if (!sprintId) return
-    Service.getTaskBySprintId(sprintId)
+  handleCollapseChange = async ([sprintId]) => {
+    const { sprintList } = this.state
+    const index = this.state.sprintList.findIndex((sprint) => sprint._id === sprintId)
+    if (~index) {
+      let { data } = await Service.getTaskBySprintId(sprintId)
+      // 处理子任务数组的排序
+      data = setSequence(data)
+      sprintList[index] = { ...sprintList[index], ...{ task: data } }
+      this.setState({ sprintList })
+    }
   }
 
   render() {
@@ -167,7 +199,7 @@ export default class Backlog extends Component {
           return (
             <Collapse key={sprint._id} onChange={this.handleCollapseChange}>
               <Panel key={sprint._id} header={<SprintPanelHeader {...sprint} onOperate={e => this.handleOperate.call(this, e, sprint, index)}/>}>
-
+                <DraggableTable header={TableHeader} data={sprint.task}/>
               </Panel>
             </Collapse>
           )
