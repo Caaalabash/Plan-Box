@@ -42,4 +42,29 @@ export function setSequence(tasks) {
     return task
   })
 }
+/**
+ * 给对应节点添加对应的类名
+ * @param {node} dom - 节点
+ * @param {string} className - 类名
+ */
+export function addClass(dom, className) {
+  dom.classList.add(className)
+}
+/**
+ * 给对应节点删除对应的类名
+ * @param {node} dom - 节点
+ * @param {string} className - 类名
+ */
+export function removeClass(dom, className) {
+  dom.classList.remove(className)
+}
+/**
+ * 判断对应节点是否含有对应的类名
+ * @param {node} dom - 节点
+ * @param {string} className - 类名
+ * @returns {boolean}
+ */
+export function hasClass(dom, className) {
+  return dom.classList.contains(className)
+}
 

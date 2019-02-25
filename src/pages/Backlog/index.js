@@ -199,7 +199,9 @@ export default class Backlog extends Component {
           return (
             <Collapse key={sprint._id} onChange={this.handleCollapseChange}>
               <Panel key={sprint._id} header={<SprintPanelHeader {...sprint} onOperate={e => this.handleOperate.call(this, e, sprint, index)}/>}>
-                <DraggableTable header={TableHeader} data={sprint.task}/>
+                {
+                  sprint.task.length ? <DraggableTable header={TableHeader} data={sprint.task} /> : '暂无子任务'
+                }
               </Panel>
             </Collapse>
           )
