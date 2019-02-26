@@ -158,7 +158,8 @@ export default class Backlog extends Component {
       else if (this.lastOperate === 'add') {
         const relateSprint = sprintList[lastIndex]._id
         const result = await Service.setTask({ relateSprint, ...payload })
-        sprintList[lastIndex].task.push(result.data)
+        const nextSequence = sprintList[lastIndex].task.length + 1
+        sprintList[lastIndex].task.push({ ...result.data, sequence: nextSequence })
         sprintList[lastIndex].storyPoint += result.data.storyPoint
         this.setState({ sprintList })
       }
@@ -200,7 +201,7 @@ export default class Backlog extends Component {
             <Collapse key={sprint._id} onChange={this.handleCollapseChange}>
               <Panel key={sprint._id} header={<SprintPanelHeader {...sprint} onOperate={e => this.handleOperate.call(this, e, sprint, index)}/>}>
                 {
-                  sprint.task.length ? <DraggableTable header={TableHeader} data={sprint.task} /> : '暂无子任务'
+                  sprint.task.length ? <DraggableTable header={TableHeader} data={sprint.task} belong={sprint._id}/> : '暂无子任务'
                 }
               </Panel>
             </Collapse>
