@@ -1,21 +1,11 @@
-.task-header {
+.sprint-operate {
   display: flex;
-  .task-progress {
-    flex: 1;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  .filter-sprint {
+    margin-right: auto;
   }
-}
-.task-content {
-  display: flex;
-  .task-column {
-    flex: 1;
-    min-height: 250px;
-    margin-right: 10px;
-    background: #f5f5f5;
+  .create-sprint {
+    margin-right: 20px;
   }
-}
-.can-drop {
-  border: 1px dashed blue;
-}
-.dragover {
-  border: 1px dashed green;
 }

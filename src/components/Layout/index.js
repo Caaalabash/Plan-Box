@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Link, Route } from 'react-router-dom'
-import { Layout, Menu, Breadcrumb } from 'antd'
+import { Layout, Menu } from 'antd'
 import 'antd/dist/antd.less'
 
 import Sprint from 'pages/Sprint'
-import Backlog from 'pages/Backlog'
+import Lane from 'pages/Lane'
 import './index.scss'
 
 const { Header, Content, Sider } = Layout
@@ -36,25 +36,20 @@ export default class AppLayout extends Component {
               style={{ height: '100%', borderRight: 0 }}
             >
               <Menu.Item key="1">
-                <Link to="/backlog">Backlog</Link>
+                <Link to="/sprint">Sprint</Link>
               </Menu.Item>
               <Menu.Item key="2">
-                <Link to="/sprint">活动的Sprint</Link>
+                <Link to="/lane">Lane</Link>
               </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
-            </Breadcrumb>
             <Content style={{
               background: '#fff', padding: 24, margin: 0, minHeight: 280,
             }}
             >
-              <Route path="/backlog" component={Backlog} />
               <Route path="/sprint" component={Sprint} />
+              <Route path="/lane/:id" component={Lane} />
             </Content>
           </Layout>
         </Layout>
