@@ -14,6 +14,10 @@ class TaskController extends require('egg').Controller {
   async deleteTask(ctx) {
     ctx.body = await ctx.service.task.deleteTask(ctx.query)
   }
+
+  async updateSequence(ctx) {
+    ctx.body = await ctx.service.task.updateSequence(ctx.request.body)
+  }
 }
 
 module.exports = TaskController

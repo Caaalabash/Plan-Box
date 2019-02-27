@@ -25,6 +25,8 @@ export default class DraggableTable extends React.Component {
   over = null
   // 是否前插
   insertLocation = INSERT_BEFORE
+  // 排序记录
+  sort = null
   // 拖动开始, 记录被拖拽的元素
   dragStart = e => {
     this.dragged = e.target
@@ -66,11 +68,14 @@ export default class DraggableTable extends React.Component {
     removeClass(this.over, 'drag-up', 'drag-down')
     if (this.insertLocation === INSERT_BEFORE) this.tbodyRef.insertBefore(this.dragged, this.over)
     if (this.insertLocation === INSERT_AFTER) this.tbodyRef.insertBefore(this.dragged, this.over.nextSibling)
-    Array.prototype.map.call(this.tbodyRef.children, function(node, index) {
+    this.sort = []
+    Array.prototype.map.call(this.tbodyRef.children, (node, index) => {
       node.dataset.sequence = index + 1
+      this.sort.push(getDataset(node, 'id'))
     })
     this.over = null
     this.dragged = null
+    this.props.onDrop(this.sort)
   }
 
   render() {
@@ -104,6 +109,7 @@ export default class DraggableTable extends React.Component {
                   draggable
                   data-sequence={row.sequence}
                   data-belong={belong}
+                  data-id={row._id}
                   onDragStart={this.dragStart}
                   onDragEnd={this.dragEnd}
                 >

@@ -30,4 +30,7 @@ export default new class apiManager extends BaseModule {
   deleteTask(query) {
     return this.delete(`task${query}`)
   }
+  updateSequence(data) {
+    return this.post('task/sequence', data)
+  }
 }()

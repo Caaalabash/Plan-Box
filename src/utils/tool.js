@@ -40,7 +40,7 @@ export function setSequence(tasks) {
       task.sequence = ++index
     }
     return task
-  })
+  }).sort((last, next) => last.sequence - next.sequence)
 }
 /**
  * 给对应节点添加对应的类名

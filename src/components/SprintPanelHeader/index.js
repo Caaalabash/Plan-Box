@@ -9,16 +9,16 @@ const FINISHED = 2
 
 export default function SprintPanelHeader(props) {
   const { onOperate, ...sprint } = props
-
-  const handleClick = e => {
-    e.domEvent && e.domEvent.stopPropagation()
-    onOperate(e)
-  }
   const statusLabel = sprint.status === UNBEGIN
     ? '未开始'
     : sprint.status === ACTIVE ? '活跃' : '关闭'
+  const handleClick = e => {
+    e.domEvent && e.domEvent.stopPropagation()
+    onOperate(e.key)
+  }
+
   const menu = (
-    <Menu onClick={ e => handleClick(e)}>
+    <Menu onClick={ handleClick }>
       <Menu.Item key="update">修改</Menu.Item>
       <Menu.Item key="delete">删除</Menu.Item>
       { sprint.status !== FINISHED && <Menu.Item key="add">增加任务</Menu.Item> }

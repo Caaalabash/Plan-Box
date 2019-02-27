@@ -134,6 +134,19 @@ class TaskService extends require('egg').Service {
       msg: '删除成功'
     }
   }
+  async updateSequence({ sequence }) {
+    const updateList = sequence.map((id, index) => {
+      return this.toPromise(
+        this.TaskModel.updateOne({ _id: id }, { sequence: index + 1 })
+      )
+    })
+    await Promise.all(updateList)
+    return {
+      errno: this.config.successCode,
+      data: {},
+      msg: ''
+    }
+  }
 }
 
 module.exports = TaskService
