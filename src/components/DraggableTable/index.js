@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { hasClass, addClass, removeClass } from 'utils/tool'
+import emitter from 'utils/events'
 import './index.scss'
 
 const getParentDom = (child, tagName) => {
@@ -77,6 +78,21 @@ export default class DraggableTable extends React.Component {
     this.dragged = null
     this.props.onDrop(this.sort)
   }
+  // 打开右键菜单
+  openContextMenu = e => {
+    e.preventDefault()
+    e.customMenu = [
+      {
+        title: '查看',
+        handler: () => {}
+      },
+      {
+        title: '删除',
+        handler: () => {}
+      }
+    ]
+    emitter.emit('contextmenu', e)
+  }
 
   render() {
     const { header, data, belong } = this.props
@@ -112,6 +128,7 @@ export default class DraggableTable extends React.Component {
                   data-id={row._id}
                   onDragStart={this.dragStart}
                   onDragEnd={this.dragEnd}
+                  onContextMenu={this.openContextMenu}
                 >
                   {
                     header.map((item, index) => {

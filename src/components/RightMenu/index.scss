@@ -1,0 +1,21 @@
+.contextMenu {
+  position: fixed;
+  display: none;
+  background: white;
+  box-shadow: 0 12px 24px 0 rgba(6, 8, 40, 0.2), 0 0 1px 0 rgba(6, 8, 40, 0.2);
+
+  &__visible {
+    display: block;
+  }
+
+  &--option {
+    padding: 6px 50px 5px 10px;
+    min-width: 160px;
+    cursor: pointer;
+    font-size: 12px;
+    &:hover {
+      background: #e6f7ff;
+      color: #1890ff;
+    }
+  }
+}

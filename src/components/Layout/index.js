@@ -5,6 +5,7 @@ import 'antd/dist/antd.less'
 
 import Sprint from 'pages/Sprint'
 import Lane from 'pages/Lane'
+import RightMenu from 'components/RightMenu'
 import './index.scss'
 
 const { Header, Content, Sider } = Layout
@@ -53,6 +54,7 @@ export default class AppLayout extends Component {
             </Content>
           </Layout>
         </Layout>
+        <RightMenu/>
       </Layout>
     )
   }
