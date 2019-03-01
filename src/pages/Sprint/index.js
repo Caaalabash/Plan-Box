@@ -109,6 +109,17 @@ export default class Sprint extends Component {
   onDrop(sequence) {
     Service.updateSequence({ sequence })
   }
+  // 删除子任务
+  onDeleteTask = (_id, relateId) => {
+    const sprintList = this.state.sprintList
+    const sprintIndex = sprintList.findIndex(sprint => sprint._id === relateId)
+    const taskIndex = sprintList[sprintIndex].task.findIndex(task => task._id === _id)
+
+    Service.deleteTask(`?_id=${_id}&relateId=${relateId}`).then(() => {
+      sprintList[sprintIndex].task.splice(taskIndex, 1)
+      this.setState({ sprintList })
+    })
+  }
   // 处理菜单点击事件
   handleOperate = (key, sprint, index) => {
     const { sprintList } = this.state
@@ -192,7 +203,7 @@ export default class Sprint extends Component {
               >
                 {
                   sprint.task.length
-                    ? <DraggableTable header={TableHeader} data={sprint.task} belong={sprint._id} onDrop={this.onDrop}/>
+                    ? <DraggableTable header={TableHeader} data={sprint.task} belong={sprint._id} onDrop={this.onDrop} onDelete={this.onDeleteTask}/>
                     : '暂无子任务'
                 }
               </Panel>

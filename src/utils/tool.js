@@ -67,4 +67,27 @@ export function removeClass(dom, ...className) {
 export function hasClass(dom, className) {
   return dom.classList.contains(className)
 }
+/**
+ * 获取子节点的某个指定tagName的父节点
+ * @param {node} child - 子节点
+ * @param {string} tagName - 标签名
+ * @returns {node|boolean}
+ */
+export function getParentDom(child, tagName) {
+  if (!child) return false
+  while(child.tagName !== tagName) {
+    child = child.parentNode
+  }
+  return child
+}
+/**
+ * 获取某个节点的指定data-set值
+ * @param {node} dom - 节点
+ * @param {string} prop - 属性名
+ * @returns {node|boolean}
+ */
+export function getDataset(dom, prop) {
+  if (!dom) return false
+  return dom.dataset[prop]
+}
 

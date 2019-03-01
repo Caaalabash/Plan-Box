@@ -1,24 +1,14 @@
 import React from 'react'
+import { withRouter } from "react-router-dom";
 
-import { hasClass, addClass, removeClass } from 'utils/tool'
+import { hasClass, addClass, removeClass, getParentDom, getDataset } from 'utils/tool'
 import emitter from 'utils/events'
 import './index.scss'
 
-const getParentDom = (child, tagName) => {
-  if (!child) return false
-  while(child.tagName !== tagName) {
-    child = child.parentNode
-  }
-  return child
-}
-const getDataset = (dom, prop) => {
-  if (!dom) return false
-  return dom.dataset[prop]
-}
 const INSERT_BEFORE = 1
 const INSERT_AFTER = 2
 
-export default class DraggableTable extends React.Component {
+class DraggableTable extends React.Component {
 
   // 被拖动元素
   dragged = null
@@ -79,16 +69,21 @@ export default class DraggableTable extends React.Component {
     this.props.onDrop(this.sort)
   }
   // 打开右键菜单
-  openContextMenu = e => {
+  openContextMenu = (e, _id, relateId) => {
     e.preventDefault()
+
     e.customMenu = [
       {
         title: '查看',
-        handler: () => {}
+        handler: () => {
+          this.props.history.push(`/lane/${_id}`)
+        }
       },
       {
         title: '删除',
-        handler: () => {}
+        handler: () => {
+          this.props.onDelete(_id, relateId)
+        }
       }
     ]
     emitter.emit('contextmenu', e)
@@ -128,7 +123,7 @@ export default class DraggableTable extends React.Component {
                   data-id={row._id}
                   onDragStart={this.dragStart}
                   onDragEnd={this.dragEnd}
-                  onContextMenu={this.openContextMenu}
+                  onContextMenu={ e => this.openContextMenu.call(this, e, row._id, belong)}
                 >
                   {
                     header.map((item, index) => {
@@ -149,3 +144,5 @@ export default class DraggableTable extends React.Component {
   }
 
 }
+
+export default withRouter(DraggableTable)

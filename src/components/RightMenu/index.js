@@ -41,13 +41,8 @@ export default class RightMenu extends React.Component {
     if (bottom) this.root.style.top = `${clickY - rootH - 5}px`
   }
 
-  _handleClick = (event) => {
-    const clickInside = this.root === event.target || this.root.contains(event.target)
-    if (clickInside) {
-      console.log('inside')
-    } else {
-      this.setState({ visible: false })
-    }
+  _handleClick = () => {
+    this.setState({ visible: false })
   }
 
   render() {
