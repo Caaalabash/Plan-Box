@@ -78,8 +78,8 @@ export const taskFormConfig = [
       type: 'select',
       list: [
         { label: '建议', value: '0' },
-        { label: '低优先级', value: '1' },
-        { label: '高优先级', value: '2' },
+        { label: '重要', value: '1' },
+        { label: '紧急', value: '2' },
         { label: '致命', value: '3' },
       ]
     },
@@ -122,6 +122,99 @@ export const taskFormConfig = [
     label: '任务描述',
     initialValue: '',
     rules: [],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+]
+
+export const issueFormConfig = [
+  {
+    key: 'title',
+    label: '子任务标题',
+    initialValue: '',
+    rules: [
+      { required: true, message: '请输入子任务标题' }
+    ],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
+    key: 'priority',
+    label: '子任务紧急程度',
+    initialValue: '0',
+    rules: [],
+    componentOptions: {
+      type: 'select',
+      list: [
+        { label: '建议', value: '0' },
+        { label: '重要', value: '1' },
+        { label: '紧急', value: '2' },
+        { label: '致命', value: '3' },
+      ]
+    },
+  },
+  {
+    key: 'issueType',
+    label: '任务类型',
+    initialValue: '0',
+    rules: [],
+    componentOptions: {
+      type: 'select',
+      list: [
+        { label: 'bug', value: '0' },
+        { label: 'issue', value: '1' },
+      ]
+    },
+  },
+  {
+    key: 'status',
+    label: '任务状态',
+    initialValue: '0',
+    rules: [],
+    componentOptions: {
+      type: 'select',
+      list: [
+        { label: '待开发', value: '0' },
+        { label: '开发中', value: '1' },
+      ]
+    },
+  },
+  {
+    key: 'desc',
+    label: '任务描述',
+    initialValue: '',
+    rules: [],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
+    key: 'time',
+    label: '预估时间',
+    initialValue: '0',
+    rules: [],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
+    key: 'usedTime',
+    label: '使用时间',
+    initialValue: '0',
+    rules: [],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
+    key: 'responsible',
+    label: '负责人',
+    initialValue: '',
+    rules: [
+      { required: true, message: '请输入子任务负责人' }
+    ],
     componentOptions: {
       type: 'input',
     },

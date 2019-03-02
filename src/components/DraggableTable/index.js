@@ -1,8 +1,8 @@
 import React from 'react'
-import { withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom"
 
-import { hasClass, addClass, removeClass, getParentDom, getDataset } from 'utils/tool'
 import emitter from 'utils/events'
+import { hasClass, addClass, removeClass, getParentDom, getDataset } from 'utils/tool'
 import './index.scss'
 
 const INSERT_BEFORE = 1

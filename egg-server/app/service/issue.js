@@ -16,7 +16,7 @@ class IssueService extends require('egg').Service {
       }
     }))
     if (e) return this.response(this.config.errorCode, {}, '创建失败')
-    return this.response(this.config.successCode, doc, '')
+    return this.response(this.config.successCode, doc, '创建成功')
   }
 
   async deleteIssue({ taskId, _id }) {

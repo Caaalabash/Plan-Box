@@ -5,7 +5,7 @@ import Service from 'service'
 import SprintPanelHeader from 'components/SprintPanelHeader'
 import LiteForm from 'components/LiteForm'
 import DraggableTable from 'components/DraggableTable'
-import { createSprintFormConfig, taskFormConfig } from 'assets/config/sprint-form'
+import { createSprintFormConfig, taskFormConfig } from 'assets/config/form'
 import { translatePriority } from 'utils/tool'
 import './index.scss'
 
@@ -80,10 +80,6 @@ export default class Sprint extends Component {
   handleRadioChange = e => {
     this.setState({ defaultSprintStatus: e.target.value })
     this.getSprintList(e.target.value)
-  }
-  // 记录表单引用
-  recordFormRef = ref => {
-    this.formRef = ref
   }
   // 切换弹窗状态
   toggleModule = status => {
@@ -238,7 +234,7 @@ export default class Sprint extends Component {
           onOk={this.handleSubmit}
           onCancel={this.toggleModule.bind(this, false)}
         >
-          <LiteForm formList={this.formContent} wrappedComponentRef={this.recordFormRef}/>
+          <LiteForm formList={this.formContent} wrappedComponentRef={ref => {this.formRef = ref}}/>
         </Modal>
       </div>
     )

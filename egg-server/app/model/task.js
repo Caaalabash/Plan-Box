@@ -50,6 +50,7 @@ module.exports = app => {
       usedTime: String,
       issueType: String,
       status: String,
+      responsible: String,
     }]
   })
 

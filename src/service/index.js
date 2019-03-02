@@ -34,4 +34,8 @@ export default new class apiManager extends BaseModule {
   updateSequence(data) {
     return this.post('task/sequence', data)
   }
+  // Issue
+  setIssue(data) {
+    return this.post('issue', data)
+  }
 }()
