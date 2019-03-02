@@ -1,12 +1,12 @@
 /**
  * 限制卡片的拖动范围
- * @param {object} event - 事件对象
+ * @param {node} dom - 被拖拽的节点
  * @returns {array} - 可拖动索引范围
  * @description 0,1,2,3,4 分别代表 待开发,开发中,待测试,测试中,已完成
  */
-export function restrictDropDistance(event) {
-  const startColumnIndex = event.target.parentNode.dataset.columnKey
-  switch (startColumnIndex) {
+export function restrictDropDistance(key) {
+  if (typeof key === 'number') key = key.toString()
+  switch (key) {
     case '0': return ['1']
     case '1': return ['0', '2']
     case '2': return ['1', '3']
@@ -68,14 +68,19 @@ export function hasClass(dom, className) {
   return dom.classList.contains(className)
 }
 /**
- * 获取子节点的某个指定tagName的父节点
+ * 获取子节点的含有某个键值对的父节点
  * @param {node} child - 子节点
- * @param {string} tagName - 标签名
+ * @param {string} prop - dom上的某个属性
+ * @param {string} value - 该属性对应的值
  * @returns {node|boolean}
  */
-export function getParentDom(child, tagName) {
+export function getParentDom(child, prop, value) {
   if (!child) return false
-  while(child.tagName !== tagName) {
+  while(child[prop] !== value) {
+    // 对于className有多个类名时特殊处理
+    if (~child[prop].indexOf(value)) {
+      break
+    }
     child = child.parentNode
   }
   return child

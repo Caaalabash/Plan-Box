@@ -6,19 +6,19 @@ import './index.scss'
 export default class TaskCard extends Component {
 
   render() {
-    const { issue } = this.props
+    const { issue, column, belong, onDragStart, onDragEnd } = this.props
     const issueProgress = '0%'
 
     return (
-      <div className="task" draggable>
-        <div className="task-inner-content">
-          <span className="task-title">{issue.title}</span>
-          <span className="task-desc">{issue.desc}</span>
-          <span className="task-owner">{issue.responsible}</span>
-          <span className="task-progress">{issueProgress}</span>
+      <div className="issue" onDragStart={onDragStart} onDragEnd={onDragEnd} data-column={column} data-belong={belong} draggable>
+        <div className="issue-inner-content">
+          <span className="issue-title">{issue.title}</span>
+          <span className="issue-desc">{issue.desc}</span>
+          <span className="issue-owner">{issue.responsible}</span>
+          <span className="issue-progress">{issueProgress}</span>
         </div>
-        <img src={testAvatar} alt="经办人" className="task-avatar"/>
-        <span className="task-total">{issue.time}</span>
+        <img src={testAvatar} alt="经办人" className="issue-avatar"/>
+        <span className="issue-total">{issue.time}</span>
       </div>
     )
   }

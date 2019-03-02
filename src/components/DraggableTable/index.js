@@ -26,7 +26,7 @@ class DraggableTable extends React.Component {
   dragOver = e => {
     e.preventDefault()
 
-    const overDom = getParentDom(e.target, 'TR')
+    const overDom = getParentDom(e.target, 'tagName', 'TR')
     // 当为自身是直接返回
     if (overDom === this.dragged) return
     // 当所属区域不同时直接返回
