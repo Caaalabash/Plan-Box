@@ -90,4 +90,17 @@ export function getDataset(dom, prop) {
   if (!dom) return false
   return dom.dataset[prop]
 }
+/**
+ * 解析查询字符串
+ * @param {string} query  - 查询字符串
+ * @returns {object}
+ */
+export function parseQueryParams(query) {
+  const queryArray = query.split('?')[1].split('&')
+  return queryArray.reduce((queryObj, partOfQuery) => {
+    const [key, val] = partOfQuery.split('=')
+    queryObj[key] = val
+    return queryObj
+  }, {})
+}
 

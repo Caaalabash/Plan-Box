@@ -1,4 +1,5 @@
 import BaseModule from './default'
+import { setSequence } from 'utils/tool'
 
 export default new class apiManager extends BaseModule {
   // Sprint
@@ -19,7 +20,7 @@ export default new class apiManager extends BaseModule {
   }
   // Task
   getTaskBySprintId(sprintId) {
-    return this.get(`task?id=${sprintId}`)
+    return this.get(`task?id=${sprintId}`).then(res => setSequence(res.data))
   }
   setTask(data) {
     return this.post('task', data)

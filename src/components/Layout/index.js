@@ -50,7 +50,7 @@ export default class AppLayout extends Component {
             }}
             >
               <Route path="/sprint" component={Sprint} />
-              <Route path="/lane/:id" component={Lane} />
+              <Route path="/lane" component={Lane} />
             </Content>
           </Layout>
         </Layout>

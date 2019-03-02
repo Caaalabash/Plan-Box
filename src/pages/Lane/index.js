@@ -10,8 +10,9 @@ import {
   tap,
 } from 'rxjs/operators'
 
+import Service from 'service'
 import TaskCard from 'components/TaskCard'
-import { restrictDropDistance } from 'utils/tool'
+import { restrictDropDistance, parseQueryParams } from 'utils/tool'
 import SwimPool from 'assets/mock/SwimPool'
 import './index.scss'
 
@@ -21,9 +22,22 @@ export default class Lane extends React.Component {
 
   state = {
     dropArr: [],
+    taskList: [],
+    open: null,
+    relateId: null
   }
 
   componentDidMount() {
+    const { relateId, open } = parseQueryParams(this.props.history.location.search)
+
+    Service.getTaskBySprintId(relateId).then(tasks => {
+      this.setState({
+        taskList: tasks,
+        open,
+        relateId,
+      })
+    })
+
     const dragStart$ = fromEvent(document, 'dragstart')
     const dragEnd$ = fromEvent(document, 'dragend')
     const drop$ = fromEvent(document, 'drop')
@@ -89,37 +103,41 @@ export default class Lane extends React.Component {
   }
 
   render() {
-    const { header } = this.props
+    const { taskList, open, relateId } = this.state
 
     return (
-      <Collapse defaultActiveKey={['1']}>
-        <Panel header={header} key="1">
-          <ul className="task-header">
-            <li className="task-progress">待开发</li>
-            <li className="task-progress">开发中</li>
-            <li className="task-progress">待测试</li>
-            <li className="task-progress">测试中</li>
-            <li className="task-progress">已完成</li>
-          </ul>
-          <div className="task-content">
-            {
-              SwimPool.swimlane.map(obj => {
-                const dynamicClassName = ~this.state.dropArr.indexOf(obj.key) ? 'can-drop' : ''
-                return (
-                  <div
-                    className={`${dynamicClassName} task-column`}
-                    key={obj.key}
-                    data-column-key={obj.key}
-                  >
-                    {
-                      obj.task.map(o => <TaskCard key={o.taskId} {...o} />)
-                    }
-                  </div>
-                )
-              })
-            }
-          </div>
-        </Panel>
+      open && <Collapse defaultActiveKey={[open]}>
+        {
+          taskList.map(task => (
+            <Panel header={task.title} key={task._id}>
+              <ul className="task-header">
+                <li className="task-progress">待开发</li>
+                <li className="task-progress">开发中</li>
+                <li className="task-progress">待测试</li>
+                <li className="task-progress">测试中</li>
+                <li className="task-progress">已完成</li>
+              </ul>
+              <div className="task-content">
+                {
+                  SwimPool.swimlane.map(obj => {
+                    const dynamicClassName = ~this.state.dropArr.indexOf(obj.key) ? 'can-drop' : ''
+                    return (
+                      <div
+                        className={`${dynamicClassName} task-column`}
+                        key={obj.key}
+                        data-column-key={obj.key}
+                      >
+                        {
+                          obj.task.map(o => <TaskCard key={o.taskId} {...o} />)
+                        }
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            </Panel>
+          ))
+        }
       </Collapse>
     )
   }

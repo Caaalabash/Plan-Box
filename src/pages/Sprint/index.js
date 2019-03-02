@@ -6,7 +6,7 @@ import SprintPanelHeader from 'components/SprintPanelHeader'
 import LiteForm from 'components/LiteForm'
 import DraggableTable from 'components/DraggableTable'
 import { createSprintFormConfig, taskFormConfig } from 'assets/config/sprint-form'
-import { translatePriority, setSequence } from 'utils/tool'
+import { translatePriority } from 'utils/tool'
 import './index.scss'
 
 const Panel = Collapse.Panel
@@ -100,8 +100,8 @@ export default class Sprint extends Component {
     const { sprintList } = this.state
     const index = sprintList.findIndex(sprint => sprint._id === sprintId)
     if (~index) {
-      let { data } = await Service.getTaskBySprintId(sprintId)
-      sprintList[index] = { ...sprintList[index], ...{ task: setSequence(data) } }
+      const tasks = await Service.getTaskBySprintId(sprintId)
+      sprintList[index] = { ...sprintList[index], ...{ task: tasks } }
       this.setState({ sprintList })
     }
   }

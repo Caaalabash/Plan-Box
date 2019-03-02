@@ -46,25 +46,10 @@ module.exports = app => {
       priority: Number,
       title: String,
       desc: String,
-      storyPoint: Number,
       time: String,
       usedTime: String,
       issueType: String,
       status: String,
-      team: {
-        pm: {
-          type: String,
-          default: '',
-        },
-        rd: {
-          type: String,
-          default: ''
-        },
-        qa:  {
-          type: String,
-          default: ''
-        },
-      },
     }]
   })
 

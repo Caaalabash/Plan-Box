@@ -5,5 +5,12 @@ module.exports = {
     }).catch(err => {
       return [err, null];
     })
+  },
+  response(errno, data, msg) {
+    return {
+      errno,
+      data,
+      msg
+    }
   }
 }
