@@ -10,7 +10,15 @@ export default class TaskCard extends Component {
     const issueProgress = '0%'
 
     return (
-      <div className="issue" onDragStart={onDragStart} onDragEnd={onDragEnd} data-column={column} data-belong={belong} draggable>
+      <div
+        className="issue"
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        data-column={column}
+        data-belong={belong}
+        data-id={issue._id}
+        draggable
+      >
         <div className="issue-inner-content">
           <span className="issue-title">{issue.title}</span>
           <span className="issue-desc">{issue.desc}</span>

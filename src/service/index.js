@@ -38,4 +38,7 @@ export default new class apiManager extends BaseModule {
   setIssue(data) {
     return this.post('issue', data)
   }
+  setIssueStatus(data) {
+    return this.put('issue/status', data)
+  }
 }()

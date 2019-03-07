@@ -83,6 +83,12 @@ export default class Lane extends React.Component {
     // 操作dom
     this.dragged.dataset.column = this.over.dataset.columnKey
     this.over.appendChild(this.dragged)
+    // 更新状态
+    Service.setIssueStatus({
+      taskId: getDataset(this.dragged, 'belong'),
+      issueId: getDataset(this.dragged, 'id'),
+      status: getDataset(this.over, 'columnKey')
+    })
     // 重置状态
     this.over = null
     this.dragged = null

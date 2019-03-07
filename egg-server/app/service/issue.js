@@ -20,7 +20,7 @@ class IssueService extends require('egg').Service {
   }
 
   async deleteIssue({ taskId, _id }) {
-    const [e,] = await this.toPromise(this.SprintModel.updateOne({_id: taskId}, {
+    const [e,] = await this.toPromise(this.TaskModel.updateOne({_id: taskId}, {
       $pull: {
         issue: { _id }
       }
@@ -29,13 +29,13 @@ class IssueService extends require('egg').Service {
     return this.response(this.config.successCode, {}, '删除成功')
   }
 
-  async updateIssue({ taskId, ...data }) {
-    const [e, doc] = await this.toPromise(this.SprintModel.updateOne({_id: taskId}, {
+  async updateIssueStatus({ taskId, issueId, status }) {
+    const [e,] = await this.toPromise(this.TaskModel.updateOne({_id: taskId, "issue._id": issueId}, {
       $set: {
-        "issue.$": data
+        "issue.$.status": status
       }
     }))
-    if (e) return this.response(this.config.errorCode, doc, '修改失败')
+    if (e) return this.response(this.config.errorCode, {}, '修改失败')
     return this.response(this.config.successCode, {}, '修改成功')
   }
 }
