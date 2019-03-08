@@ -562,10 +562,13 @@ module.exports = function(webpackEnv) {
       // the HTML & assets that are part of the Webpack build.
       isEnvProduction &&
         new WorkboxWebpackPlugin.GenerateSW({
+          skipWaiting: true,
           clientsClaim: true,
+          cleanupOutdatedCaches: true,
           exclude: [/\.map$/, /asset-manifest\.json$/],
-          importWorkboxFrom: 'cdn',
+          importWorkboxFrom: 'local',
           navigateFallback: publicUrl + '/index.html',
+          dontCacheBustURLsMatching: /\.\w{8}\./,
           navigateFallbackBlacklist: [
             // Exclude URLs starting with /_, as they're likely an API call
             new RegExp('^/_'),
@@ -573,6 +576,31 @@ module.exports = function(webpackEnv) {
             // public/ and not a SPA route
             new RegExp('/[^/]+\\.[^/]+$'),
           ],
+          runtimeCaching: [
+            {
+              urlPattern: /.(?:png|svg|webp|jpg|jpeg|gif)$/,
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'plan-box-media',
+                expiration: {
+                  maxEntries: 30,
+                  maxAgeSeconds: 10 * 24 * 60 * 60
+                }
+              },
+            },
+            {
+              urlPattern: /api\/plan-box/,
+              handler: 'NetworkFirst',
+              options: {
+                networkTimeoutSeconds: 7,
+                cacheName: 'plan-box-api',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60
+                },
+              },
+            },
+          ]
         }),
       // TypeScript type checking
       useTypeScript &&
