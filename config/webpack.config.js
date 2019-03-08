@@ -568,7 +568,6 @@ module.exports = function(webpackEnv) {
           exclude: [/\.map$/, /asset-manifest\.json$/],
           importWorkboxFrom: 'local',
           navigateFallback: publicUrl + '/index.html',
-          dontCacheBustURLsMatching: /\.\w{8}\./,
           navigateFallbackBlacklist: [
             // Exclude URLs starting with /_, as they're likely an API call
             new RegExp('^/_'),
