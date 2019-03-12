@@ -101,6 +101,7 @@ export function getDataset(dom, prop) {
  * @returns {object}
  */
 export function parseQueryParams(query) {
+  if (!query) return {}
   const queryArray = query.split('?')[1].split('&')
   return queryArray.reduce((queryObj, partOfQuery) => {
     const [key, val] = partOfQuery.split('=')
