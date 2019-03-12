@@ -6,13 +6,23 @@ import 'antd/dist/antd.less'
 import Sprint from 'pages/Sprint'
 import Lane from 'pages/Lane'
 import RightMenu from 'components/RightMenu'
+import Oauth from 'components/Oauth'
 import './index.scss'
 
 const { Header, Content, Sider } = Layout
 
 export default class AppLayout extends Component {
+  state = {
+    oauthModalVisible: false,
+  }
 
+  toggleModal = status => {
+    this.setState({
+      oauthModalVisible: status
+    })
+  }
   render() {
+    const { oauthModalVisible }  = this.state
     return (
       <Layout>
         <Header className="header">
@@ -23,7 +33,7 @@ export default class AppLayout extends Component {
             defaultSelectedKeys={['2']}
             style={{ lineHeight: '64px' }}
           >
-            <Menu.Item key="1">nav 1</Menu.Item>
+            <Menu.Item key="1" onClick={() => this.toggleModal(true)}>Login</Menu.Item>
             <Menu.Item key="2">nav 1</Menu.Item>
             <Menu.Item key="3">nav 1</Menu.Item>
           </Menu>
@@ -54,6 +64,7 @@ export default class AppLayout extends Component {
             </Content>
           </Layout>
         </Layout>
+        <Oauth visible={oauthModalVisible} toggleModal={this.toggleModal}/>
         <RightMenu/>
       </Layout>
     )

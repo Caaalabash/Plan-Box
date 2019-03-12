@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: plan-box-backend
+    env_file:
+      - /mynode/plan-box-ci/plan-box.env
     ports:
       - 7778:7778
     volumes:

@@ -41,4 +41,8 @@ export default new class apiManager extends BaseModule {
   setIssueStatus(data) {
     return this.put('issue/status', data)
   }
+  // oauth
+  getGithubInfo(data) {
+    return this.post('oauth/github', data)
+  }
 }()
