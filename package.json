@@ -122,7 +122,8 @@
     ]
   },
   "devDependencies": {
-    "sass-resources-loader": "^2.0.0"
+    "sass-resources-loader": "^2.0.0",
+    "webpack-aliyun-oss-plugin": "^2.1.0"
   },
   "proxy": "http://localhost:7001"
 }

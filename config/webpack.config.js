@@ -23,7 +23,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-
+const AliyunOss = require('webpack-aliyun-oss-plugin')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -600,6 +600,16 @@ module.exports = function(webpackEnv) {
               },
             },
           ]
+        }),
+      isEnvDevelopment &&
+        new AliyunOss({
+          region: 'oss-cn-beijing',
+          bucket: 'calabash-static',
+          ak: process.env.PROD_OSS_AK,
+          sk: process.env.PROD_OSS_SK,
+          filter: function (asset) {
+            return !/(\.html|\.map)$/.test(asset)
+          },
         }),
       // TypeScript type checking
       useTypeScript &&
