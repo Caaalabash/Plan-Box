@@ -16,8 +16,8 @@ export default class Oauth extends Component {
   }
 
   componentDidMount() {
-    console.log(parseQueryParams(window.location.search))
-    Service.getGithubInfo()
+    const { code } = parseQueryParams(window.location.search)
+    code && Service.getGithubInfo({ code })
   }
 
   render() {
