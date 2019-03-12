@@ -561,46 +561,46 @@ module.exports = function(webpackEnv) {
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the Webpack build.
       isEnvProduction &&
-        new WorkboxWebpackPlugin.GenerateSW({
-          skipWaiting: true,
-          clientsClaim: true,
-          cleanupOutdatedCaches: true,
-          exclude: [/\.map$/, /asset-manifest\.json$/],
-          importWorkboxFrom: 'local',
-          navigateFallback: publicUrl + '/index.html',
-          navigateFallbackBlacklist: [
-            // Exclude URLs starting with /_, as they're likely an API call
-            new RegExp('^/_'),
-            // Exclude URLs containing a dot, as they're likely a resource in
-            // public/ and not a SPA route
-            new RegExp('/[^/]+\\.[^/]+$'),
-          ],
-          runtimeCaching: [
-            {
-              urlPattern: /.(?:png|svg|webp|jpg|jpeg|gif)$/,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'plan-box-media',
-                expiration: {
-                  maxEntries: 30,
-                  maxAgeSeconds: 10 * 24 * 60 * 60
-                }
-              },
-            },
-            {
-              urlPattern: /api\/plan-box/,
-              handler: 'NetworkFirst',
-              options: {
-                networkTimeoutSeconds: 7,
-                cacheName: 'plan-box-api',
-                expiration: {
-                  maxEntries: 10,
-                  maxAgeSeconds: 60
-                },
-              },
-            },
-          ]
-        }),
+        // new WorkboxWebpackPlugin.GenerateSW({
+        //   skipWaiting: true,
+        //   clientsClaim: true,
+        //   cleanupOutdatedCaches: true,
+        //   exclude: [/\.map$/, /asset-manifest\.json$/],
+        //   importWorkboxFrom: 'local',
+        //   navigateFallback: publicUrl + '/index.html',
+        //   navigateFallbackBlacklist: [
+        //     // Exclude URLs starting with /_, as they're likely an API call
+        //     new RegExp('^/_'),
+        //     // Exclude URLs containing a dot, as they're likely a resource in
+        //     // public/ and not a SPA route
+        //     new RegExp('/[^/]+\\.[^/]+$'),
+        //   ],
+        //   runtimeCaching: [
+        //     {
+        //       urlPattern: /.(?:png|svg|webp|jpg|jpeg|gif)$/,
+        //       handler: 'StaleWhileRevalidate',
+        //       options: {
+        //         cacheName: 'plan-box-media',
+        //         expiration: {
+        //           maxEntries: 30,
+        //           maxAgeSeconds: 10 * 24 * 60 * 60
+        //         }
+        //       },
+        //     },
+        //     {
+        //       urlPattern: /api\/plan-box/,
+        //       handler: 'NetworkFirst',
+        //       options: {
+        //         networkTimeoutSeconds: 7,
+        //         cacheName: 'plan-box-api',
+        //         expiration: {
+        //           maxEntries: 10,
+        //           maxAgeSeconds: 60
+        //         },
+        //       },
+        //     },
+        //   ]
+        // }),
       isEnvDevelopment &&
         new AliyunOss({
           region: 'oss-cn-beijing',
