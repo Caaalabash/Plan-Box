@@ -601,7 +601,7 @@ module.exports = function(webpackEnv) {
         //     },
         //   ]
         // }),
-      isEnvDevelopment &&
+      isEnvProduction &&
         new AliyunOss({
           region: 'oss-cn-beijing',
           bucket: 'calabash-static',
