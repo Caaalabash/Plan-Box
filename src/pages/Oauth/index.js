@@ -9,7 +9,10 @@ export default class Lane extends React.Component {
     const { code } = parseQueryParams(window.location.search)
     if (code) {
       Service.getGithubInfo({ code }).then(res => {
-         window.postMessage(res.data, localStorage.getItem('OAUTH_LOGIN_URL'))
+        if (!res.code) {
+          localStorage.setItem('plan-box-userinfo', JSON.stringify(res.data))
+        }
+        window.close()
       })
     }
   }

@@ -3,6 +3,7 @@ class OauthService extends require('egg').Service {
     super(ctx)
     this.toPromise =  ctx.helper.to
     this.response =  ctx.helper.response
+    this.OauthModel = ctx.model.Oauth
   }
 
   async getGithubInfo({ code }) {
@@ -14,9 +15,20 @@ class OauthService extends require('egg').Service {
     })
 
     if (data.error) return this.response(this.config.errorCode, data, '授权失败')
-    const userInfo = await this.ctx.$get(`https://api.github.com/user?access_token=${data.access_token}`)
+    const userInfoRes = await this.ctx.$get(`https://api.github.com/user?access_token=${data.access_token}`)
+    const userInfo = JSON.parse(JSON.stringify(userInfoRes.data))
 
-    return this.response(this.config.successCode, userInfo.data, '授权成功')
+    const options = {
+      'new': true,
+      'upsert': true,
+    }
+    const update = ['name', 'bio', 'location', 'company', 'blog', 'email', 'avatar_url'].reduce((obj, key) => {
+      obj[key] = userInfo[key] || ''
+      return obj
+    }, {})
+    const [, doc] = await this.toPromise(this.OauthModel.findOneAndUpdate({ id: userInfo.id }, update, options))
+
+    return this.response(this.config.successCode, doc, '')
   }
 }
 
