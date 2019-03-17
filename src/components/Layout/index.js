@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Route } from 'react-router-dom'
-import { Layout, Menu, Avatar } from 'antd'
+import { Layout, Menu, Avatar, Dropdown } from 'antd'
 import { inject, observer } from 'mobx-react'
 
 import 'antd/dist/antd.less'
@@ -24,15 +24,28 @@ class AppLayout extends Component {
     this.setState({ oauthModalVisible: status })
   }
 
+  handleLogout = () => {
+    this.props.store.userStore.resetUser()
+  }
+
   render() {
-    const { oauthModalVisible }  = this.state
-    const { user } = this.props.store
+    const { oauthModalVisible } = this.state
+    const { userStore } = this.props.store
+
+    const menu = (
+      <Menu>
+        <Menu.Item onClick={this.handleLogout}>Logout</Menu.Item>
+      </Menu>
+    )
+
     return (
       <Layout className="c-layout">
         <Header className="c-layout-header">
           {
-            user.isLogin
-              ? <Avatar className="c-layout-avatar" size={32} src={user.avatar_url} />
+            userStore.isLogin
+              ? (<Dropdown overlay={menu}>
+                  <Avatar className="c-layout-avatar" size={32} src={userStore.user.avatar_url} alt={userStore.user.name} />
+                </Dropdown>)
               : <Avatar className="c-layout-avatar" size={32} icon="user" onClick={this.toggleModal.bind(this, true)}/>
           }
         </Header>

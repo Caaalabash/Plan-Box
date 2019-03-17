@@ -22,7 +22,7 @@ class UserStore {
 
 class Store {
   constructor() {
-    this.user = new UserStore()
+    this.userStore = new UserStore()
   }
 }
 

@@ -15,7 +15,7 @@ class Oauth extends Component {
   componentDidMount() {
     window.addEventListener('storage', event => {
       if (event.key === 'plan-box-userinfo') {
-        this.props.store.user.setUser(JSON.parse(event.newValue))
+        this.props.store.userStore.setUser(JSON.parse(event.newValue))
         this.props.toggleModal(false)
       }
     })
