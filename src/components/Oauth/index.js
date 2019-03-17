@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Modal, Button } from 'antd'
+import { observer } from 'mobx-react'
 
-export default class Oauth extends Component {
+@observer
+class Oauth extends Component {
 
   client_id = 'a6ff9b81a63fdfb211e4'
 
@@ -10,10 +12,9 @@ export default class Oauth extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('storage', function(event) {
+    window.addEventListener('storage', event => {
       if (event.key === 'plan-box-userinfo') {
-        console.log(event.newValue)
-        localStorage.removeItem('plan-box-userinfo')
+        this.props.userStore.setUser(JSON.parse(event.newValue))
       }
     })
   }
@@ -28,3 +29,5 @@ export default class Oauth extends Component {
   }
 
 }
+
+export default Oauth
