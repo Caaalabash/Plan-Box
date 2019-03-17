@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Modal, Button } from 'antd'
-import { observer } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 
+@inject('store')
 @observer
 class Oauth extends Component {
 
@@ -14,7 +15,8 @@ class Oauth extends Component {
   componentDidMount() {
     window.addEventListener('storage', event => {
       if (event.key === 'plan-box-userinfo') {
-        this.props.userStore.setUser(JSON.parse(event.newValue))
+        this.props.store.user.setUser(JSON.parse(event.newValue))
+        this.props.toggleModal(false)
       }
     })
   }
@@ -23,7 +25,7 @@ class Oauth extends Component {
     const { visible, toggleModal } = this.props
     return (
       <Modal title="第三方登录" visible={visible} onOk={() => toggleModal(false)} onCancel={() => toggleModal(false)}>
-       <Button icon="github" type="default" size="large" shape="circle" onClick={this.loginThroughGithub} />
+        <Button icon="github" type="default" size="large" shape="circle" onClick={this.loginThroughGithub} />
       </Modal>
     )
   }

@@ -20,5 +20,10 @@ class UserStore {
 
 }
 
+class Store {
+  constructor() {
+    this.user = new UserStore()
+  }
+}
 
-export default new UserStore()
+export default new Store()
