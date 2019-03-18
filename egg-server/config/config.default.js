@@ -7,6 +7,9 @@ module.exports = appInfo => ({
       enable: false
     }
   },
+  jwt: {
+    secret: process.env.JWT_SECRET
+  },
   successCode: 0,
   errorCode: 1
 })

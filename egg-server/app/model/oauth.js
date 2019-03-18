@@ -1,7 +1,6 @@
 module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
-  const ObjectId = mongoose.Types.ObjectId
 
   const oauthSchema = new Schema({
     id: String,
