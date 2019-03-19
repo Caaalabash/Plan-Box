@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Route } from 'react-router-dom'
-import { Layout, Menu, Avatar, Dropdown } from 'antd'
+import { Layout, Menu, Avatar, Dropdown, Icon } from 'antd'
 import { inject, observer } from 'mobx-react'
 
 import 'antd/dist/antd.less'
@@ -58,10 +58,12 @@ class AppLayout extends Component {
               style={{ height: '100%', borderRight: 0 }}
             >
               <Menu.Item key="1">
-                <Link to="/sprint">Sprint</Link>
+                <Icon type="calendar" />
+                <Link to="/sprint" style={{ display: 'inline-block' }}>Sprint</Link>
               </Menu.Item>
               <Menu.Item key="2">
-                <Link to="/lane">Lane</Link>
+                <Icon type="ordered-list" />
+                <Link to="/lane" style={{ display: 'inline-block' }}>Lane</Link>
               </Menu.Item>
             </Menu>
           </Sider>

@@ -6,6 +6,7 @@ export default class BaseModule {
     this.$http = axios.create({
       timeout: 10000,
       baseURL: '/api/plan-box',
+      withCredentials: true
     })
     this.$http.interceptors.response.use(response => {
       // 如果状态码正确并且含有msg字段,代表需要使用Message组件提示
