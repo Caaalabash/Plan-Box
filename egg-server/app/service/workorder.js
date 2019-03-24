@@ -8,7 +8,7 @@ class WorkorderService extends require('egg').Service {
   /**
    * 创建工单, 不做重复性校验
    */
-  async setWorkOrder({ data }) {
+  async setWorkOrder(data) {
     const [e, doc] = await this.toPromise(this.TicketModel.create(data))
 
     if (e) return this.response(1, {}, '提交失败')
