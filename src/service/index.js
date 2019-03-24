@@ -45,6 +45,12 @@ export default new class apiManager extends BaseModule {
   getGithubInfo(data) {
     return this.post('oauth/github', data)
   }
+  getUserInfo() {
+    return this.get('oauth/userInfo')
+  }
+  logout() {
+    return this.get('oauth/logout')
+  }
   // 工单
   getWorkOrder({ isAdmin = false, _id }) {
     return this.get(`workorder?isAdmin=${isAdmin}&userId=${_id}`)

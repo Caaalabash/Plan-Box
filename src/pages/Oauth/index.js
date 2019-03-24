@@ -9,7 +9,7 @@ export default class Lane extends React.Component {
     const { code } = parseQueryParams(window.location.search)
     if (code) {
       Service.getGithubInfo({ code }).then(res => {
-        if (!res.code) {
+        if (!res.errno) {
           localStorage.setItem('plan-box-userinfo', JSON.stringify(res.data))
         }
         window.close()

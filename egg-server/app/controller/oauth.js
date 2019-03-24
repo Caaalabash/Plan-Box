@@ -1,16 +1,19 @@
 class OauthController extends require('egg').Controller {
   async github(ctx) {
-    const userInfo = await ctx.service.oauth.getGithubInfo(ctx.request.body)
-    const token = this.app.jwt.sign({ id: userInfo.data.id }, this.config.jwt.secret, { expiresIn: 60 * 60 })
+    const resp = await ctx.service.oauth.getGithubInfo(ctx.request.body)
 
-    if (!userInfo.code) {
-      ctx.cookies.set('__token', token, {
-        signed: false,
-        maxAge: 3600,
-        path: '/',
-      })
+    if (!resp.errno) {
+      const token = this.app.jwt.sign({ userId: resp.data._id }, this.config.jwt.secret, { expiresIn: '1d' })
+      ctx.cookies.set('__token', token, { signed: false, maxAge: 1000 * 3600 * 24, path: '/' })
     }
-    ctx.body = userInfo
+    ctx.body = resp
+  }
+  async userInfo(ctx) {
+    ctx.body = await ctx.service.oauth.getUserInfo(ctx.state)
+  }
+  async logout(ctx) {
+    ctx.cookies.set('__token', null, { signed: false, maxAge: 1000 * 3600 * 24, path: '/' })
+    ctx.body = { errno: 0, msg: '注销成功' }
   }
 }
 

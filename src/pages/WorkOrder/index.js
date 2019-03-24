@@ -50,8 +50,6 @@ const columns = [{
   },
 }]
 
-
-
 @inject('store')
 class WorkOrder extends React.Component {
   userId = null
@@ -118,6 +116,7 @@ class WorkOrder extends React.Component {
         this.setState({
           tableData: [...this.state.tableData, create.data]
         })
+        this.toggleModalVisible(false)
       }
     })
   }
@@ -132,11 +131,11 @@ class WorkOrder extends React.Component {
   }
 
   render() {
-    const { modalVisible } = this.state
+    const { modalVisible, tableData } = this.state
     return (
       <div className="workorder-layout">
         <Button className="workorder-layout-button" icon="plus" onClick={this.toggleModalVisible.bind(this, true)}>新建工单</Button>
-        <Table columns={columns}/>
+        <Table columns={columns} dataSource={tableData}/>
         <Modal
           title='新建工单'
           destroyOnClose

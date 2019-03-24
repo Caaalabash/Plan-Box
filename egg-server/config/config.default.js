@@ -7,6 +7,12 @@ module.exports = appInfo => ({
       enable: false
     }
   },
+  auth: {
+    whiteList: [
+      '/api/plan-box/oauth/github'
+    ]
+  },
+  middleware: ['auth'],
   jwt: {
     secret: process.env.JWT_SECRET
   },

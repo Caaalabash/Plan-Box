@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Modal, Button } from 'antd'
 import { inject, observer } from 'mobx-react'
 
+import Service from 'service'
+
 @inject('store')
 @observer
 class Oauth extends Component {
@@ -13,10 +15,14 @@ class Oauth extends Component {
   }
 
   componentDidMount() {
+    Service.getUserInfo().then(res => {
+      if (!res.errno) this.props.store.userStore.setUser(res.data)
+    })
     window.addEventListener('storage', event => {
-      if (event.key === 'plan-box-userinfo') {
+      if (event.key === 'plan-box-userinfo' && event.newValue) {
         this.props.store.userStore.setUser(JSON.parse(event.newValue))
         this.props.toggleModal(false)
+        localStorage.removeItem('plan-box-userinfo')
       }
     })
   }

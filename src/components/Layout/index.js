@@ -10,6 +10,7 @@ import Lane from 'pages/Lane'
 import WorkOrder from 'pages/WorkOrder'
 import RightMenu from 'components/RightMenu'
 import Oauth from 'components/Oauth'
+import Service from 'service'
 
 const { Header, Content, Sider } = Layout
 
@@ -25,7 +26,8 @@ class AppLayout extends Component {
     this.setState({ oauthModalVisible: status })
   }
 
-  handleLogout = () => {
+  handleLogout = async () => {
+    await Service.logout()
     this.props.store.userStore.resetUser()
   }
 
