@@ -5,4 +5,5 @@ module.exports = app => {
   require('./router/task')(app)
   require('./router/issue')(app)
   require('./router/oauth')(app)
+  require('./router/workorder')(app)
 };
