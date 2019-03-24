@@ -1,16 +1,4 @@
 module.exports = {
-  to(promise) {
-    return promise.then(function(){
-      return [null, ...arguments];
-    }).catch(err => {
-      return [err, null];
-    })
-  },
-  response(errno, data, msg) {
-    return {
-      errno,
-      data,
-      msg
-    }
-  }
+  to: promise => promise.then(data => [null, data]).catch(err => [err, null]),
+  response: (errno, data, msg) => ({ errno, data, msg })
 }

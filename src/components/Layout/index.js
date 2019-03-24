@@ -7,6 +7,7 @@ import 'antd/dist/antd.less'
 import './index.scss'
 import Sprint from 'pages/Sprint'
 import Lane from 'pages/Lane'
+import WorkOrder from 'pages/WorkOrder'
 import RightMenu from 'components/RightMenu'
 import Oauth from 'components/Oauth'
 
@@ -65,12 +66,17 @@ class AppLayout extends Component {
                 <Icon type="ordered-list" />
                 <Link to="/lane" style={{ display: 'inline-block' }}>Lane</Link>
               </Menu.Item>
+              <Menu.Item key="3">
+                <Icon type="form" />
+                <Link to="/workorder" style={{ display: 'inline-block' }}>WorkOrder</Link>
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
             <Content style={{background: '#fff', padding: 24, margin: 0, minHeight: 280}}>
               <Route path="/sprint" component={Sprint} />
               <Route path="/lane" component={Lane} />
+              <Route path="/workorder" component={WorkOrder} />
             </Content>
           </Layout>
         </Layout>
