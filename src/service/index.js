@@ -46,8 +46,8 @@ export default new class apiManager extends BaseModule {
     return this.post('oauth/github', data)
   }
   // 工单
-  getWorkOrder({ isAdmin = false, userId }) {
-    return this.get(`workorder?isAdmin=${isAdmin}&userId=${userId}`)
+  getWorkOrder({ isAdmin = false, _id }) {
+    return this.get(`workorder?isAdmin=${isAdmin}&userId=${_id}`)
   }
   setWorkOrder(data) {
     return this.post('workorder', data)

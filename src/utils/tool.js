@@ -1,6 +1,6 @@
 /**
  * 限制卡片的拖动范围
- * @param {node} dom - 被拖拽的节点
+ * @param {node} key - 被拖拽的节点
  * @returns {array} - 可拖动索引范围
  * @description 0,1,2,3,4 分别代表 待开发,开发中,待测试,测试中,已完成
  */

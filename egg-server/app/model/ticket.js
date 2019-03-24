@@ -2,7 +2,7 @@ module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
 
-  const workOrderSchema = new Schema({
+  const ticketSchema = new Schema({
     userId: String,
     title: String,
     content: String,
@@ -27,5 +27,5 @@ module.exports = app => {
     }
   })
 
-  return mongoose.model('WorkOrder', workOrderSchema)
+  return mongoose.model('Ticket', ticketSchema)
 }

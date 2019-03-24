@@ -1,8 +1,8 @@
 module.exports = app => {
   const { router, controller } = app
 
-  router.get('/workorder', controller.workorder.getWorkorder)
-  router.post('/workorder', controller.workorder.setWorkorder)
-  router.delete('/workorder/:id', controller.workorder.deleteWorkorder)
-  router.put('/workorder', controller.workorder.updateWorkorder)
+  router.get('/workorder', controller.workorder.getWorkOrder)
+  router.post('/workorder', controller.workorder.setWorkOrder)
+  router.delete('/workorder/:id', controller.workorder.deleteWorkOrder)
+  router.put('/workorder', controller.workorder.updateWorkOrder)
 }

@@ -1,18 +1,18 @@
 class WorkOrderController extends require('egg').Controller {
-  async getWorkorder(ctx) {
-    ctx.body = await ctx.service.workorder.getWorkorder(ctx.query)
+  async getWorkOrder(ctx) {
+    ctx.body = await ctx.service.workorder.getWorkOrder(ctx.query)
   }
 
-  async setWorkorder(ctx) {
-    ctx.body = await ctx.service.workorder.setWorkorder(ctx.request.body)
+  async setWorkOrder(ctx) {
+    ctx.body = await ctx.service.workorder.setWorkOrder(ctx.request.body)
   }
 
-  async deleteWorkorder(ctx) {
-    ctx.body = await ctx.service.workorder.getWorkorder({ ...ctx.query, ...ctx.params })
+  async deleteWorkOrder(ctx) {
+    ctx.body = await ctx.service.workorder.deleteWorkOrder({ ...ctx.query, ...ctx.params })
   }
 
-  async updateWorkorder(ctx) {
-    ctx.body = await ctx.service.workorder.updateWorkorder(ctx.request.body)
+  async updateWorkOrder(ctx) {
+    ctx.body = await ctx.service.workorder.updateWorkOrder(ctx.request.body)
   }
 }
 
