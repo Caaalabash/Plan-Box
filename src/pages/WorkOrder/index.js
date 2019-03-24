@@ -1,10 +1,9 @@
 import React from 'react'
-import { Table, Divider, Tag, Button, Modal } from 'antd';
+import { Table, Tag, Button, Modal } from 'antd';
 import { inject } from 'mobx-react'
 
 import './index.scss'
 import Service from 'service'
-import { parseQueryParams } from 'utils/tool'
 import LiteForm from 'components/LiteForm'
 
 const columns = [{
