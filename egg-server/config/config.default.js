@@ -7,15 +7,17 @@ module.exports = appInfo => ({
       enable: false
     }
   },
+  middleware: ['auth', 'response'],
   auth: {
     whiteList: [
       '/api/plan-box/oauth/github'
     ]
   },
-  middleware: ['auth'],
-  jwt: {
-    secret: process.env.JWT_SECRET
+  response: {
+    successCode: 0,
+    errorCode: 1
   },
-  successCode: 0,
-  errorCode: 1
+  secret: process.env.JWT_SECRET,
+  client_id: process.env.GITHUB_ID,
+  client_secret: process.env.GITHUB_SECRETID,
 })

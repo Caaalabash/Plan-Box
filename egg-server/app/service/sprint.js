@@ -11,18 +11,9 @@ class SprintService extends require('egg').Service {
   async getSprintByFilter({ status }) {
     let query = status !== 'all' ? { status } : {}
     const result = await this.toPromise(this.SprintModel.find(query))
-    if (!result[1]) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '未查询相应的Sprint',
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: result[1],
-      msg: '',
-    }
+
+    if (!result[1]) return { errorMsg: '未查询相应的Sprint' }
+    return { data: result[1] }
   }
   /**
    * 查询某个Sprint任务周期, 根据_id查询
@@ -32,44 +23,22 @@ class SprintService extends require('egg').Service {
    **/
   async getSprint({_id}) {
     const result = await this.toPromise(this.SprintModel.findById(_id))
-    if(!result[1]) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '查询失败'
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: result[1],
-      msg: '查询成功'
-    }
+
+    if(!result[1]) return { errorMsg: '查询失败' }
+    return { data: result[1], msg: '查询成功' }
   }
   /**
    * 创建新的Sprint任务周期, 需要检查一下title字段是否已经存在
    */
   async setSprint(data) {
     const checkResult = await this.toPromise(this.SprintModel.findOne({title: data.title}))
-    if (checkResult[1]) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '当前Sprint已存在'
-      }
-    }
+
+    if (checkResult[1]) return { errorMsg: '当前Sprint已存在' }
+
     const createResult = await this.toPromise(this.SprintModel.create(data))
-    if (!createResult[1]) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '创建失败'
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: createResult[1],
-      msg: '创建成功'
-    }
+
+    if (!createResult[1]) return { errorMsg: '创建失败' }
+    return { data: createResult[1], msg: '创建成功' }
   }
   /**
    * 更新某个Sprint任务周期, 根据_id来更新
@@ -83,18 +52,9 @@ class SprintService extends require('egg').Service {
       'upsert': true,
     }
     const updateResult = await this.toPromise(this.SprintModel.findByIdAndUpdate(_id, update, options))
-    if(!updateResult[1]) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '更新失败'
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: updateResult[1],
-      msg: '更新成功'
-    }
+
+    if(!updateResult[1]) return { errorMsg: '更新失败' }
+    return { data: updateResult[1], msg: '更新成功' }
   }
   /**
    * 删除某个Sprint任务周期, 根据_id来删除
@@ -107,18 +67,8 @@ class SprintService extends require('egg').Service {
     const deleteSprint = this.toPromise(this.SprintModel.findByIdAndRemove(_id))
     const [[err1, ], [err2,]] = await Promise.all([deleteTask, deleteSprint])
 
-    if(err1 || err2) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '删除失败'
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: {},
-      msg: '删除成功'
-    }
+    if(err1 || err2) return { errorMsg: '删除失败' }
+    return { msg: '删除成功' }
   }
 }
 

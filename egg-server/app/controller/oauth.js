@@ -3,7 +3,7 @@ class OauthController extends require('egg').Controller {
     const resp = await ctx.service.oauth.getGithubInfo(ctx.request.body)
 
     if (!resp.errno) {
-      const token = this.app.jwt.sign({ userId: resp.data._id }, this.config.jwt.secret, { expiresIn: '1d' })
+      const token = this.app.jwt.sign({ userId: resp.data._id }, this.config.secret, { expiresIn: '1d' })
       ctx.cookies.set('__token', token, { signed: false, maxAge: 1000 * 3600 * 24, path: '/' })
     }
     ctx.body = resp

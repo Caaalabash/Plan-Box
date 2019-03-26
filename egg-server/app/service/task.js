@@ -10,18 +10,9 @@ class TaskService extends require('egg').Service {
    */
   async getTask({ id }) {
     const [e, result] = await this.toPromise(this.TaskModel.find({ relateSprint: id }))
-    if(e || !result) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '查询失败'
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: result,
-      msg: ''
-    }
+
+    if(e || !result) return { errorMsg: '查询失败' }
+    return { data: result }
   }
   /**
    * 创建新的 Task, 创建前检查对应 Sprint 下是否存在相同 title
@@ -29,29 +20,14 @@ class TaskService extends require('egg').Service {
    */
   async setTask({relateSprint, ...data}) {
     const [, sprintDoc] = await this.toPromise(this.SprintModel.findById(relateSprint))
-    if (!sprintDoc) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '所属Sprint已不存在'
-      }
-    }
+    if (!sprintDoc) return { errorMsg: '所属Sprint已不存在' }
+
     const [, isExist] = await this.toPromise(this.TaskModel.findOne({ relateSprint, title: data.title}))
-    if (isExist) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '当前Task已存在'
-      }
-    }
+    if (isExist) return { errorMsg: '当前Task已存在' }
+
     const [, taskDoc] = await this.toPromise(this.TaskModel.create({relateSprint, ...data}))
-    if (!taskDoc) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '创建失败'
-      }
-    }
+    if (!taskDoc) return { errorMsg: '创建失败' }
+
     const [updateErr, ] = await this.toPromise(this.SprintModel.update({_id: relateSprint}, {
       $push: {
         task: {
@@ -62,13 +38,7 @@ class TaskService extends require('egg').Service {
         },
       }
     }))
-    if (!updateErr) {
-      return {
-        errno: this.config.successCode,
-        data: taskDoc,
-        msg: '创建成功'
-      }
-    }
+    if (!updateErr) return { data: taskDoc, msg: '创建成功' }
   }
   /**
    * 更新某个Task, 根据_id来更新
@@ -93,18 +63,8 @@ class TaskService extends require('egg').Service {
         }
       }))
     }
-    if(!doc) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '更新失败'
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: doc,
-      msg: '更新成功'
-    }
+    if(!doc) return { errorMsg: '更新失败' }
+    return { data: doc, msg: '更新成功' }
   }
   /**
    * 删除某个Task, 根据_id来删除
@@ -121,18 +81,9 @@ class TaskService extends require('egg').Service {
       }
     }))
     const [taskResult, sprintResult] = await Promise.all([deleteTaskPromise, deleteSprintPromise])
-    if(taskResult[0] || sprintResult[0]) {
-      return {
-        errno: this.config.errorCode,
-        data: {},
-        msg: '删除失败'
-      }
-    }
-    return {
-      errno: this.config.successCode,
-      data: {},
-      msg: '删除成功'
-    }
+
+    if(taskResult[0] || sprintResult[0]) return { errorMsg: '删除失败' }
+    return { msg: '删除成功' }
   }
   async updateSequence({ sequence }) {
     const updateList = sequence.map((id, index) => {
@@ -141,11 +92,7 @@ class TaskService extends require('egg').Service {
       )
     })
     await Promise.all(updateList)
-    return {
-      errno: this.config.successCode,
-      data: {},
-      msg: ''
-    }
+    return { msg: '' }
   }
 }
 
