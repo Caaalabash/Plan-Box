@@ -30,9 +30,9 @@ export default class Lane extends React.Component {
   componentDidMount() {
     const { relateId, open } = parseQueryParams(this.props.history.location.search)
 
-    Service.getTaskBySprintId(relateId).then(tasks => {
+    Service.getTaskBySprintId(relateId).then(resp => {
       this.setState({
-        taskList: tasks,
+        taskList: resp.data,
         open,
         relateId,
       })

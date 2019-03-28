@@ -14,7 +14,7 @@ import Service from 'service'
 
 const { Header, Content, Sider } = Layout
 
-@inject('store')
+@inject('userStore')
 @observer
 class AppLayout extends Component {
 
@@ -28,12 +28,12 @@ class AppLayout extends Component {
 
   handleLogout = async () => {
     await Service.logout()
-    this.props.store.userStore.resetUser()
+    this.props.userStore.resetUser()
   }
 
   render() {
     const { oauthModalVisible } = this.state
-    const { userStore } = this.props.store
+    const { userStore } = this.props
 
     const menu = (
       <Menu>

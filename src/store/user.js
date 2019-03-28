@@ -4,6 +4,10 @@ class UserStore {
 
   @observable user = null
 
+  @computed get isLogin() {
+    return !!this.user
+  }
+
   @action
   setUser(userData) {
     this.user = userData
@@ -14,16 +18,7 @@ class UserStore {
     this.user = null
     localStorage.removeItem('plan-box-userinfo')
   }
-  @computed get isLogin() {
-    return !!this.user
-  }
 
 }
 
-class Store {
-  constructor() {
-    this.userStore = new UserStore()
-  }
-}
-
-export default new Store()
+export default new UserStore()

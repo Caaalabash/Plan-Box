@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react'
 
 import Service from 'service'
 
-@inject('store')
+@inject('userStore')
 @observer
 class Oauth extends Component {
 
@@ -16,11 +16,11 @@ class Oauth extends Component {
 
   componentDidMount() {
     Service.getUserInfo().then(res => {
-      if (!res.errno) this.props.store.userStore.setUser(res.data)
+      if (!res.errno) this.props.userStore.setUser(res.data)
     })
     window.addEventListener('storage', event => {
       if (event.key === 'plan-box-userinfo' && event.newValue) {
-        this.props.store.userStore.setUser(JSON.parse(event.newValue))
+        this.props.userStore.setUser(JSON.parse(event.newValue))
         this.props.toggleModal(false)
         localStorage.removeItem('plan-box-userinfo')
       }
