@@ -1,3 +1,13 @@
+.lane-layout {
+  position: relative;
+  &-button {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+  &-collapse {
+    margin-bottom: 10px;
+  }
+ }
 .task-header {
   display: flex;
   .task-progress {

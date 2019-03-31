@@ -50,7 +50,7 @@ const columns = [{
   },
 }]
 
-@inject('store')
+@inject('userStore')
 class WorkOrder extends React.Component {
   userId = null
   isAdmin = true
@@ -122,7 +122,7 @@ class WorkOrder extends React.Component {
   }
 
   componentDidMount() {
-    const userStore = this.props.store.userStore
+    const userStore = this.props.userStore
     if (!userStore.isLogin) return
 
     this.userId = userStore.user._id
