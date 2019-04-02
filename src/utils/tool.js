@@ -1,3 +1,4 @@
+import { SEQUENCE_DIFF } from './constant'
 /**
  * 限制卡片的拖动范围
  * @param {node} key - 被拖拽的节点
@@ -35,12 +36,29 @@ export function translatePriority(value) {
  * @description 创建子任务时, 默认排序值为0
  */
 export function setSequence(tasks) {
-  return tasks.map((task, index) => {
-    if (task.sequence === 0) {
-      task.sequence = ++index
-    }
-    return task
-  }).sort((last, next) => last.sequence - next.sequence)
+  return tasks.sort((last, next) => last.sequence - next.sequence)
+}
+/**
+ * 处理DOM修改后的sequence值
+ * @param {node} drag - 将插入的元素
+ * @param {boolean} sequence - 插入方向 true前 false后
+ * @description
+ *   首: 旧首 - SEQUENCE_DIFF
+ *   中部: (前 + 后) / 2
+ *   尾: 旧尾 + SEQUENCE_DIFF
+ * @returns {number} - drag元素新的sequence
+ */
+export function calculateSequence(drag, sequence) {
+  const prev = +getDataset(drag.previousSibling, 'sequence')
+  const next = +getDataset(drag.nextSibling, 'sequence')
+
+  let result = 0
+  if (sequence) {
+    result =  prev ? (prev + next) / 2 : next - SEQUENCE_DIFF
+  } else {
+    result =  next ? (prev + next) / 2 : prev + SEQUENCE_DIFF
+  }
+  return +result.toFixed(10)
 }
 /**
  * 给对应节点添加对应的类名

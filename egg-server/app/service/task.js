@@ -85,13 +85,10 @@ class TaskService extends require('egg').Service {
     if(taskResult[0] || sprintResult[0]) return { errorMsg: '删除失败' }
     return { msg: '删除成功' }
   }
-  async updateSequence({ sequence }) {
-    const updateList = sequence.map((id, index) => {
-      return this.toPromise(
-        this.TaskModel.updateOne({ _id: id }, { sequence: index + 1 })
-      )
-    })
-    await Promise.all(updateList)
+  async updateSequence({ id, sequence }) {
+    const [e, ] = await this.toPromise(this.TaskModel.updateOne({ _id: id }, { sequence }))
+
+    if (e) return { errorMsg: '' }
     return { msg: '' }
   }
 }

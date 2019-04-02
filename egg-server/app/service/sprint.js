@@ -62,10 +62,10 @@ class SprintService extends require('egg').Service {
    *
    * @description findByIdAndRemove(id)相当于findOneAndRemove({_id: id})
    */
-  async deleteSprint({_id}) {
-    const deleteTask = this.toPromise(this.TaskModel.deleteMany({ relateSprint: _id }))
-    const deleteSprint = this.toPromise(this.SprintModel.findByIdAndRemove(_id))
-    const [[err1, ], [err2,]] = await Promise.all([deleteTask, deleteSprint])
+  async deleteSprint({ id }) {
+    const deleteTask = this.toPromise(this.TaskModel.deleteMany({ relateSprint: id }))
+    const deleteSprint = this.toPromise(this.SprintModel.findByIdAndRemove(id))
+    const [[err1, ], [err2, ]] = await Promise.all([deleteTask, deleteSprint])
 
     if(err1 || err2) return { errorMsg: '删除失败' }
     return { msg: '删除成功' }

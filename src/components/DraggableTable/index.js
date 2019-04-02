@@ -2,7 +2,14 @@ import React from 'react'
 import { withRouter } from "react-router-dom"
 
 import emitter from 'utils/events'
-import { hasClass, addClass, removeClass, getParentDom, getDataset } from 'utils/tool'
+import {
+  hasClass,
+  addClass,
+  removeClass,
+  getParentDom,
+  getDataset,
+  calculateSequence
+} from 'utils/tool'
 import './index.scss'
 
 const INSERT_BEFORE = 1
@@ -59,14 +66,13 @@ class DraggableTable extends React.Component {
     removeClass(this.over, 'drag-up', 'drag-down')
     if (this.insertLocation === INSERT_BEFORE) this.tbodyRef.insertBefore(this.dragged, this.over)
     if (this.insertLocation === INSERT_AFTER) this.tbodyRef.insertBefore(this.dragged, this.over.nextSibling)
-    this.sort = []
-    Array.prototype.map.call(this.tbodyRef.children, (node, index) => {
-      node.dataset.sequence = index + 1
-      this.sort.push(getDataset(node, 'id'))
-    })
+
+    const newSeq = calculateSequence(this.dragged, this.insertLocation === INSERT_BEFORE)
+    const id = getDataset(this.dragged, 'id')
+    this.dragged.dataset.sequence = newSeq
     this.over = null
     this.dragged = null
-    this.props.onDrop(this.sort)
+    this.props.onDrop(id, newSeq)
   }
   // 打开右键菜单
   openContextMenu = (e, _id, relateId) => {

@@ -39,7 +39,7 @@ class Sprint extends Component {
 
   formContent = []
   operate = 'create'
-  operateSprint = null
+  operateSprint = {}
   state = {
     modalVisible: false,
     filter: 'all'
@@ -59,7 +59,7 @@ class Sprint extends Component {
 
   handleCollapseChange = async ([sprintId]) => sprintId && this.props.sprintStore.getTask(sprintId)
 
-  onDrop = sequence => Service.updateSequence({ sequence })
+  onDrop = (id, sequence) => Service.updateSequence({ id, sequence })
 
   onDeleteTask = (_id, relateId) => this.props.sprintStore.deleteTask(_id, relateId)
 

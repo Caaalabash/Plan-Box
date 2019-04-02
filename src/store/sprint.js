@@ -2,6 +2,7 @@ import { observable, action, computed } from 'mobx'
 
 import Service from '../service'
 import { setSequence } from 'utils/tool'
+import { SEQUENCE_DEFAULT, SEQUENCE_DIFF } from 'utils/constant'
 
 /**
  * 基于ES6 proxy 建议尽情修改数据
@@ -50,7 +51,7 @@ class SprintStore {
   @action
   async addSprint(newSprint) {
     const resp = await Service.setSprint(newSprint)
-    if (!resp.errno) this.sprintList.push(newSprint)
+    if (!resp.errno) this.sprintList.push(resp.data)
   }
   /**
    * delete sprint
@@ -92,14 +93,14 @@ class SprintStore {
    */
   @action
   async addTask(relateSprint, payload) {
-    const resp = await Service.setTask({ relateSprint, ...payload })
+    const index = this.sprintList.findIndex(item => item._id === relateSprint)
+    const taskList = this.sprintList[index].task || []
+    const seq = taskList.length ? taskList[taskList.length - 1].sequence + SEQUENCE_DIFF : SEQUENCE_DEFAULT
+    const resp = await Service.setTask({ relateSprint, ...payload, sequence: seq })
+
     if (!resp.errno) {
-      const index = this.sprintList.findIndex(item => item._id === relateSprint)
-      if (index > -1) {
-        const nextSequence = this.sprintList[index].task.length + 1
-        this.sprintList[index].task.push({...resp.data, sequence: nextSequence })
-        this.sprintList[index].storyPoint += resp.data.storyPoint
-      }
+      this.sprintList[index].task.push(resp.data)
+      this.sprintList[index].storyPoint += resp.data.storyPoint
     }
   }
   /**
@@ -112,8 +113,8 @@ class SprintStore {
       const sprintIndex = this.sprintList.findIndex(sprint => sprint._id === relateId)
       const taskIndex = this.sprintList[sprintIndex].task.findIndex(task => task._id === _id)
       if (sprintIndex > -1 && taskIndex > -1) {
-        this.sprintList[sprintIndex].task.splice(taskIndex, 1)
-        this.sprintList[sprintIndex].storyPoint -= this.sprintList[sprintIndex].task[taskIndex].storyPoint
+        const deletedTask = this.sprintList[sprintIndex].task.splice(taskIndex, 1)
+        this.sprintList[sprintIndex].storyPoint -= deletedTask.storyPoint
       }
     }
   }
