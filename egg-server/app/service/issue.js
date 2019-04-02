@@ -9,7 +9,7 @@ class IssueService extends require('egg').Service {
    */
   async setIssue({ taskId, ...data }) {
     const [e, doc] = await this.toPromise(
-      this.TaskModel.updateOne({ _id: taskId }, { $push: { issue: data } })
+      this.TaskModel.findOneAndUpdate({ _id: taskId }, { $push: { issue: data } }, { 'new': true })
     )
 
     if (e) return { errorMsg: '创建失败' }
@@ -20,7 +20,7 @@ class IssueService extends require('egg').Service {
    */
   async deleteIssue({ taskId, _id }) {
     const [e, ] = await this.toPromise(
-      this.TaskModel.updateOne({_id: taskId}, { $pull: { issue: { _id } } })
+      this.TaskModel.findOneAndUpdate({_id: taskId}, { $pull: { issue: { _id } } })
     )
 
     if (e) return { errorMsg: '删除失败' }
@@ -31,7 +31,7 @@ class IssueService extends require('egg').Service {
    */
   async updateIssueStatus({ taskId, issueId, status }) {
     const [e, ] = await this.toPromise(
-      this.TaskModel.updateOne({ _id: taskId, 'issue._id': issueId }, { $set: { 'issue.$.status': status } })
+      this.TaskModel.findOneAndUpdate({ _id: taskId, 'issue._id': issueId }, { $set: { 'issue.$.status': status } })
     )
     if (e) return { errorMsg: '修改失败' }
     return { msg: '修改成功' }

@@ -57,7 +57,7 @@ class Sprint extends Component {
 
   toggleModal = status => this.setState({ modalVisible: status })
 
-  handleCollapseChange = async ([sprintId]) => this.props.sprintStore.getTask(sprintId)
+  handleCollapseChange = async ([sprintId]) => sprintId && this.props.sprintStore.getTask(sprintId)
 
   onDrop = sequence => Service.updateSequence({ sequence })
 

@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, computed } from 'mobx'
 
 import Service from '../service'
 import { setSequence } from 'utils/tool'
@@ -8,8 +8,34 @@ import { setSequence } from 'utils/tool'
  */
 
 class SprintStore {
+  /**
+   * 全局维护一个sprintList
+   * 在初始状态, 只获取sprint以及task(简略信息)
+   * 展开折叠面板后, 获取task以及issue详细信息
+   */
   @observable sprintList = []
-
+  /**
+   * 当前选中的Spring的_id
+   */
+  @observable chooseSprint = null
+  /**
+   * 获得当前选中的Sprint的数据
+   */
+  @computed get currentSprint() {
+    return this.sprintList.find(sprint => sprint._id === this.chooseSprint) ||
+      this.sprintList[0] ||
+      {}
+  }
+  @computed get currentSprintIndex() {
+    return this.sprintList.findIndex(sprint => sprint._id === this.chooseSprint)
+  }
+  /**
+   * 设置当前选中的Spring
+   */
+  @action
+  setChooseSprint(sprint) {
+    this.chooseSprint = sprint
+  }
   /**
    * get all sprint
    */
@@ -103,7 +129,28 @@ class SprintStore {
         this.sprintList[index].task = setSequence(resp.data)
       }
     }
-
+  }
+  /**
+   * create Issue, Issue相关的修改, chooseSprint都是固定的
+   */
+  @action
+  async createIssue(taskId, payload) {
+    const resp = await Service.setIssue({ taskId, ...payload })
+    const taskIndex = this.currentSprint.task.findIndex(task => task._id === taskId)
+    if (!resp.errno && taskIndex > -1) {
+      this.sprintList[this.currentSprintIndex].task[taskIndex] = resp.data
+    }
+  }
+  /**
+   * set Issue
+   */
+  @action
+  async setIssueStatus(payload) {
+    Service.setIssueStatus({
+      taskId: payload.taskId,
+      issueId: payload.issueId,
+      status: payload.status
+    })
   }
 }
 
