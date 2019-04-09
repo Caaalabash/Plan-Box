@@ -8,6 +8,7 @@ import './index.scss'
 import Sprint from 'pages/Sprint'
 import Lane from 'pages/Lane'
 import WorkOrder from 'pages/WorkOrder'
+import Team from 'pages/Team'
 import RightMenu from 'components/RightMenu'
 import Oauth from 'components/Oauth'
 import Service from 'service'
@@ -72,6 +73,10 @@ class AppLayout extends Component {
                 <Icon type="form" />
                 <Link to="/workorder" style={{ display: 'inline-block' }}>WorkOrder</Link>
               </Menu.Item>
+              <Menu.Item key="4">
+                <Icon type="team" />
+                <Link to="/team" style={{ display: 'inline-block' }}>Team</Link>
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
@@ -79,6 +84,7 @@ class AppLayout extends Component {
               <Route path="/sprint" component={Sprint} />
               <Route path="/lane" component={Lane} />
               <Route path="/workorder" component={WorkOrder} />
+              <Route path="/team" component={Team} />
             </Content>
           </Layout>
         </Layout>

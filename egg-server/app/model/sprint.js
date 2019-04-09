@@ -1,6 +1,7 @@
 /**
  * Sprint排期表
  *
+ * relateTeam: 所属团队
  * title: 开发周期主要任务
  * desc: 开发周期描述
  * startTime: 开发周期开始时间(时间戳)
@@ -25,6 +26,7 @@ module.exports = app => {
   const ObjectId = mongoose.Types.ObjectId
 
   const sprintSchema = new Schema({
+    relateTeam: String,
     title: String,
     desc: String,
     startTime: String,
