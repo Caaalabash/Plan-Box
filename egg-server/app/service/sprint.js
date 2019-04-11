@@ -6,68 +6,75 @@ class SprintService extends require('egg').Service {
     this.TaskModel = ctx.model.Task
   }
   /**
-   * 查找某个范围内的所有Sprint任务周期, 仅能根据Sprint状态查询
+   * 查找多个 Sprint
+   * @param {string} status 筛选条件
+   * @return {object} 所有Sprint信息
    */
   async getSprintByFilter({ status }) {
-    let query = status !== 'all' ? { status } : {}
-    const result = await this.toPromise(this.SprintModel.find(query))
+    const query = status !== 'all' ? { status } : {}
+    const result = await this.toPromise(
+      this.SprintModel.find(query)
+    )
 
-    if (!result[1]) return { errorMsg: '未查询相应的Sprint' }
-    return { data: result[1] }
+    if (!result) return { errorMsg: '未查询相应的Sprint' }
+    return { data: result }
   }
   /**
-   * 查询某个Sprint任务周期, 根据_id查询
-   *
-   * @description 通过_id查找单个文档时, 使用findById而不是findOne({_id: id})
-   * @description 因为findOne({_id: undefined})返回任意文档而findById(undefined)会被转换为findOne({_id: null})
-   **/
-  async getSprint({_id}) {
-    const result = await this.toPromise(this.SprintModel.findById(_id))
+   * 查询某个 Sprint
+   * @param {string} _id SprintId
+   * @return {object} Sprint信息
+   */
+  async getSprint({ _id }) {
+    const result = await this.toPromise(
+      this.SprintModel.findById(_id)
+    )
 
-    if(!result[1]) return { errorMsg: '查询失败' }
-    return { data: result[1], msg: '查询成功' }
+    return { data: result, msg: '查询成功' }
   }
   /**
-   * 创建新的Sprint任务周期, 需要检查一下title字段是否已经存在
+   * 创建 Sprint
+   * @param {object} data Sprint载体
+   * @return {object} Sprint信息
    */
   async setSprint(data) {
-    const checkResult = await this.toPromise(this.SprintModel.findOne({title: data.title}))
+    const checkResult = await this.toPromise(
+      this.SprintModel.findOne({ title: data.title })
+    )
+    if (checkResult) return { errorMsg: '当前Sprint已存在' }
 
-    if (checkResult[1]) return { errorMsg: '当前Sprint已存在' }
-
-    const createResult = await this.toPromise(this.SprintModel.create(data))
-
-    if (!createResult[1]) return { errorMsg: '创建失败' }
-    return { data: createResult[1], msg: '创建成功' }
+    const createResult = await this.toPromise(
+      this.SprintModel.create(data)
+    )
+    return { data: createResult, msg: '创建成功' }
   }
   /**
-   * 更新某个Sprint任务周期, 根据_id来更新
-   *
-   * @description findByIdAndUpdate(id)相当于findOneAndUpdate({_id: id})
-   * @description 默认情况下返回原始文档, 如果文档不存在也不会创建它
+   * 更新 Sprint 信息
+   * @param {string} _id SprintId
+   * @param {object} update 更新载体
+   * @return {object} 更新后文档
    */
-  async updateSprint({_id, ...update}) {
-    const options = {
-      'new': true,
-      'upsert': true,
-    }
-    const updateResult = await this.toPromise(this.SprintModel.findByIdAndUpdate(_id, update, options))
+  async updateSprint({ _id, ...update }) {
+    const options = { 'new': true, 'upsert': true }
+    const updateResult = await this.toPromise(
+      this.SprintModel.findByIdAndUpdate(_id, update, options)
+    )
 
-    if(!updateResult[1]) return { errorMsg: '更新失败' }
-    return { data: updateResult[1], msg: '更新成功' }
+    return { data: updateResult, msg: '更新成功' }
   }
   /**
-   * 删除某个Sprint任务周期, 根据_id来删除
-   * 同时需要删除task表中对应任务周期的子任务
-   *
-   * @description findByIdAndRemove(id)相当于findOneAndRemove({_id: id})
+   * 删除 Sprint
+   * @param {string} _id SprintId
+   * @return {object} success response
    */
   async deleteSprint({ id }) {
-    const deleteTask = this.toPromise(this.TaskModel.deleteMany({ relateSprint: id }))
-    const deleteSprint = this.toPromise(this.SprintModel.findByIdAndRemove(id))
-    const [[err1, ], [err2, ]] = await Promise.all([deleteTask, deleteSprint])
+    const deleteTask = this.toPromise(
+      this.TaskModel.deleteMany({ relateSprint: id })
+    )
+    const deleteSprint = this.toPromise(
+      this.SprintModel.findByIdAndRemove(id)
+    )
+    await Promise.all([deleteTask, deleteSprint])
 
-    if(err1 || err2) return { errorMsg: '删除失败' }
     return { msg: '删除成功' }
   }
 }

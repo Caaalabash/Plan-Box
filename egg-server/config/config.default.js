@@ -13,6 +13,14 @@ module.exports = appInfo => ({
       '/api/plan-box/oauth/github'
     ]
   },
+  onerror: {
+    all(err, ctx) {
+      ctx.body = {
+        errno: 1,
+        msg: '服务器错误'
+      }
+    }
+  },
   response: {
     successCode: 0,
     errorCode: 1

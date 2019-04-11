@@ -5,7 +5,7 @@ class TeamController extends require('egg').Controller {
   }
 
   async createTeam(ctx) {
-    ctx.body = await ctx.service.team.createTeam(ctx.body)
+    ctx.body = await ctx.service.team.createTeam(ctx.request.body)
   }
 
 }

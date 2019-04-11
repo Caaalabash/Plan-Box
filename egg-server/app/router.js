@@ -7,4 +7,4 @@ module.exports = app => {
   require('./router/oauth')(app)
   require('./router/workorder')(app)
   require('./router/team')(app)
-};
+}

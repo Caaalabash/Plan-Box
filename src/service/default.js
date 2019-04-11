@@ -20,7 +20,7 @@ export default class BaseModule {
         }
       }
     }, error => {
-      message.error('响应出错')
+      message.error('Server Error')
       return Promise.reject(error)
     })
   }

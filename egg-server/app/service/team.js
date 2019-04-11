@@ -5,18 +5,25 @@ class TeamService extends require('egg').Service {
     this.TeamModel = ctx.model.Team
   }
   /**
-   * 根据 Team _id 获得对应团队信息
+   * 获得 Team 信息
+   * @param {string} teamId 团队Id
+   * @return {object} 团队信息
    */
-  async getTeam({ id }) {
-    const [e, result] = await this.toPromise( this.TeamModel.findOne({ _id: id }) )
+  async getTeam({ teamId }) {
+    const result = await this.toPromise( this.TeamModel.findOne({ _id: teamId }) )
 
-    if(e || !result) return { errorMsg: '' }
     return { data: result }
   }
+  /**
+   * 创建 Team
+   * @param {string} name 团队名称
+   * @param {object} owner 所有者信息
+   * @return {object} 团队信息
+   */
   async createTeam({ name, owner }) {
-    const [e, result] = await this.toPromise( this.TeamModel.create({ name, owner }) )
+    const result = await this.toPromise( this.TeamModel.create({ name, owner }) )
+    await this.service.oauth.setTeamInfo(owner[0].userId, result._id, 'owner')
 
-    if(e || !result) return { errorMsg: '创建失败' }
     return { data: result, msg: '创建成功' }
   }
 }
