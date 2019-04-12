@@ -1,6 +1,6 @@
 class TaskController extends require('egg').Controller {
   async getTask(ctx) {
-    ctx.body = await ctx.service.task.getTask(ctx.query)
+    ctx.body = await ctx.service.task.getTask(ctx.request.body)
   }
 
   async setTask(ctx) {
@@ -12,7 +12,7 @@ class TaskController extends require('egg').Controller {
   }
 
   async deleteTask(ctx) {
-    ctx.body = await ctx.service.task.deleteTask(ctx.query)
+    ctx.body = await ctx.service.task.deleteTask(ctx.request.body)
   }
 
   async updateSequence(ctx) {

@@ -33,10 +33,11 @@ class SprintService extends require('egg').Service {
   }
   /**
    * 创建 Sprint
+   * @param {string} userId [useless userId]
    * @param {object} data Sprint载体
    * @return {object} Sprint信息
    */
-  async setSprint(data) {
+  async setSprint({ userId, ...data }) {
     const checkResult = await this.toPromise(
       this.SprintModel.findOne({ title: data.title })
     )
@@ -49,11 +50,12 @@ class SprintService extends require('egg').Service {
   }
   /**
    * 更新 Sprint 信息
+   * @param {string} userId [useless userId]
    * @param {string} _id SprintId
    * @param {object} update 更新载体
    * @return {object} 更新后文档
    */
-  async updateSprint({ _id, ...update }) {
+  async updateSprint({ userId, _id, ...update }) {
     const options = { 'new': true, 'upsert': true }
     const updateResult = await this.toPromise(
       this.SprintModel.findByIdAndUpdate(_id, update, options)

@@ -55,7 +55,7 @@ class OauthService extends require('egg').Service {
     )
   }
   /**
-   * 获取用户TEAM信息 [TEAM SERVICE 使用]
+   * 获取用户TEAM字段信息 [TEAM SERVICE 使用]
    * @param {string} userId 用户Id
    * @return {object} team 用户TEAM信息
    */
@@ -65,6 +65,39 @@ class OauthService extends require('egg').Service {
     )
 
     return doc.team || {}
+  }
+  /**
+   * 获取所有用户TEAM相关信息 [TEAM SERVICE 使用]
+   * @param {array} memberList 成员Id
+   * @return {array} memberInfo 成员TEAM信息
+   */
+  async getAllMemberInfo(memberList) {
+    const promiseList = memberList.map(id => this.toPromise( this.OauthModel.findOne({ _id: id }) ))
+    const response = await Promise.all(promiseList)
+
+    return response
+      .map(({ _id, name, avatar_url, email, team }) => ({
+        _id,
+        name,
+        avatar_url,
+        email,
+        permission: team.permission
+      }))
+  }
+  /**
+   * 通过正则匹配用户名 [TEAM SERVICE 使用]
+   * @param {RegExp} name 名称的正则表达式
+   * @return {array} 用户信息列表
+   */
+  async matchUser(name) {
+    const doc = await this.OauthModel.find({ name })
+
+    return doc.map(({ _id, email, name, team }) => ({
+      _id,
+      name,
+      email,
+      belong: team.belong
+    })).slice(0, 5)
   }
 }
 

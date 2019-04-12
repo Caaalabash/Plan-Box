@@ -1,10 +1,10 @@
 class SprintController extends require('egg').Controller {
   async getSprintByFilter(ctx) {
-    ctx.body = await ctx.service.sprint.getSprintByFilter(ctx.query)
+    ctx.body = await ctx.service.sprint.getSprintByFilter(ctx.request.body)
   }
 
   async getSprint(ctx) {
-    ctx.body = await ctx.service.sprint.getSprint(ctx.query)
+    ctx.body = await ctx.service.sprint.getSprint(ctx.request.body)
   }
 
   async setSprint(ctx) {
@@ -16,7 +16,7 @@ class SprintController extends require('egg').Controller {
   }
 
   async deleteSprint(ctx) {
-    ctx.body = await ctx.service.sprint.deleteSprint(ctx.query)
+    ctx.body = await ctx.service.sprint.deleteSprint(ctx.request.body)
   }
 }
 

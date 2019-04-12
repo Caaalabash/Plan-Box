@@ -6,4 +6,14 @@ module.exports = {
   to: promise => promise.then(data => data).catch(() => {
     throw new Error('DB_ERROR')
   }),
+  /**
+   * permission-map
+   * @param {string}
+   */
+  permissionMap: {
+    'guest': [],
+    'developer': ['guest'],
+    'master': ['guest', 'developer'],
+    'owner': ['guest', 'developer', 'master']
+  }
 }

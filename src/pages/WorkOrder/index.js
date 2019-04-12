@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Tag, Button, Modal } from 'antd';
+import { Table, Tag, Button, Modal } from 'antd'
 import { inject } from 'mobx-react'
 
 import './index.scss'
@@ -98,7 +98,7 @@ class WorkOrder extends React.Component {
   }
 
   getWorkOrder = async () => {
-    const data = await Service.getWorkOrder({ _id: this.userId, isAdmin: this.isAdmin })
+    const data = await Service.getWorkOrder({ isAdmin: this.isAdmin })
     if (!data.code) {
       this.setState({ tableData: data.data })
     }
@@ -111,7 +111,7 @@ class WorkOrder extends React.Component {
 
     form.validateFields(async (err, value) => {
       if (err) return
-      const create = await Service.setWorkOrder({ userId: this.userId, ...value })
+      const create = await Service.setWorkOrder(value)
       if (!create.code) {
         this.setState({
           tableData: [...this.state.tableData, create.data]

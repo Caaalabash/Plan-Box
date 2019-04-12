@@ -19,11 +19,12 @@ class TaskService extends require('egg').Service {
   }
   /**
    * 创建新的 Task, 创建前检查对应 Sprint 下是否存在相同 title
+   * @param {string} userId [useless userId]
    * @param {string} relateSprint 所属SprintId
    * @param {object} data 子任务payload
    * @return {object} 创建后的task文档
    */
-  async setTask({ relateSprint, ...data }) {
+  async setTask({ userId, relateSprint, ...data }) {
     const isExist = await this.toPromise(
       this.TaskModel.findOne({ relateSprint, title: data.title })
     )
@@ -49,10 +50,11 @@ class TaskService extends require('egg').Service {
   }
   /**
    * 更新 Task
+   * @param {string} userId [useless userId]
    * @param {object} data 更新载体
    * @return {object} 更新后Task文档
    */
-  async updateTask(data) {
+  async updateTask({ userId, ...data }) {
     const options = { 'new': true, 'upsert': true }
     const { _id, ...update } = data
     const shouldUpdateSprint = data.title || (data.team && data.team.rd) || data.storyPoint

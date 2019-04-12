@@ -6,11 +6,12 @@ class IssueService extends require('egg').Service {
   }
   /**
    * 创建 Issue
+   * @param {string} userId [useless userId]
    * @param {string} taskId 所属TaskId
    * @param {object} data Issue内容
    * @return {object} success response
    */
-  async setIssue({ taskId, ...data }) {
+  async setIssue({ userId, taskId, ...data }) {
     const doc = await this.toPromise(
       this.TaskModel.findOneAndUpdate({ _id: taskId }, { $push: { issue: data } }, { 'new': true })
     )

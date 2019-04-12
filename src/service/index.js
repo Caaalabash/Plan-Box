@@ -51,8 +51,8 @@ export default new class apiManager extends BaseModule {
     return this.get('oauth/logout')
   }
   // 工单
-  getWorkOrder({ isAdmin = false, _id }) {
-    return this.get(`workorder?isAdmin=${isAdmin}&userId=${_id}`)
+  getWorkOrder({ isAdmin = false }) {
+    return this.get(`workorder?isAdmin=${isAdmin}`)
   }
   setWorkOrder(data) {
     return this.post('workorder', data)
@@ -62,5 +62,23 @@ export default new class apiManager extends BaseModule {
   }
   deleteWorkOrder(userId, _id) {
     return this.delete(`workorder/${_id}?userId=${userId}`)
+  }
+  /**
+   * Team 模块请求
+   **/
+  getTeam(teamId) {
+    return this.get(`team/${teamId}`)
+  }
+  createTeam(teamName) {
+    return this.post('team', { name: teamName })
+  }
+  inviteUser(inviteUserId) {
+    return this.post('team/member', { inviteUserId })
+  }
+  setPermission(enhanceUserId, permission) {
+    return this.post('team/permission', { enhanceUserId, permission })
+  }
+  matchMember(name) {
+    return this.post('team/autocomplete', { name })
   }
 }()

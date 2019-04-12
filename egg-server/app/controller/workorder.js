@@ -1,6 +1,6 @@
 class WorkOrderController extends require('egg').Controller {
   async getWorkOrder(ctx) {
-    ctx.body = await ctx.service.workorder.getWorkOrder(ctx.query)
+    ctx.body = await ctx.service.workorder.getWorkOrder(ctx.request.body)
   }
 
   async setWorkOrder(ctx) {
@@ -8,7 +8,7 @@ class WorkOrderController extends require('egg').Controller {
   }
 
   async deleteWorkOrder(ctx) {
-    ctx.body = await ctx.service.workorder.deleteWorkOrder({ ...ctx.query, ...ctx.params })
+    ctx.body = await ctx.service.workorder.deleteWorkOrder({ ...ctx.request.body, ...ctx.params })
   }
 
   async updateWorkOrder(ctx) {

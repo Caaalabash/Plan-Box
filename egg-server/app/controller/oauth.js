@@ -9,7 +9,7 @@ class OauthController extends require('egg').Controller {
     ctx.body = resp
   }
   async userInfo(ctx) {
-    ctx.body = await ctx.service.oauth.getUserInfo(ctx.state)
+    ctx.body = await ctx.service.oauth.getUserInfo(ctx.request.body)
   }
   async logout(ctx) {
     ctx.cookies.set('__token', null, { signed: false, maxAge: 1000 * 3600 * 24, path: '/' })

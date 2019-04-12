@@ -33,9 +33,9 @@ class WorkorderService extends require('egg').Service {
    * @param {object} payload 工单载体
    * @return {object} success response
    */
-  async updateWorkOrder({ _id, feedback, status, type, title, content }) {
+  async updateWorkOrder({ userId, feedback, status, type, title, content }) {
     const doc = await this.toPromise(
-      this.TicketModel.findOneAndUpdate({ _id }, { $set: { feedback, status, type, title, content} }, { 'new': true })
+      this.TicketModel.findOneAndUpdate({ _id: userId }, { $set: { feedback, status, type, title, content} }, { 'new': true })
     )
 
     return { msg: '修改成功', data: doc }

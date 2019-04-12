@@ -3,9 +3,7 @@
  *
  * name: 团队名称
  * owner: 团队所有者
- * master: 团队管理者
- * developer: 开发者
- * guest: 访客
+ * member: 团队成员
  * createTime: 创建时间
  */
 module.exports = app => {
@@ -14,10 +12,11 @@ module.exports = app => {
 
   const teamSchema = new Schema({
     name: String,
-    owner: [{ userId: String, name: String }],
-    master: [{ userId: String, name: String }],
-    developer: [{ userId: String, name: String }],
-    guest: [{ userId: String, name: String }],
+    owner: String,
+    member: {
+      type: Array,
+      default: []
+    },
     createTime: { type: Date, default: Date.now },
   }, {
     timestamps: {

@@ -4,7 +4,7 @@
  * 2. 白名单之外的请求地址
  *   2.1 如果没有token
  *   2.2 如果token校验失败, 返回对应的提示信息
- *   2.3 校验成功, 正常请求
+ *   2.3 校验成功, 正常请求, 处理所有参数, 将其挂载到ctx.request.body下
  */
 module.exports = (options, app) => {
   return async function auth(ctx, next) {
@@ -19,7 +19,7 @@ module.exports = (options, app) => {
       } else {
         const userId = verifyToken(app, token)
         if (userId) {
-          ctx.state.userId = userId
+          processParams(ctx, userId)
           await next()
         } else {
           ctx.body = { errno: 1, msg: '您的登录状态已过期，请重新登录' }
@@ -31,7 +31,12 @@ module.exports = (options, app) => {
   }
 }
 
-// 校验token, 返回token中包含的userId信息
+/**
+ * 校验 token
+ * @param {object} app context
+ * @param {string} token 用户token
+ * @return {string|null} 用户Id
+ */
 function verifyToken(app, token) {
   const verify = app.jwt.verify
   const secret = app.config.secret
@@ -44,4 +49,18 @@ function verifyToken(app, token) {
     console.log(err)
   }
   return userId
+}
+/**
+ * 统一处理所有参数 ctx.request.body, ctx.query
+ * @description 无法在中间件中获得ctx.params! (Controller之前)
+ * @param {object} ctx context
+ * @param {string} userId token中携带的userId
+ * @return none
+ */
+function processParams(ctx, userId) {
+  ctx.request.body = {
+    userId,
+    ...ctx.query,
+    ...ctx.request.body
+  }
 }

@@ -8,7 +8,7 @@ class IssueController extends require('egg').Controller {
   }
 
   async deleteIssue(ctx) {
-    ctx.body = await ctx.service.issue.deleteIssue(ctx.query)
+    ctx.body = await ctx.service.issue.deleteIssue(ctx.request.body)
   }
 }
 

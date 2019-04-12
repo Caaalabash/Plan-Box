@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { Form, Input, Radio, Select, DatePicker, InputNumber } from 'antd'
+import {
+  Form,
+  Input,
+  Radio,
+  Select,
+  DatePicker,
+  InputNumber
+} from 'antd'
 
 const FormItem = Form.Item
 const Option = Select.Option
