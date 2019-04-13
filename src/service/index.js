@@ -81,4 +81,7 @@ export default new class apiManager extends BaseModule {
   matchMember(name) {
     return this.post('team/autocomplete', { name })
   }
+  removeMember(memberId) {
+    return this.delete(`team/member/${memberId}`)
+  }
 }()

@@ -17,6 +17,12 @@ class UserStore {
     return !!this.user
   }
   /**
+   * 权限
+   */
+  @computed get permission() {
+    return this.user && this.user.team.permission
+  }
+  /**
    * 设置登录信息, 并获取团队信息
    */
   @action
@@ -37,7 +43,34 @@ class UserStore {
     this.team = null
     localStorage.removeItem('plan-box-userinfo')
   }
-
+  /**
+   * 邀请成员
+   */
+  @action
+  async inviteUser(inviteUserId) {
+    const resp = await Service.inviteUser(inviteUserId)
+    if (!resp.errno) this.team.memberInfo.push(resp.data)
+  }
+  /**
+   * 提升成员权限
+   */
+  async setPermission(enhanceUserId, permission) {
+    const resp = await Service.setPermission(enhanceUserId, permission)
+    if (!resp.errno) {
+      const userIndex = this.team.memberInfo.findIndex(user => user._id === enhanceUserId)
+      this.team.memberInfo[userIndex].permission = permission
+    }
+  }
+  /**
+   * 移除成员
+   */
+  async removeMember(memberId) {
+    const resp = await Service.removeMember(memberId)
+    if (!resp.errno) {
+      const userIndex = this.team.memberInfo.findIndex(user => user._id === memberId)
+      this.team.memberInfo.splice(userIndex, 1)
+    }
+  }
 }
 
 export default new UserStore()

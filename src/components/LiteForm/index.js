@@ -50,7 +50,7 @@ const renderFormItem = (config, getFieldDecorator) => {
 class LiteForm extends Component {
 
   render() {
-    const { formList, form: { getFieldDecorator } } = this.props
+    const { formList = [], form: { getFieldDecorator } } = this.props
 
     return (
       <Form>

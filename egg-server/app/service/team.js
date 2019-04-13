@@ -48,14 +48,15 @@ class TeamService extends require('egg').Service {
     const { permission, belong } = await this.service.oauth.getTeamInfo(userId)
     if (!['master', 'owner'].includes(permission)) return { errorMsg: '权限不足' }
 
-    const [, response] = await Promise.all([
+    await Promise.all([
       this.service.oauth.setTeamInfo(inviteUserId, belong, 'guest'),
       this.toPromise(
         this.TeamModel.findOneAndUpdate({ _id: belong }, { $push: { member: inviteUserId } }, { 'new': true })
       )
     ])
+    const resp = await this.service.oauth.getAllMemberInfo([inviteUserId])
 
-    return { msg: '邀请成功', data: response[1]}
+    return { msg: '邀请成功', data: resp[0] }
   }
   /**
    * 邀请成员 - 自动补全
@@ -88,7 +89,23 @@ class TeamService extends require('egg').Service {
 
     return { msg: '更改成功' }
   }
+  /**
+   * 移除成员, 仅限所有者
+   * @param {string} userId 操作者Id
+   * @param {string} memberId 被移除整者Id
+   * @return {object} success response
+   */
+  async deleteTeamMember({ userId, memberId }) {
+    const { permission, belong } = await this.service.oauth.getTeamInfo(userId)
+    if (permission !== 'owner') return { errorMsg: '权限不足' }
 
+    await Promise.all([
+      this.service.oauth.setTeamInfo(memberId, '', ''),
+      this.toPromise( this.TeamModel.findOneAndUpdate({ _id: belong }, { $pull: { member: memberId } }) )
+    ])
+
+    return { msg: '移除成功' }
+  }
 }
 
 module.exports = TeamService
