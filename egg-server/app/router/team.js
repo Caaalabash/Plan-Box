@@ -7,4 +7,5 @@ module.exports = app => {
   router.delete('/team/member/:memberId', controller.team.deleteTeamMember)
   router.post('/team/permission', controller.team.setPermission)
   router.post('/team/autocomplete', controller.team.autoComplete)
+  router.post('/team/leave', controller.team.leave)
 }

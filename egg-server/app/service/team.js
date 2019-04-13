@@ -106,6 +106,57 @@ class TeamService extends require('egg').Service {
 
     return { msg: '移除成功' }
   }
+  /**
+   * 获得继承人 [TEAM SERVICE 使用]
+   * @param {string} teamId 团队Id
+   * @return {object} heir继承人信息, 团队所有成员信息
+   */
+  async getHeir(teamId) {
+    const result = await this.toPromise( this.TeamModel.findOne({ _id: teamId }) )
+    const memberList = result.member.concat(result.owner)
+    const memberInfo = await this.service.oauth.getAllMemberInfo(memberList)
+
+    return {
+      member: memberList,
+      heir: memberInfo.find(member => member.permission === 'master')
+    }
+  }
+  /**
+   * 离开团队
+   * @description 可能有三种情况
+   *   1. 所有者退出: a) 清理所有者权限 b) 设置继承人权限 c) 调整团队member
+   *   2. 如果没有继承人: a)
+   *   3. 非所有者退出, 直接离开团队
+   * @param {string} userId 操作者Id, token中
+   * @return success response
+   */
+  async leave({ userId }) {
+    const { permission, belong } = await this.service.oauth.getTeamInfo(userId)
+    const { heir, member } = await this.service.team.getHeir(belong)
+    const isOwner = permission === 'owner'
+
+    if (isOwner) {
+      if (heir) {
+        await Promise.all([
+          this.service.oauth.setTeamInfo(userId, '', ''),
+          this.service.oauth.setTeamInfo(heir._id, belong, 'owner'),
+          this.toPromise( this.TeamModel.findOneAndUpdate({ _id: belong }, { $pull: { member: heir._id }, owner: heir._id }) )
+        ])
+      } else {
+        await Promise.all(
+          member
+            .map(memberId => this.service.oauth.setTeamInfo(memberId, '', ''))
+            .concat(this.toPromise( this.TeamModel.findOneAndRemove({ _id: belong }) ))
+        )
+      }
+    } else {
+      await Promise.all([
+        this.service.oauth.setTeamInfo(userId, '', ''),
+        this.toPromise( this.TeamModel.findOneAndUpdate({ _id: belong }, { $pull: { member: userId } }) )
+      ])
+    }
+    return { msg: '退出成功' }
+  }
 }
 
 module.exports = TeamService

@@ -1,5 +1,10 @@
 .team-layout {
   &-operate {
+    display: flex;
     margin-bottom: 20px;
+    .create,
+    .leave {
+      margin-left: auto;
+    }
   }
 }

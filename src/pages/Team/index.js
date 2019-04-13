@@ -16,9 +16,11 @@ import LiteForm from 'components/LiteForm'
 import './index.scss'
 
 const Option = AutoComplete.Option
+const Confirm = Modal.confirm
 const SET_PERMISSION = 'SET_PERMISSION'
 const INVITE_MEMBER = 'INVITE_MEMBER'
 const DELETE_MEMBER = 'DELETE_MEMBER'
+const CREATE_TEAM = 'CREATE_TEAM'
 const columns = [
   {
     title: '用户名',
@@ -108,9 +110,28 @@ class Team extends React.Component {
     this.toggleModalVisible(true)
   }
 
+  createTeam = async () => {
+    this.formContent = createForm
+    this.operate = CREATE_TEAM
+    this.toggleModalVisible(true)
+  }
+
   removeMember = async () => {
     await Promise.all(this.state.selectedRowKeys.map( id => this.props.userStore.removeMember(id) ))
     this.setState({ selectedRowKeys: [] })
+  }
+
+  leaveTeam = async () => {
+    const content = this.props.userStore.permission === 'owner'
+      ? '团队所有者将移交给某位Master，否则团队将直接解散。'
+      : '您将直接退出该团队。'
+    Confirm({
+      title: '确定要退出该TEAM吗？',
+      content,
+      onOk: () => {
+        this.props.userStore.leaveTeam()
+      },
+    })
   }
 
   handleSubmit = async () => {
@@ -119,11 +140,16 @@ class Team extends React.Component {
       await this.props.userStore.inviteUser(this.selectUserId)
       this.toggleModalVisible(false)
     }
-    else if (this.operate === SET_PERMISSION) {
+    else {
       const form = this.formRef.props.form
+
       form.validateFields(async (err, obj) => {
         if (err) return
-        await Promise.all(this.state.selectedRowKeys.map( id => this.props.userStore.setPermission(id, obj.permission) ))
+        if (this.operate === SET_PERMISSION) {
+          await Promise.all(this.state.selectedRowKeys.map( id => this.props.userStore.setPermission(id, obj.permission) ))
+        } else if (this.operate === CREATE_TEAM) {
+          await this.props.userStore.createTeam(obj)
+        }
         this.toggleModalVisible(false)
       })
     }
@@ -140,10 +166,6 @@ class Team extends React.Component {
 
   onSelectChange = selectedRowKeys => this.setState({ selectedRowKeys })
 
-  componentDidMount() {
-
-  }
-
   render() {
     const { modalVisible, selectedRowKeys, autoCompleteData } = this.state
     const { memberInfo = [] } = this.props.userStore.team || {}
@@ -153,7 +175,7 @@ class Team extends React.Component {
       selectedRowKeys,
       onChange: this.onSelectChange,
       getCheckboxProps: record => ({
-        disabled: !PERMISSION_MAP[currentPermission].includes(record.permission),
+        disabled: !(PERMISSION_MAP[currentPermission] || []).includes(record.permission),
       }),
     }
 
@@ -171,11 +193,16 @@ class Team extends React.Component {
     return (
       <div className="team-layout">
         <section className="team-layout-operate">
-          <Button className="add" icon="user-add" onClick={this.inviteUser}>邀请成员</Button>
+          <Button className="add" icon="user-add" disabled={!currentPermission} onClick={this.inviteUser}>邀请成员</Button>
           <Divider type="vertical"/>
           <Button className="delete" icon="delete" disabled={!selectedRowKeys.length} onClick={this.removeMember}>移除成员</Button>
           <Divider type="vertical"/>
           <Button className="add" icon="sort-descending" disabled={!selectedRowKeys.length} onClick={this.setPermission}>设置权限</Button>
+          {
+            currentPermission
+              ? <Button className="leave" icon="logout" onClick={this.leaveTeam}>退出团队</Button>
+              : <Button className="create" icon="form" onClick={this.createTeam}>创建团队</Button>
+          }
         </section>
         <Table rowKey="_id" rowSelection={rowSelection} columns={columns} dataSource={memberInfo}/>
         <Modal

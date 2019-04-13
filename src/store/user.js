@@ -71,6 +71,30 @@ class UserStore {
       this.team.memberInfo.splice(userIndex, 1)
     }
   }
+  /**
+   * 创建团队
+   */
+  async createTeam(payload) {
+    const resp = await Service.createTeam(payload)
+    if (!resp.errno) {
+      const teamResp = await Service.getTeam(resp.data._id)
+      if (!teamResp.errno) {
+        this.team = teamResp.data
+        this.user.team.permission = 'owner'
+        this.user.team.belong = this.team._id
+      }
+    }
+  }
+  /**
+   * 退出团队
+   */
+  async leaveTeam() {
+    const resp = await Service.leaveTeam()
+    if (!resp.errno) {
+      this.team = null
+      this.user.team = {}
+    }
+  }
 }
 
 export default new UserStore()

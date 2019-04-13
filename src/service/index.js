@@ -69,8 +69,8 @@ export default new class apiManager extends BaseModule {
   getTeam(teamId) {
     return this.get(`team/${teamId}`)
   }
-  createTeam(teamName) {
-    return this.post('team', { name: teamName })
+  createTeam(payload) {
+    return this.post('team', payload)
   }
   inviteUser(inviteUserId) {
     return this.post('team/member', { inviteUserId })
@@ -83,5 +83,8 @@ export default new class apiManager extends BaseModule {
   }
   removeMember(memberId) {
     return this.delete(`team/member/${memberId}`)
+  }
+  leaveTeam() {
+    return this.post('team/leave')
   }
 }()

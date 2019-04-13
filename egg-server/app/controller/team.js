@@ -24,6 +24,9 @@ class TeamController extends require('egg').Controller {
     ctx.body = await this.service.team.deleteTeamMember({ ...ctx.request.body, ...ctx.params })
   }
 
+  async leave(ctx) {
+    ctx.body = await this.service.team.leave(ctx.request.body)
+  }
 }
 
 module.exports = TeamController
