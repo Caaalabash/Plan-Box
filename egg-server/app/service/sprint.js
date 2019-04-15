@@ -34,14 +34,14 @@ class SprintService extends require('egg').Service {
    * @return {object} Sprint信息
    */
   async setSprint({ userId, ...data }) {
-    const checkResult = await this.toPromise(
-      this.SprintModel.findOne({ title: data.title })
-    )
+    const { belong } = await this.service.oauth.getTeamInfo(userId)
+    if (!belong) return { errorMsg: '请先创建一个团队' }
+
+    const checkResult = await this.toPromise( this.SprintModel.findOne({ title: data.title }) )
     if (checkResult) return { errorMsg: '当前Sprint已存在' }
 
-    const createResult = await this.toPromise(
-      this.SprintModel.create(data)
-    )
+    data.relateTeam = belong
+    const createResult = await this.toPromise(this.SprintModel.create(data))
     return { data: createResult, msg: '创建成功' }
   }
   /**

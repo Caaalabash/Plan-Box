@@ -31,7 +31,8 @@ class AppLayout extends Component {
 
   render() {
     const { oauthModalVisible } = this.state
-    const { userStore } = this.props
+    const { userStore, history } = this.props
+    const { pathname } = history.location
 
     const menu = (
       <Menu>
@@ -54,23 +55,23 @@ class AppLayout extends Component {
           <Sider width={200} style={{ background: '#fff' }}>
             <Menu
               mode="inline"
-              defaultSelectedKeys={['1']}
+              defaultSelectedKeys={[pathname]}
               defaultOpenKeys={['sub1']}
               style={{ height: '100%', borderRight: 0 }}
             >
-              <Menu.Item key="1">
+              <Menu.Item key="/sprint">
                 <Icon type="calendar" />
                 <Link to="/sprint" style={{ display: 'inline-block' }}>Sprint</Link>
               </Menu.Item>
-              <Menu.Item key="2">
+              <Menu.Item key="/lane">
                 <Icon type="ordered-list" />
                 <Link to="/lane" style={{ display: 'inline-block' }}>Lane</Link>
               </Menu.Item>
-              <Menu.Item key="3">
+              <Menu.Item key="/workorder">
                 <Icon type="form" />
                 <Link to="/workorder" style={{ display: 'inline-block' }}>WorkOrder</Link>
               </Menu.Item>
-              <Menu.Item key="4">
+              <Menu.Item key="/team">
                 <Icon type="team" />
                 <Link to="/team" style={{ display: 'inline-block' }}>Team</Link>
               </Menu.Item>
