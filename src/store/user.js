@@ -23,16 +23,19 @@ class UserStore {
     return this.user && this.user.team.permission
   }
   /**
-   * 设置登录信息, 并获取团队信息
+   * 设置登录信息
    */
   @action
-  async setUser(userData) {
+  setUser(userData) {
     this.user = userData
-    if (this.user.team && this.user.team.belong) {
-      const team = await Service.getTeam(this.user.team.belong)
-      if (!team.errno) this.team = team.data
-    }
-    localStorage.removeItem('plan-box-userinfo')
+    localStorage.removeItem('isLogin')
+  }
+  /**
+   * 设置团队信息
+   */
+  @action
+  setTeam(team) {
+    this.team = team
   }
   /**
    * 清空登录信息
@@ -41,7 +44,7 @@ class UserStore {
   resetUser() {
     this.user = null
     this.team = null
-    localStorage.removeItem('plan-box-userinfo')
+    localStorage.removeItem('isLogin')
   }
   /**
    * 邀请成员

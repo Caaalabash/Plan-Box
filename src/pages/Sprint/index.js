@@ -109,10 +109,6 @@ class Sprint extends Component {
       this.toggleModal(false)
     })
   }
-
-  componentDidMount() {
-    this.props.sprintStore.initSprintList()
-  }
   
   render() {
     const { modalVisible, filter } = this.state

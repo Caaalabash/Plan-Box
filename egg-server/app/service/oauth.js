@@ -32,15 +32,29 @@ class OauthService extends require('egg').Service {
   }
   /**
    * 获取个人信息
+   * @description 如果有team, 在此处获取team信息, 并获取team相关的Sprint信息
    * @param {string} userId 用户Id
-   * @return {object} 用户信息
+   * @return {object} { userInfo, [teamInfo], [sprintInfo] }
    */
   async getUserInfo({ userId }) {
-    const doc = await this.toPromise(
-      this.OauthModel.findById(userId)
-    )
+    const userInfo = await this.toPromise( this.OauthModel.findById(userId) )
+    const teamId = userInfo.team && userInfo.team.belong
 
-    return { data: doc }
+    if (teamId) {
+      const [teamInfo, sprintInfo] = await Promise.all([
+        this.service.team.getTeamInfo(teamId),
+        this.service.sprint.getSprints(teamId)
+      ])
+      return {
+        data: {
+          userInfo,
+          teamInfo,
+          sprintInfo
+        }
+      }
+    }
+
+    return { data: { userInfo } }
   }
   /**
    * 设定团队 [TEAM SERVICE 使用]

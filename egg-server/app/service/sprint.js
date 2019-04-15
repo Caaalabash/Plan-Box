@@ -6,18 +6,14 @@ class SprintService extends require('egg').Service {
     this.TaskModel = ctx.model.Task
   }
   /**
-   * 查找多个 Sprint
-   * @param {string} status 筛选条件
-   * @return {object} 所有Sprint信息
+   * 查找某个团队的所有Sprint [OAUTH SERVICE 使用]
+   * @param {string} teamId 团队Id
+   * @return {array} 所有Sprint数组
    */
-  async getSprintByFilter({ status }) {
-    const query = status !== 'all' ? { status } : {}
-    const result = await this.toPromise(
-      this.SprintModel.find(query)
+  async getSprints(teamId) {
+    return await this.toPromise(
+      this.SprintModel.find({ relateTeam: teamId })
     )
-
-    if (!result) return { errorMsg: '未查询相应的Sprint' }
-    return { data: result }
   }
   /**
    * 查询某个 Sprint

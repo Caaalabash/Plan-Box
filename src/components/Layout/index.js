@@ -5,13 +5,13 @@ import { inject, observer } from 'mobx-react'
 
 import 'antd/dist/antd.less'
 import './index.scss'
+import emitter from 'utils/events'
 import Sprint from 'pages/Sprint'
 import Lane from 'pages/Lane'
 import WorkOrder from 'pages/WorkOrder'
 import Team from 'pages/Team'
 import RightMenu from 'components/RightMenu'
 import Oauth from 'components/Oauth'
-import Service from 'service'
 
 const { Header, Content, Sider } = Layout
 
@@ -27,10 +27,7 @@ class AppLayout extends Component {
     this.setState({ oauthModalVisible: status })
   }
 
-  handleLogout = async () => {
-    await Service.logout()
-    this.props.userStore.resetUser()
-  }
+  handleLogout = () => emitter.emit('logout')
 
   render() {
     const { oauthModalVisible } = this.state

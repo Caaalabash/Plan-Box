@@ -1,7 +1,4 @@
 class SprintController extends require('egg').Controller {
-  async getSprintByFilter(ctx) {
-    ctx.body = await ctx.service.sprint.getSprintByFilter(ctx.request.body)
-  }
 
   async getSprint(ctx) {
     ctx.body = await ctx.service.sprint.getSprint(ctx.request.body)

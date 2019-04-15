@@ -5,9 +5,8 @@ import { setSequence } from 'utils/tool'
 import { SEQUENCE_DEFAULT, SEQUENCE_DIFF } from 'utils/constant'
 
 /**
- * 基于ES6 proxy 建议尽情修改数据
+ * Sprint 模块
  */
-
 class SprintStore {
   /**
    * 全局维护一个sprintList
@@ -38,12 +37,11 @@ class SprintStore {
     this.chooseSprint = sprint
   }
   /**
-   * get all sprint
+   * set sprint
    */
   @action
-  async initSprintList() {
-    const resp = await Service.getSprintByFilter()
-    if (!resp.errno) this.sprintList = resp.data
+  async setSprintList(sprintList) {
+    this.sprintList = sprintList
   }
   /**
    * create sprint

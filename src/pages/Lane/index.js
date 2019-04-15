@@ -56,7 +56,6 @@ class Lane extends React.Component {
 
   initLane = async(sprintId) => {
     const { sprintStore } = this.props
-    if (!sprintStore.sprintList.length) await sprintStore.initSprintList()
     const currentSprintId = sprintId || sprintStore.sprintList[0]._id
 
     sprintStore.setChooseSprint(currentSprintId)
@@ -151,7 +150,7 @@ class Lane extends React.Component {
   componentDidMount() {
     const { relateId, open } = parseQueryParams(this.props.history.location.search)
 
-    this.initLane(relateId)
+    relateId && this.initLane(relateId)
     open && this.setState({ open })
   }
 

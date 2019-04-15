@@ -24,6 +24,23 @@ class TeamService extends require('egg').Service {
     return { data: payload }
   }
   /**
+   * 获得 Team 信息 [OAUTH SERVICE 使用]
+   * @param {string} teamId 团队Id
+   * @return {object} 团队信息
+   */
+  async getTeamInfo(teamId) {
+    const result = await this.toPromise( this.TeamModel.findOne({ _id: teamId }) )
+    const memberList = result.member.concat(result.owner)
+    const memberInfo = await this.service.oauth.getAllMemberInfo(memberList)
+
+    return {
+      _id: result._id,
+      name: result.name,
+      owner: result.owner,
+      memberInfo,
+    }
+  }
+  /**
    * 创建 Team
    * @param {string} name 团队名称
    * @param {string} userId 所有者Id

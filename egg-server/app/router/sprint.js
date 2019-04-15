@@ -5,5 +5,4 @@ module.exports = app => {
   router.post('/sprint', controller.sprint.setSprint)
   router.delete('/sprint', controller.sprint.deleteSprint)
   router.put('/sprint', controller.sprint.updateSprint)
-  router.get('/sprint/filter', controller.sprint.getSprintByFilter)
 }
