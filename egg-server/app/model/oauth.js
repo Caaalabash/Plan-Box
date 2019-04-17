@@ -32,8 +32,8 @@ module.exports = app => {
     createTime: { type: Date, default: Date.now },
     updateTime: { type: Date, default: Date.now },
     team: {
-      belong: String,
-      permission: String,
+      belong: { type: String, default: '' },
+      permission: { type: String, default: '' },
     },
   }, {
     timestamps: {
