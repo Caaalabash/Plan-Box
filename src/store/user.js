@@ -43,7 +43,6 @@ class UserStore {
   @action
   setUser(userData) {
     this.user = userData
-    localStorage.removeItem('isLogin')
   }
   /**
    * 设置团队信息
@@ -59,7 +58,6 @@ class UserStore {
   resetUser() {
     this.user = null
     this.team = null
-    localStorage.removeItem('isLogin')
   }
   /**
    * 邀请成员

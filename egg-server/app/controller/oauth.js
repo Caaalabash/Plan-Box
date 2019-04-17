@@ -1,12 +1,12 @@
 class OauthController extends require('egg').Controller {
   async github(ctx) {
-    const resp = await ctx.service.oauth.getGithubInfo(ctx.request.body)
+    const resp = await ctx.service.oauth.getGithubInfo(ctx.user.accessToken)
 
     if (resp.data && resp.data._id) {
       const token = this.app.jwt.sign({ userId: resp.data._id }, this.config.secret, { expiresIn: '1d' })
       ctx.cookies.set('__token', token, { signed: false, maxAge: 1000 * 3600 * 24, path: '/' })
     }
-    ctx.body = resp
+    ctx.unsafeRedirect(process.env.HOME_PAGE || 'http://localhost:3000/sprint')
   }
   async userInfo(ctx) {
     ctx.body = await ctx.service.oauth.getUserInfo(ctx.request.body)

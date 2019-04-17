@@ -8,7 +8,8 @@
  */
 module.exports = (options, app) => {
   return async function auth(ctx, next) {
-    const url = ctx.request.url
+    // ignore query
+    const url = ctx.request.url.split('?')[0]
     const shouldVerify = !options.whiteList.includes(url)
 
     if (shouldVerify) {

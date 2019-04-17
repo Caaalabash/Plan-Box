@@ -14,7 +14,7 @@ const defaultResponse = {
 module.exports = (options) => {
   return async function processResponse(ctx, next) {
     await next()
-    const { errorMsg } = ctx.body
+    const { errorMsg } = ctx.body || {}
 
     if (typeof errorMsg === 'string') {
       ctx.body = {

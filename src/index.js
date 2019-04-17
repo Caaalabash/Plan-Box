@@ -8,7 +8,6 @@ import './assets/styles/index.css'
 import userStore from './store/user'
 import sprintStore from './store/sprint'
 import Layout from './components/Layout'
-import OAuth from './pages/Oauth'
 import Intro from './pages/Intro'
 // import './registerServiceWorker'
 
@@ -17,7 +16,6 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Intro} />
-        <Route exact path="/oauth/login" component={OAuth} />
         <Route path="/" component={Layout} />
       </Switch>
     </BrowserRouter>

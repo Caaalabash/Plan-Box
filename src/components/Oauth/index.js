@@ -10,14 +10,8 @@ import Service from 'service'
 @observer
 class Oauth extends Component {
 
-  client_id = 'a6ff9b81a63fdfb211e4'
-
   loginThroughGithub = () => {
-    window.open(
-      `https://github.com/login/oauth/authorize?client_id=${this.client_id}&scope=user:email`,
-      '_blank',
-      'width=600,height=400,menubar=no,toolbar=no,location=no'
-    )
+    window.location.href = '/api/plan-box/oauth/github'
   }
 
   init = async() => {
@@ -36,13 +30,6 @@ class Oauth extends Component {
       await Service.logout()
       this.props.userStore.resetUser()
       this.props.sprintStore.setSprintList([])
-    })
-    window.addEventListener('storage', async event => {
-      if (event.key === 'isLogin') {
-        await this.init()
-        this.props.toggleModal(false)
-        localStorage.removeItem('isLogin')
-      }
     })
     this.init()
   }

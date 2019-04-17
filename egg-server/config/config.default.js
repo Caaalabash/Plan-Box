@@ -5,12 +5,18 @@ module.exports = appInfo => ({
   security: {
     csrf: {
       enable: false
-    }
+    },
+    domainWhiteList: [
+      'http://team.calabash.top/',
+      'http://localhost:3000/'
+    ]
   },
   middleware: ['auth', 'response'],
   auth: {
     whiteList: [
-      '/api/plan-box/oauth/github'
+      '/api/plan-box/oauth/github',
+      '/api/plan-box/oauth/github/callback',
+      '/api/plan-box/oauth/github/userInfo'
     ]
   },
   onerror: {
@@ -26,6 +32,9 @@ module.exports = appInfo => ({
     errorCode: 1
   },
   secret: process.env.JWT_SECRET,
-  client_id: process.env.GITHUB_ID,
-  client_secret: process.env.GITHUB_SECRETID,
+  passportGithub: {
+    key: process.env.GITHUB_ID,
+    secret: process.env.GITHUB_SECRETID,
+    callbackURL: process.env.CALLBACK_URL || 'http://localhost:7001/api/plan-box/oauth/github/callback'
+  },
 })
