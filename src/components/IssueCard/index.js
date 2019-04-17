@@ -11,7 +11,8 @@ class IssueCard extends Component {
   render() {
     const { issue, column, belong, onDragStart, onDragEnd } = this.props
     const responsibleInfo = this.props.userStore.teamMember.find(member => member._id === issue.responsible)
-    const issueProgress = '0%'
+    const issueProgress = Math.round(issue.usedTime / issue.time * 100) + '%'
+    const remain = issue.time - issue.usedTime
 
     return (
       <div
@@ -24,17 +25,17 @@ class IssueCard extends Component {
         draggable
       >
         <div className="issue-inner-content">
-          <span className="issue-title">{issue.title}</span>
-          <span className="issue-desc">{issue.desc}</span>
+          <span className="issue-title">{ issue.title }</span>
+          <span className="issue-desc">{ issue.desc }</span>
           <span className="issue-owner">{ responsibleInfo ? responsibleInfo.name : '[该成员已不在团队内]' }</span>
-          <span className="issue-progress">{issueProgress}</span>
+          <span className="issue-progress">{ issueProgress }</span>
         </div>
         {
           responsibleInfo
             ? <img src={responsibleInfo.avatar_url} alt="经办人" className="issue-avatar"/>
             : <Icon type="user-delete" title="该用户已不在当前团队" className="issue-avatar"/>
         }
-        <span className="issue-total">{issue.time}</span>
+        <span className="issue-total">{ remain }h</span>
       </div>
     )
   }

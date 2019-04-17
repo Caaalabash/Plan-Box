@@ -111,7 +111,7 @@ class SprintStore {
       const sprintIndex = this.sprintList.findIndex(sprint => sprint._id === relateId)
       const taskIndex = this.sprintList[sprintIndex].task.findIndex(task => task._id === _id)
       if (sprintIndex > -1 && taskIndex > -1) {
-        const deletedTask = this.sprintList[sprintIndex].task.splice(taskIndex, 1)
+        const deletedTask = this.sprintList[sprintIndex].task.splice(taskIndex, 1)[0]
         this.sprintList[sprintIndex].storyPoint -= deletedTask.storyPoint
       }
     }
