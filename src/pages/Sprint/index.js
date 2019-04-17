@@ -8,7 +8,7 @@ import LiteForm from 'components/LiteForm'
 import DraggableTable from 'components/DraggableTable'
 import Empty from 'components/Empty'
 
-import { createSprintFormConfig, taskFormConfig } from 'assets/config/form'
+import { createSprintForm, createTaskForm } from 'assets/config/form'
 import { translatePriority } from 'utils/tool'
 import './index.scss'
 
@@ -34,6 +34,7 @@ const processPayload = formData =>
   }, { team: {} })
 
 @inject('sprintStore')
+@inject('userStore')
 @observer
 class Sprint extends Component {
 
@@ -65,7 +66,7 @@ class Sprint extends Component {
 
   handleBtnClick = () => {
     this.operate = 'create'
-    this.formContent = createSprintFormConfig()
+    this.formContent = createSprintForm({}, this.props.userStore.responsibleList)
     this.toggleModal(true)
   }
 
@@ -82,8 +83,8 @@ class Sprint extends Component {
     }
     else {
       this.formContent = key === 'update'
-        ? createSprintFormConfig(sprint)
-        : taskFormConfig
+        ? createSprintForm(sprint, this.props.userStore.responsibleList)
+        : createTaskForm(this.props.userStore.responsibleList)
       this.toggleModal(true)
     }
   }

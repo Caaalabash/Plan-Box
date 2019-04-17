@@ -15,13 +15,12 @@ import {
   removeClass,
   hasClass
 } from 'utils/tool'
-import { issueFormConfig } from 'assets/config/form'
+import { createIssueForm } from 'assets/config/form'
 import './index.scss'
 
 const Panel = Collapse.Panel
 const RadioGroup = Radio.Group
 const overClass = 'dragover'
-const formContent = issueFormConfig
 const column = [0, 1, 2, 3, 4]
 const radioStyle = {
   display: 'block',
@@ -30,16 +29,19 @@ const radioStyle = {
 }
 
 @inject('sprintStore')
+@inject('userStore')
 @observer
 class Lane extends React.Component {
   dragged = null
   over = null
   taskId = null
-
   state = {
     dropArr: {},
     modalVisible: false,
     drawerVisible: false,
+  }
+  get formContent() {
+    return createIssueForm(this.props.userStore.responsibleList)
   }
 
   onCloseDrawer = () => this.toggleVisible('drawerVisible', false)
@@ -238,13 +240,13 @@ class Lane extends React.Component {
           }
         </Drawer>
         <Modal
-          title="创建子任务"
+          title="创建Issue"
           destroyOnClose
           visible={modalVisible}
           onOk={this.handleSubmit}
           onCancel={this.toggleVisible.bind(this, false)}
         >
-          <LiteForm formList={formContent} wrappedComponentRef={ref => {this.formRef = ref}}/>
+          <LiteForm formList={this.formContent} wrappedComponentRef={ref => {this.formRef = ref}}/>
         </Modal>
       </div>
     )

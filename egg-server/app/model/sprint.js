@@ -8,11 +8,7 @@
  * endTime: 开发周期截止时间(时间戳)
  * finishedStoryPoint: 开发周期结束后完成的故事点
  * status: 开发周期状态 0 / 1 / 2  === 未开始 / 进行中 / 已完成
- * team: {
- *   pm: 负责产品
- *   rd: 负责开发
- *   qa: 负责测试
- * }
+ * responsible: 开发主要负责人(用户_id)
  * task: {
  *   title: 子任务名称
  *   team: 子任务负责人
@@ -33,11 +29,7 @@ module.exports = app => {
     endTime: String,
     finishedStoryPoint: { type: Number, default: 0 },
     status: { type: Number, default: 0 },
-    team: {
-      pm: { type: String, default: '' },
-      rd: { type: String, default: '' },
-      qa: { type: String, default: '' },
-    },
+    responsible: String,
     task: [{
       _id: ObjectId,
       title: String,

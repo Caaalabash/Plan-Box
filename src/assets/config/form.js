@@ -1,4 +1,14 @@
-export const createSprintFormConfig = (sprintDefault = {}) => [
+/**
+ * 创建/更新Sprint表单配置
+ * 1. Sprint标题
+ * 2. Sprint描述
+ * 3. Sprint负责人: 从团队Team中选择
+ * 4. Sprint起止时间
+ * @param {object} sprintDefault sprint初始值, 用于修改Sprint信息
+ * @param {array} responsibleList 负责人下拉列表
+ * @return {array} 表单配置
+ */
+export const createSprintForm = (sprintDefault = {}, responsibleList) => [
   {
     key: 'title',
     label: 'Sprint标题',
@@ -12,19 +22,28 @@ export const createSprintFormConfig = (sprintDefault = {}) => [
     },
   },
   {
-    key: 'pm',
-    label: '负责人',
-    initialValue: sprintDefault.team ? sprintDefault.team.pm : '',
-    rules: [
-      { required: true, message: '请指定背锅位' }
-    ],
+    key: 'desc',
+    label: 'Sprint描述',
+    initialValue: sprintDefault.desc || '',
     componentOptions: {
       type: 'input',
     },
   },
   {
+    key: 'responsible',
+    label: 'Sprint负责人',
+    initialValue: sprintDefault.responsible || '',
+    rules: [
+      { required: true, message: '请指定背锅位' }
+    ],
+    componentOptions: {
+      type: 'select',
+      list: responsibleList
+    },
+  },
+  {
     key: 'range',
-    label: '起始时间',
+    label: 'Sprint起止时间',
     initialValue: '',
     rules: [
       { required: true, message: '请选择时间范围' }
@@ -34,18 +53,21 @@ export const createSprintFormConfig = (sprintDefault = {}) => [
       size: 'default'
     },
   },
-  {
-    key: 'desc',
-    label: 'Sprint描述',
-    initialValue: sprintDefault.desc || '',
-    rules: [],
-    componentOptions: {
-      type: 'input',
-    },
-  },
-]
 
-export const taskFormConfig = [
+]
+/**
+ * 创建子任务表单
+ * 1. 任务主题
+ * 2. 任务描述
+ * 3. 任务故事点
+ * 4. 任务紧急程度
+ * 5. 相关开发
+ * 6. 相关产品
+ * 7. 相关测试
+ * @param {array} responsibleList 成员列表
+ * @return {array} 表单配置
+ */
+export const createTaskForm = responsibleList => [
   {
     key: 'title',
     label: '任务主题',
@@ -53,6 +75,15 @@ export const taskFormConfig = [
     rules: [
       { required: true, message: '请输入任务标题' }
     ],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
+    key: 'desc',
+    label: '任务描述',
+    initialValue: '',
+    rules: [],
     componentOptions: {
       type: 'input',
     },
@@ -92,7 +123,8 @@ export const taskFormConfig = [
       { required: true, message: '请指定开发' }
     ],
     componentOptions: {
-      type: 'input',
+      type: 'select',
+      list: responsibleList
     },
   },
   {
@@ -103,7 +135,8 @@ export const taskFormConfig = [
       { required: true, message: '请指定测试' }
     ],
     componentOptions: {
-      type: 'input',
+      type: 'select',
+      list: responsibleList
     },
   },
   {
@@ -114,35 +147,49 @@ export const taskFormConfig = [
       { required: true, message: '请指定产品' }
     ],
     componentOptions: {
-      type: 'input',
-    },
-  },
-  {
-    key: 'desc',
-    label: '任务描述',
-    initialValue: '',
-    rules: [],
-    componentOptions: {
-      type: 'input',
+      type: 'select',
+      list: responsibleList
     },
   },
 ]
 
-export const issueFormConfig = [
+/**
+ * 创建Issue表单配置
+ * 1. Issue标题
+ * 2. Issue描述
+ * 3. Issue紧急程度
+ * 4. Issue类型: 是否为bug
+ * 5. Issue状态: 初始状态可以选择为待开发 or 开发中
+ * 6. Issue预估耗费时间: 单位为小时
+ * 7. Issue实际用时: 单位为小时
+ * 8. Issue负责人, 负责人应该可以从团队成员列表中选择
+ * @param {array} responsibleList 负责人下拉列表
+ * @return {array} Issue表单配置
+ */
+export const createIssueForm = responsibleList => [
   {
     key: 'title',
-    label: '子任务标题',
+    label: 'Issue标题',
     initialValue: '',
     rules: [
-      { required: true, message: '请输入子任务标题' }
+      { required: true, message: '请输入Issue标题' }
     ],
     componentOptions: {
       type: 'input',
     },
   },
   {
+    key: 'desc',
+    label: 'Issue描述',
+    initialValue: '',
+    rules: [],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
     key: 'priority',
-    label: '子任务紧急程度',
+    label: 'Issue紧急程度',
     initialValue: '0',
     rules: [],
     componentOptions: {
@@ -157,7 +204,7 @@ export const issueFormConfig = [
   },
   {
     key: 'issueType',
-    label: '任务类型',
+    label: 'Issue类型',
     initialValue: '0',
     rules: [],
     componentOptions: {
@@ -170,7 +217,7 @@ export const issueFormConfig = [
   },
   {
     key: 'status',
-    label: '任务状态',
+    label: 'Issue状态',
     initialValue: '0',
     rules: [],
     componentOptions: {
@@ -182,30 +229,23 @@ export const issueFormConfig = [
     },
   },
   {
-    key: 'desc',
-    label: '任务描述',
-    initialValue: '',
-    rules: [],
-    componentOptions: {
-      type: 'input',
-    },
-  },
-  {
     key: 'time',
-    label: '预估时间',
-    initialValue: '0',
+    label: '预估耗费时间(单位为小时)',
+    initialValue: 0,
     rules: [],
     componentOptions: {
-      type: 'input',
+      type: 'input-number',
+      min: 0,
     },
   },
   {
     key: 'usedTime',
-    label: '使用时间',
-    initialValue: '0',
+    label: '使用时间(单位为小时)',
+    initialValue: 0,
     rules: [],
     componentOptions: {
-      type: 'input',
+      type: 'input-number',
+      min: 0,
     },
   },
   {
@@ -213,10 +253,11 @@ export const issueFormConfig = [
     label: '负责人',
     initialValue: '',
     rules: [
-      { required: true, message: '请输入子任务负责人' }
+      { required: true, message: '请输入Issue负责人' }
     ],
     componentOptions: {
-      type: 'input',
+      type: 'select',
+      list: responsibleList
     },
   },
 ]

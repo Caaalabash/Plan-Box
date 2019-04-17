@@ -23,6 +23,15 @@ class UserStore {
     return this.user && this.user.team.permission
   }
   /**
+   * 获取团队成员简略信息, 用于Select组件
+   */
+  @computed get responsibleList() {
+    if (!this.team) return []
+    return this.team.memberInfo.map(({ name, _id }) => ({
+      label: name, value: _id
+    }))
+  }
+  /**
    * 设置登录信息
    */
   @action
