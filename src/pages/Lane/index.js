@@ -38,7 +38,6 @@ class Lane extends React.Component {
 
   state = {
     dropArr: {},
-    open: null,
     modalVisible: false,
     drawerVisible: false,
   }
@@ -148,14 +147,12 @@ class Lane extends React.Component {
   }
 
   componentDidMount() {
-    const { relateId, open } = parseQueryParams(this.props.history.location.search)
-
+    const { relateId } = parseQueryParams(this.props.history.location.search)
     relateId && this.initLane(relateId)
-    open && this.setState({ open })
   }
 
   render() {
-    const { open, modalVisible, dropArr, drawerVisible } = this.state
+    const { modalVisible, dropArr, drawerVisible } = this.state
     const { sprintStore } = this.props
     const currentTask = sprintStore.currentSprint.task || []
     const createHeader = task => (
@@ -172,7 +169,7 @@ class Lane extends React.Component {
           currentTask.length
             ? currentTask.map(task => (
               <Collapse
-                defaultActiveKey={[open]}
+                defaultActiveKey={task._id}
                 onChange={this.handleCollapseChange}
                 key={task._id}
                 className='lane-layout-collapse'

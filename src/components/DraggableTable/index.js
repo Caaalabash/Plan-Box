@@ -82,7 +82,7 @@ class DraggableTable extends React.Component {
       {
         title: '查看',
         handler: () => {
-          this.props.history.push(`/lane?relateId=${relateId}&open=${_id}`)
+          this.props.history.push(`/lane?relateId=${relateId}`)
         }
       },
       {
