@@ -23,6 +23,12 @@ class UserStore {
     return this.user && this.user.team.permission
   }
   /**
+   * 获取团队成员列表
+   */
+  @computed get teamMember() {
+    return this.team ? this.team.memberInfo : []
+  }
+  /**
    * 获取团队成员简略信息, 用于Select组件
    */
   @computed get responsibleList() {

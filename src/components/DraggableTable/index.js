@@ -1,5 +1,6 @@
 import React from 'react'
 import { withRouter } from "react-router-dom"
+import { inject } from 'mobx-react'
 
 import emitter from 'utils/events'
 import {
@@ -8,13 +9,27 @@ import {
   removeClass,
   getParentDom,
   getDataset,
-  calculateSequence
+  calculateSequence,
+  translatePriority
 } from 'utils/tool'
 import './index.scss'
 
 const INSERT_BEFORE = 1
 const INSERT_AFTER = 2
+const TableHeader = [
+  { title: '子任务', key: 'title' },
+  { title: '任务描述', key: 'desc' },
+  { title: '故事点', key: 'storyPoint' },
+  { title: '优先级', key: 'priority', handler: translatePriority },
+  { title: '负责人', key: 'team', handler: getResponsible }
+]
+function getResponsible(val) {
+  val = typeof val === 'string' ? val : val.rd
+  const member = this.props.userStore.teamMember.find(member => member._id === val)
+  return member ? member.name : '[该成员不在团队内]'
+}
 
+@inject('userStore')
 class DraggableTable extends React.Component {
 
   // 被拖动元素
@@ -96,14 +111,14 @@ class DraggableTable extends React.Component {
   }
 
   render() {
-    const { header, data, belong } = this.props
+    const { data, belong } = this.props
 
     return (
       <table className='draggable-table'>
         <thead className='draggable-table-head'>
           <tr>
             {
-              header.map((item, index) => {
+              TableHeader.map((item, index) => {
                 return (
                   <th key={index}>
                     <div className='title'>{item.title}</div>
@@ -132,10 +147,10 @@ class DraggableTable extends React.Component {
                   onContextMenu={ e => this.openContextMenu.call(this, e, row._id, belong)}
                 >
                   {
-                    header.map((item, index) => {
+                    TableHeader.map((item, index) => {
                       return (
                         <td key={index}>
-                          <span className='cell'>{item.handler ? item.handler(row[item.key]) : row[item.key]}</span>
+                          <span className='cell'>{item.handler ? item.handler.call(this, row[item.key]) : row[item.key]}</span>
                         </td>
                       )
                     })

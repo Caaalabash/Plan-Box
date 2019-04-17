@@ -7,19 +7,10 @@ import SprintPanelHeader from 'components/SprintPanelHeader'
 import LiteForm from 'components/LiteForm'
 import DraggableTable from 'components/DraggableTable'
 import Empty from 'components/Empty'
-
 import { createSprintForm, createTaskForm } from 'assets/config/form'
-import { translatePriority } from 'utils/tool'
 import './index.scss'
 
 const Panel = Collapse.Panel
-const TableHeader = [
-  { title: '子任务', key: 'title' },
-  { title: '任务描述', key: 'desc' },
-  { title: '故事点', key: 'storyPoint' },
-  { title: '优先级', key: 'priority', handler: translatePriority },
-  { title: '负责人', key: 'team', handler: obj => obj.rd }
-]
 
 const processPayload = formData =>
   Object.keys(formData).reduce((payload, key) => {
@@ -125,7 +116,7 @@ class Sprint extends Component {
             header={<SprintPanelHeader {...sprint} onOperate={e => this.handleSprintOperate.call(this, e, sprint)}/>}>
             {
               sprint.task.length
-                ? <DraggableTable header={TableHeader} data={sprint.task} belong={sprint._id} onDrop={this.onDrop} onDelete={this.onDeleteTask}/>
+                ? <DraggableTable data={sprint.task} belong={sprint._id} onDrop={this.onDrop} onDelete={this.onDeleteTask}/>
                 : <Empty description='暂无子任务'/>
             }
           </Panel>

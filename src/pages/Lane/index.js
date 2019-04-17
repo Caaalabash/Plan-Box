@@ -3,7 +3,7 @@ import { Collapse, Modal, Drawer, Radio, Button } from 'antd'
 import { inject, observer } from 'mobx-react'
 
 import emitter from 'utils/events'
-import TaskCard from 'components/TaskCard'
+import IssueCard from 'components/IssueCard'
 import LiteForm from 'components/LiteForm'
 import Empty from 'components/Empty'
 import {
@@ -200,7 +200,7 @@ class Lane extends React.Component {
                               task.issue && task.issue
                                 .filter(issue => +issue.status === index)
                                 .map(issue =>
-                                  <TaskCard
+                                  <IssueCard
                                     key={issue._id}
                                     issue={issue}
                                     column={index}
