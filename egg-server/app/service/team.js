@@ -30,6 +30,8 @@ class TeamService extends require('egg').Service {
    */
   async getTeamInfo(teamId) {
     const result = await this.toPromise( this.TeamModel.findOne({ _id: teamId }) )
+    if (!result) return {}
+
     const memberList = result.member.concat(result.owner)
     const memberInfo = await this.service.oauth.getAllMemberInfo(memberList)
 

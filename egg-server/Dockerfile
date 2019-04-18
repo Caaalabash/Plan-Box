@@ -10,10 +10,10 @@ RUN yarn --registry=https://registry.npm.taobao.org
 
 ENV NODE_ENV prod
 
-ENV PORT 7778
+ENV PORT 7001
 
 COPY . /app
 
-EXPOSE 7778
+EXPOSE 7001
 
 CMD ["npm", "run", "start:prod"]

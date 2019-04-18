@@ -8,7 +8,7 @@ services:
     env_file:
       - /mynode/plan-box-ci/plan-box.env
     ports:
-      - 7778:7778
+      - 7001:7001
     volumes:
       - /etc/localtime:/etc/localtime
     network_mode: host
