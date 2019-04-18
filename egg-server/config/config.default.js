@@ -21,10 +21,10 @@ module.exports = appInfo => ({
   },
   onerror: {
     all(err, ctx) {
-      console.log(err)
       ctx.body = {
         errno: 1,
-        msg: '服务器错误'
+        msg: '服务器错误',
+        errMsg: err.message
       }
     }
   },
