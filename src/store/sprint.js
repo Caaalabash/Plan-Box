@@ -166,6 +166,7 @@ class SprintStore {
     if (!resp.errno && issue) {
       issue.log = payload.log
       issue.usedTime += payload.time
+      issue.remainTime = payload.remainTime
     }
   }
 

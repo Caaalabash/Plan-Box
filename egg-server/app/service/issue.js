@@ -13,7 +13,7 @@ class IssueService extends require('egg').Service {
    */
   async setIssue({ userId, taskId, ...data }) {
     const doc = await this.toPromise(
-      this.TaskModel.findOneAndUpdate({ _id: taskId }, { $push: { issue: data } }, { 'new': true })
+      this.TaskModel.findOneAndUpdate({ _id: taskId }, { $push: { issue: { remainTime: data.time, ...data } } }, { 'new': true })
     )
 
     return { msg: '创建成功', data: doc }
@@ -50,14 +50,18 @@ class IssueService extends require('egg').Service {
    * @param {string} issueId 所属IssueId
    * @param {string} log 工作日志
    * @param {number} time 耗费时间
+   * @param {number} remainTime 剩余时间
    * @return {status} success response
    */
-  async updateIssueLog({ taskId, issueId, log, time }) {
+  async updateIssueLog({ taskId, issueId, log, time, remainTime }) {
     await this.toPromise(
       this.TaskModel.findOneAndUpdate(
         { _id: taskId, 'issue._id': issueId },
         {
-          $set: { 'issue.$.log': log },
+          $set: {
+            'issue.$.log': log,
+            'issue.$.remainTime': remainTime
+          },
           $inc: { 'issue.$.usedTime': time }
         }
       )

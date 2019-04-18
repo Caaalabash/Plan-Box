@@ -230,7 +230,7 @@ export const createIssueForm = responsibleList => [
   },
   {
     key: 'time',
-    label: '预估耗费时间(单位为小时)',
+    label: '预估耗费时间 (单位为小时)',
     initialValue: 1,
     rules: [],
     componentOptions: {
@@ -240,7 +240,7 @@ export const createIssueForm = responsibleList => [
   },
   {
     key: 'usedTime',
-    label: '使用时间(单位为小时)',
+    label: '实际开发时间 (单位为小时)',
     initialValue: 0,
     rules: [],
     componentOptions: {
@@ -279,8 +279,18 @@ export const createIssueLogForm = defaultIssue => [
   },
   {
     key: 'time',
-    label: '耗费的时间(单位为小时)',
+    label: '耗费的时间 (单位为小时)',
     initialValue: 0,
+    rules: [],
+    componentOptions: {
+      type: 'input-number',
+      min: 0,
+    },
+  },
+  {
+    key: 'remainTime',
+    label: '剩余开发时间 (单位为小时)',
+    initialValue: defaultIssue.remainTime || 0,
     rules: [],
     componentOptions: {
       type: 'input-number',

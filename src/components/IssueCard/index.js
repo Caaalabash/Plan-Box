@@ -28,8 +28,7 @@ class IssueCard extends Component {
   render() {
     const { issue, column, belong, onDragStart, onDragEnd } = this.props
     const responsibleInfo = this.props.userStore.teamMember.find(member => member._id === issue.responsible)
-    const issueProgress = Math.round(issue.usedTime / issue.time * 100) + '%'
-    const remain = issue.time - issue.usedTime
+    const issueProgress = Math.round((1 - issue.remainTime / issue.time) * 100) + '%'
 
     return (
       <div
@@ -53,7 +52,7 @@ class IssueCard extends Component {
             ? <img src={responsibleInfo.avatar_url} alt="经办人" className="issue-avatar"/>
             : <Icon type="user-delete" title="该用户已不在当前团队" className="issue-avatar"/>
         }
-        <span className="issue-total">{ remain }h</span>
+        <span className="issue-total">{ issue.remainTime }h</span>
       </div>
     )
   }
