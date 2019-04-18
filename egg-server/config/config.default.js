@@ -31,10 +31,13 @@ module.exports = appInfo => ({
     successCode: 0,
     errorCode: 1
   },
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET || 'Plan_Box',
+  /**
+   * 测试环境下提供 Plan-Box-Dev Oauth App支持
+   */
   passportGithub: {
-    key: process.env.GITHUB_ID,
-    secret: process.env.GITHUB_SECRETID,
+    key: process.env.GITHUB_ID || 'a764a9105c803decd727',
+    secret: process.env.GITHUB_SECRETID || '7055c9a2c96aa26686f64bd38cbcc3f2cef43c01',
     callbackURL: process.env.CALLBACK_URL || 'http://localhost:7001/api/plan-box/oauth/github/callback'
   },
 })
