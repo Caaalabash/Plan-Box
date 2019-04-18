@@ -32,6 +32,7 @@ class Sprint extends Component {
   formContent = []
   operate = 'create'
   operateSprint = {}
+
   state = {
     modalVisible: false,
     filter: 'all'
@@ -53,7 +54,7 @@ class Sprint extends Component {
 
   onDrop = (id, sequence) => Service.updateSequence({ id, sequence })
 
-  onDeleteTask = (_id, relateId) => this.props.sprintStore.deleteTask(_id, relateId)
+  onDeleteTask = (_id, relateId) => this.props.sprintStore.deleteTask(relateId, _id)
 
   handleBtnClick = () => {
     this.operate = 'create'

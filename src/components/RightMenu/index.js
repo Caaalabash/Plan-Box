@@ -46,7 +46,7 @@ export default class RightMenu extends React.Component {
   }
 
   render() {
-    const { visible, customMenu } = this.state
+    const { visible, customMenu = [] } = this.state
 
     return (
       <div className={visible ? 'contextMenu contextMenu__visible' : 'contextMenu'} ref={ref => this.root = ref}>

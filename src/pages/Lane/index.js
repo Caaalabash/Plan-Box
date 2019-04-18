@@ -15,7 +15,10 @@ import {
   removeClass,
   hasClass
 } from 'utils/tool'
-import { createIssueForm } from 'assets/config/form'
+import {
+  createIssueForm,
+  createIssueLogForm
+} from 'assets/config/form'
 import './index.scss'
 
 const Panel = Collapse.Panel
@@ -32,16 +35,18 @@ const radioStyle = {
 @inject('userStore')
 @observer
 class Lane extends React.Component {
+
+  formContent = null
+  formTitle = null
   dragged = null
   over = null
   taskId = null
+  modalPayload = null
+
   state = {
     dropArr: {},
     modalVisible: false,
     drawerVisible: false,
-  }
-  get formContent() {
-    return createIssueForm(this.props.userStore.responsibleList)
   }
 
   onCloseDrawer = () => this.toggleVisible('drawerVisible', false)
@@ -51,21 +56,8 @@ class Lane extends React.Component {
   toggleVisible = (key, value) => this.setState({ [key]: value })
 
   onRadioChange = async e => {
-    await this.initLane(e.target.value)
+    await this.props.sprintStore.setChooseSprintId(e.target.value)
     this.setState({ drawerVisible: false })
-  }
-
-  initLane = async(sprintId) => {
-    const { sprintStore } = this.props
-    const currentSprintId = sprintId || sprintStore.sprintList[0]._id
-
-    sprintStore.setChooseSprint(currentSprintId)
-    sprintStore.getTask(sprintId)
-  }
-
-  handleCollapseChange = ([, e]) => {
-    const { sprintStore } = this.props
-    e && sprintStore.getTask(sprintStore.chooseSprint)
   }
 
   handleDragStart = e => {
@@ -129,7 +121,11 @@ class Lane extends React.Component {
     const form = this.formRef.props.form
     form.validateFields(async (e, value) => {
       if (e) return
-      await sprintStore.createIssue(this.taskId, value)
+      else if (this.modalPayload) {
+        await sprintStore.setIssueLog({ ...this.modalPayload, ...value })
+      } else {
+        await sprintStore.createIssue(this.taskId, value)
+      }
       this.toggleVisible('modalVisible', false)
     })
   }
@@ -140,6 +136,9 @@ class Lane extends React.Component {
       {
         title: '创建Issue',
         handler: () => {
+          this.modalPayload = null
+          this.formContent = createIssueForm(this.props.userStore.responsibleList)
+          this.formTitle = 'Issue - 创建'
           this.toggleVisible('modalVisible', true)
         }
       }
@@ -148,31 +147,44 @@ class Lane extends React.Component {
     emitter.emit('contextmenu', e)
   }
 
+  createIssueLog = ({ issue, taskId }) => {
+    this.modalPayload = { issueId: issue._id, taskId }
+    this.formContent = createIssueLogForm(issue)
+    this.formTitle = 'Issue - 登记工作日志'
+    this.toggleVisible('modalVisible', true)
+  }
+
   componentDidMount() {
+    emitter.on('issueLog', payload => {
+      this.createIssueLog(payload)
+    })
+    emitter.on('deleteIssue', payload => {
+      this.props.sprintStore.deleteIssue(payload)
+    })
     const { relateId } = parseQueryParams(this.props.history.location.search)
-    relateId && this.initLane(relateId)
+    this.props.sprintStore.setChooseSprintId(relateId)
   }
 
   render() {
     const { modalVisible, dropArr, drawerVisible } = this.state
     const { sprintStore } = this.props
-    const currentTask = sprintStore.currentSprint.task || []
+    const currentSprint = sprintStore.currentSprint
     const createHeader = task => (
       <div className="pane-header" onContextMenu={e => this.handleContextMenu.call(this, e, task._id)}>
         <span>{task.title}</span>
       </div>
     )
+
     return (
       <div className="lane-layout">
         <div className="lane-layout-button">
           <Button type="default" onClick={this.handleBtnClick}>切换Sprint</Button>
         </div>
         {
-          currentTask.length
-            ? currentTask.map(task => (
+          currentSprint.task && currentSprint.task.length
+            ? currentSprint.task.map(task => (
               <Collapse
                 defaultActiveKey={task._id}
-                onChange={this.handleCollapseChange}
                 key={task._id}
                 className='lane-layout-collapse'
               >
@@ -229,7 +241,7 @@ class Lane extends React.Component {
         >
           {
             sprintStore.sprintList.length
-              ? <RadioGroup onChange={this.onRadioChange} value={sprintStore.chooseSprint}>
+              ? <RadioGroup onChange={this.onRadioChange} value={sprintStore.currentSprint._id}>
                 {
                   sprintStore.sprintList.map(sprint =>
                     <Radio style={radioStyle} value={sprint._id} key={sprint._id}>{ sprint.title }</Radio>
@@ -240,11 +252,11 @@ class Lane extends React.Component {
           }
         </Drawer>
         <Modal
-          title="创建Issue"
+          title={this.formTitle}
           destroyOnClose
           visible={modalVisible}
           onOk={this.handleSubmit}
-          onCancel={this.toggleVisible.bind(this, false)}
+          onCancel={this.toggleVisible.bind(this, 'modalVisible', false)}
         >
           <LiteForm formList={this.formContent} wrappedComponentRef={ref => {this.formRef = ref}}/>
         </Modal>

@@ -32,7 +32,7 @@ class OauthService extends require('egg').Service {
    */
   async getUserInfo({ userId }) {
     const userInfo = await this.toPromise( this.OauthModel.findById(userId) )
-    const teamId = userInfo.team && userInfo.team.belong
+    const teamId = userInfo && userInfo.team && userInfo.team.belong
 
     if (teamId) {
       const [teamInfo, sprintInfo] = await Promise.all([

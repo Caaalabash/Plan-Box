@@ -160,7 +160,7 @@ export const createTaskForm = responsibleList => [
  * 3. Issue紧急程度
  * 4. Issue类型: 是否为bug
  * 5. Issue状态: 初始状态可以选择为待开发 or 开发中
- * 6. Issue预估耗费时间: 单位为小时
+ * 6. Issue预估耗费时间: 单位为小时, 最少为1小时
  * 7. Issue实际用时: 单位为小时
  * 8. Issue负责人, 负责人应该可以从团队成员列表中选择
  * @param {array} responsibleList 负责人下拉列表
@@ -231,11 +231,11 @@ export const createIssueForm = responsibleList => [
   {
     key: 'time',
     label: '预估耗费时间(单位为小时)',
-    initialValue: 0,
+    initialValue: 1,
     rules: [],
     componentOptions: {
       type: 'input-number',
-      min: 0,
+      min: 1,
     },
   },
   {
@@ -258,6 +258,33 @@ export const createIssueForm = responsibleList => [
     componentOptions: {
       type: 'select',
       list: responsibleList
+    },
+  },
+]
+/**
+ * Issue工作日志表单
+ * 1. 工作日志
+ * 2. 耗时
+ * @param {object} defaultIssue 原Issue数据
+ * @return {array} Issue工作日志表单
+ */
+export const createIssueLogForm = defaultIssue => [
+  {
+    key: 'log',
+    label: '工作日志',
+    initialValue: defaultIssue.log || '',
+    componentOptions: {
+      type: 'input-area',
+    },
+  },
+  {
+    key: 'time',
+    label: '耗费的时间(单位为小时)',
+    initialValue: 0,
+    rules: [],
+    componentOptions: {
+      type: 'input-number',
+      min: 0,
     },
   },
 ]

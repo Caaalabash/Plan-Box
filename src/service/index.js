@@ -1,7 +1,9 @@
 import BaseModule from './default'
 
 export default new class apiManager extends BaseModule {
-  // Sprint
+  /**
+   * Sprint模块
+   */
   getSprint(query) {
     return this.get(`sprint${query}`)
   }
@@ -11,10 +13,12 @@ export default new class apiManager extends BaseModule {
   updateSprint(data) {
     return this.put('sprint', data)
   }
-  deleteSprint(query) {
-    return this.delete(`sprint${query}`)
+  deleteSprint(sprintId) {
+    return this.delete(`sprint?id=${sprintId}`)
   }
-  // Task
+  /**
+   * Task模块
+   */
   getTaskBySprintId(sprintId) {
     return this.get(`task?id=${sprintId}`)
   }
@@ -24,18 +28,26 @@ export default new class apiManager extends BaseModule {
   updateTask(data) {
     return this.put('task', data)
   }
-  deleteTask(query) {
-    return this.delete(`task${query}`)
+  deleteTask(relateSprint, taskId) {
+    return this.delete(`task?_id=${taskId}&relateId=${relateSprint}`)
   }
   updateSequence(data) {
     return this.post('task/sequence', data)
   }
-  // Issue
+  /**
+   * Issue模块
+   */
   setIssue(data) {
     return this.post('issue', data)
   }
   setIssueStatus(data) {
     return this.put('issue/status', data)
+  }
+  setIssueLog(data) {
+    return this.put('issue/log', data)
+  }
+  deleteIssue({ taskId, issueId }) {
+    return this.delete(`issue?taskId=${taskId}&issueId=${issueId}`)
   }
   // oauth
   getUserInfo() {

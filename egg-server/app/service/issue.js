@@ -25,8 +25,8 @@ class IssueService extends require('egg').Service {
    * @return {object} success response
    */
   async deleteIssue({ taskId, issueId }) {
-    await this.toPromise(
-      this.TaskModel.findOneAndUpdate({ _id: taskId }, { $pull: { issue: { _id: issueId } } })
+    const doc = await this.toPromise(
+      this.TaskModel.findOneAndUpdate({ _id: taskId }, { $pull: { issue: { _id: issueId } } }, { 'new': true })
     )
 
     return { msg: '删除成功' }

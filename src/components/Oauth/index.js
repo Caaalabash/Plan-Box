@@ -11,10 +11,9 @@ import Service from 'service'
 class Oauth extends Component {
 
   loginThroughGithub = () => {
-    const path = process.env.NODE_ENV === 'development'
+    window.location.href = process.env.NODE_ENV === 'development'
       ? 'http://localhost:7001/api/plan-box/oauth/github'
       : '/api/plan-box/oauth/github'
-    window.location.href = path
   }
 
   init = async() => {
@@ -28,13 +27,16 @@ class Oauth extends Component {
     }
   }
 
+  componentWillMount() {
+    this.init()
+  }
+
   componentDidMount() {
     emitter.on('logout', async() => {
       await Service.logout()
       this.props.userStore.resetUser()
       this.props.sprintStore.setSprintList([])
     })
-    this.init()
   }
 
   render() {

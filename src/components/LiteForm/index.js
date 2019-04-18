@@ -12,6 +12,7 @@ const FormItem = Form.Item
 const Option = Select.Option
 const RadioGroup = Radio.Group
 const RangePicker = DatePicker.RangePicker
+const TextArea = Input.TextArea
 
 const getFormComponent = ({ type = 'input', ...options }) => {
   switch (type) {
@@ -31,6 +32,8 @@ const getFormComponent = ({ type = 'input', ...options }) => {
       return <RangePicker {...options} />
     case 'input-number':
       return <InputNumber {...options} />
+    case 'input-area':
+      return <TextArea {...options}/>
     default:
       return <Input {...options} />
   }
