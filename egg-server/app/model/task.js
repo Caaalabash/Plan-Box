@@ -13,10 +13,11 @@
  *   priority: issue优先级
  *   title: issue名称
  *   desc: issue描述
- *   time: 预估时间(时间戳)
- *   usedTime: 耗费时间(时间戳)
+ *   time: 预估时间 (小时)
+ *   usedTime: 耗费时间(小时)
  *   status: issue状态
  *   responsible: issue经办人
+ *   log: Issue工作日志
  * }
  *
  * Task & Issue status:
@@ -46,11 +47,12 @@ module.exports = app => {
       priority: Number,
       title: String,
       desc: String,
-      time: String,
-      usedTime: String,
+      time: { type: Number, default: 0 },
+      usedTime: { type: Number, default: 0 },
       issueType: String,
       status: String,
       responsible: String,
+      log: String
     }]
   })
 

@@ -10,6 +10,10 @@ class IssueController extends require('egg').Controller {
   async deleteIssue(ctx) {
     ctx.body = await ctx.service.issue.deleteIssue(ctx.request.body)
   }
+
+  async updateIssueLog(ctx) {
+    ctx.body = await ctx.service.issue.updateIssueLog(ctx.request.body)
+  }
 }
 
 module.exports = IssueController

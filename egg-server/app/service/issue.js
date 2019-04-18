@@ -44,6 +44,27 @@ class IssueService extends require('egg').Service {
 
     return { msg: '修改成功' }
   }
+  /**
+   * 登记Issue工作日志
+   * @param {string} taskId 所属TaskId
+   * @param {string} issueId 所属IssueId
+   * @param {string} log 工作日志
+   * @param {number} time 耗费时间
+   * @return {status} success response
+   */
+  async updateIssueLog({ taskId, issueId, log, time }) {
+    await this.toPromise(
+      this.TaskModel.findOneAndUpdate(
+        { _id: taskId, 'issue._id': issueId },
+        {
+          $set: { 'issue.$.log': log },
+          $inc: { 'issue.$.usedTime': time }
+        }
+      )
+    )
+
+    return { msg: '日志登记成功' }
+  }
 }
 
 module.exports = IssueService
