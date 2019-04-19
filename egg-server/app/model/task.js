@@ -16,6 +16,7 @@
  *   time: 预估时间 (小时)
  *   usedTime: 耗费时间(小时)
  *   remainTime: 剩余时间(小时)
+ *   issueType: Issue类型 issue or bug
  *   status: issue状态
  *   responsible: issue经办人
  *   log: Issue工作日志
@@ -51,7 +52,7 @@ module.exports = app => {
       time: { type: Number, default: 0 },
       usedTime: { type: Number, default: 0 },
       remainTime: { type: Number, default: 0 },
-      issueType: String,
+      issueType: { type: String, default: 'issue' },
       status: String,
       responsible: String,
       log: String

@@ -15,6 +15,7 @@
  *   belong: Belong Team _id
  *   permission: guest / developer / master / owner
  * }
+ * provider: Github for now
  */
 module.exports = app => {
   const mongoose = app.mongoose
@@ -35,6 +36,7 @@ module.exports = app => {
       belong: { type: String, default: '' },
       permission: { type: String, default: '' },
     },
+    provider: { type: String, default: 'Github' }
   }, {
     timestamps: {
       createdAt: 'createTime',

@@ -6,6 +6,7 @@ import emitter from 'utils/events'
 import IssueCard from 'components/IssueCard'
 import LiteForm from 'components/LiteForm'
 import Empty from 'components/Empty'
+import IssueDetail from 'components/IssueDetail'
 import {
   restrictDropDistance,
   parseQueryParams,
@@ -51,7 +52,7 @@ class Lane extends React.Component {
 
   onCloseDrawer = () => this.toggleVisible('drawerVisible', false)
 
-  handleBtnClick = () => this.toggleVisible('drawerVisible', true)
+  switchSprint = () => this.toggleVisible('drawerVisible', true)
 
   toggleVisible = (key, value) => this.setState({ [key]: value })
 
@@ -178,7 +179,7 @@ class Lane extends React.Component {
     return (
       <div className="lane-layout">
         <div className="lane-layout-button">
-          <Button type="default" onClick={this.handleBtnClick}>切换Sprint</Button>
+          <Button type="default" onClick={this.switchSprint}>切换Sprint</Button>
         </div>
         {
           currentSprint.task && currentSprint.task.length
@@ -260,6 +261,7 @@ class Lane extends React.Component {
         >
           <LiteForm formList={this.formContent} wrappedComponentRef={ref => {this.formRef = ref}}/>
         </Modal>
+        <IssueDetail/>
       </div>
     )
   }

@@ -25,6 +25,11 @@ class IssueCard extends Component {
     emitter.emit('contextmenu', e)
   }
 
+  handleClick = () => {
+    const { issue, belong } = this.props
+    emitter.emit('issueDetail', { taskId: belong, ...issue })
+  }
+
   render() {
     const { issue, column, belong, onDragStart, onDragEnd } = this.props
     const responsibleInfo = this.props.userStore.teamMember.find(member => member._id === issue.responsible)
@@ -39,6 +44,7 @@ class IssueCard extends Component {
         data-belong={belong}
         data-id={issue._id}
         draggable
+        onClick={this.handleClick}
         onContextMenu={ e => this.openContextMenu.call(this, e, issue, belong)}
       >
         <div className="issue-inner-content">
@@ -50,7 +56,7 @@ class IssueCard extends Component {
         {
           responsibleInfo
             ? <img src={responsibleInfo.avatar_url} alt="经办人" className="issue-avatar"/>
-            : <Icon type="user-delete" title="该用户已不在当前团队" className="issue-avatar"/>
+            : <Icon type="user-delete" title="该成员已不在团队内" className="issue-avatar"/>
         }
         <span className="issue-total">{ issue.remainTime }h</span>
       </div>

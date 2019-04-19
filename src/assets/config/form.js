@@ -210,8 +210,8 @@ export const createIssueForm = responsibleList => [
     componentOptions: {
       type: 'select',
       list: [
-        { label: 'bug', value: '0' },
-        { label: 'issue', value: '1' },
+        { label: 'bug', value: 'bug' },
+        { label: 'issue', value: 'issue' },
       ]
     },
   },
