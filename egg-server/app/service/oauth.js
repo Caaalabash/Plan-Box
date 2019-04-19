@@ -7,11 +7,14 @@ class OauthService extends require('egg').Service {
   /**
    * Github登录, 获取个人信息更新数据库
    * @param {string} access_token
+   * @param {string} fallbackUserName
    * @return {object} 用户信息
    */
-  async getGithubInfo(access_token) {
+  async getGithubInfo(access_token, fallbackUserName) {
     const userInfoRes = await this.ctx.$get(`https://api.github.com/user?access_token=${access_token}`)
     const userInfo = JSON.parse(JSON.stringify(userInfoRes.data))
+    !userInfo.name && (userInfo.name = fallbackUserName)
+    !userInfo.email && (userInfo.email = '暂无邮箱')
     const update = ['name', 'bio', 'location', 'company', 'blog', 'email', 'avatar_url'].reduce((obj, key) => {
       obj[key] = userInfo[key] || ''
       return obj
