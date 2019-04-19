@@ -39,6 +39,7 @@ module.exports = appInfo => ({
   passportGithub: {
     key: process.env.GITHUB_ID || 'a764a9105c803decd727',
     secret: process.env.GITHUB_SECRETID || '7055c9a2c96aa26686f64bd38cbcc3f2cef43c01',
-    callbackURL: process.env.CALLBACK_URL || 'http://localhost:7001/api/plan-box/oauth/github/callback'
+    callbackURL: process.env.CALLBACK_URL || 'http://localhost:7001/api/plan-box/oauth/github/callback',
+    scope: 'read:user'
   },
 })
