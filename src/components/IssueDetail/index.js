@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Drawer, Tag, Progress, Button, Divider } from 'antd'
+import { Drawer, Tag, Progress, Button } from 'antd'
 import { inject } from 'mobx-react'
 
 import emitter from 'utils/events'
