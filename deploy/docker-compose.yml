@@ -1,14 +1,13 @@
 version: "3"
 services:
+  # Node 后端服务
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # 选择的镜像为 caaalabash/plan-box + 环境变量VUE_BLOG_TAG + BE后缀
+    image: caaalabash/plan-box:${PLAN_BOX_TAG}-BE
     container_name: plan-box-backend
+    # 挂载环境变量
     env_file:
       - /mynode/plan-box-ci/plan-box.env
-    ports:
-      - 7001:7001
     volumes:
       - /etc/localtime:/etc/localtime
     network_mode: host
