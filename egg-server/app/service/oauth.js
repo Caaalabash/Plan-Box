@@ -15,7 +15,7 @@ class OauthService extends require('egg').Service {
     const userInfo = JSON.parse(JSON.stringify(userInfoRes.data))
     !userInfo.name && (userInfo.name = fallbackUserName)
     !userInfo.email && (userInfo.email = '暂无邮箱')
-    const update = ['name', 'bio', 'location', 'company', 'blog', 'email', 'avatar_url'].reduce((obj, key) => {
+    const update = ['name', 'email', 'avatar_url'].reduce((obj, key) => {
       obj[key] = userInfo[key] || ''
       return obj
     }, {})
