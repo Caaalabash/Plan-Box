@@ -9,11 +9,10 @@
  * finishedStoryPoint: 开发周期结束后完成的故事点
  * status: 开发周期状态 0 / 1 / 2  === 未开始 / 进行中 / 已完成
  * responsible: 开发主要负责人(用户_id)
- * task: {
+ * task:
  *   title: 子任务名称
  *   team: 子任务负责人
  *   storyPoint: 子任务故事点
- * }
  * storyPoint(virtual): 总故事点
  */
 module.exports = app => {

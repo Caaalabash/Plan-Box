@@ -4,7 +4,6 @@
  * name: 团队名称
  * owner: 团队所有者
  * member: 团队成员
- * createTime: 创建时间
  */
 module.exports = app => {
   const mongoose = app.mongoose
@@ -17,11 +16,6 @@ module.exports = app => {
       type: Array,
       default: []
     },
-    createTime: { type: Date, default: Date.now },
-  }, {
-    timestamps: {
-      createdAt: 'createTime',
-    }
   })
 
   return mongoose.model('Team', teamSchema)

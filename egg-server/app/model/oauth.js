@@ -4,11 +4,10 @@
  * name: Github NickName
  * email: Github Email
  * avatar_url: Github Avatar
- * team: {
+ * provider: Github for now
+ * team:
  *   belong: Belong Team _id
  *   permission: guest / developer / master / owner
- * }
- * provider: Github for now
  */
 module.exports = app => {
   const mongoose = app.mongoose
@@ -18,11 +17,11 @@ module.exports = app => {
     name: String,
     email: String,
     avatar_url: String,
+    provider: { type: String, default: 'Github' },
     team: {
       belong: { type: String, default: '' },
       permission: { type: String, default: '' },
     },
-    provider: { type: String, default: 'Github' }
   })
 
   return mongoose.model('Oauth', oauthSchema)

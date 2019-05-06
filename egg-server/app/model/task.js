@@ -9,7 +9,7 @@
  * sequence: 子任务排序
  * status: 子任务状态
  * team: 负责团队
- * issue: {
+ * issue:
  *   priority: issue优先级
  *   title: issue名称
  *   desc: issue描述
@@ -20,7 +20,6 @@
  *   status: issue状态
  *   responsible: issue经办人
  *   log: Issue工作日志
- * }
  *
  * Task & Issue status:
  * 0: 待开发  1: 开发中  2: 待测试  3: 测试中  4: 已完成
