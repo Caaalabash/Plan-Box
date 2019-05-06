@@ -70,6 +70,7 @@ class UserStore {
   /**
    * 提升成员权限
    */
+  @action
   async setPermission(enhanceUserId, permission) {
     const resp = await Service.setPermission(enhanceUserId, permission)
     if (!resp.errno) {
@@ -80,6 +81,7 @@ class UserStore {
   /**
    * 移除成员
    */
+  @action
   async removeMember(memberId) {
     const resp = await Service.removeMember(memberId)
     if (!resp.errno) {
@@ -90,6 +92,7 @@ class UserStore {
   /**
    * 创建团队
    */
+  @action
   async createTeam(payload) {
     const resp = await Service.createTeam(payload)
     if (!resp.errno) {
@@ -104,6 +107,7 @@ class UserStore {
   /**
    * 退出团队
    */
+  @action
   async leaveTeam() {
     const resp = await Service.leaveTeam()
     if (!resp.errno) {

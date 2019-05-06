@@ -20,10 +20,11 @@ class Oauth extends Component {
     const res = await Service.getUserInfo()
 
     if (!res.errno) {
-      const { userInfo, teamInfo, sprintInfo } = res.data
+      const { userInfo, teamInfo, sprintInfo, backlogInfo } = res.data
       this.props.userStore.setUser(userInfo)
       teamInfo && this.props.userStore.setTeam(teamInfo)
       sprintInfo && this.props.sprintStore.setSprintList(sprintInfo)
+      backlogInfo && this.props.backlogStore.setBacklog(backlogInfo)
     }
   }
 

@@ -7,15 +7,16 @@ import './assets/styles/normalize.css'
 import './assets/styles/index.css'
 import userStore from './store/user'
 import sprintStore from './store/sprint'
+import backlogStore from './store/backlog'
 import Layout from './components/Layout'
-import Intro from './pages/Intro'
+// import Intro from './pages/Intro'
 // import './registerServiceWorker'
 
 ReactDOM.render(
-  <Provider sprintStore={sprintStore} userStore={userStore}>
+  <Provider sprintStore={sprintStore} userStore={userStore} backlogStore={backlogStore}>
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Intro} />
+        {/*<Route exact path="/" component={Intro} />*/}
         <Route path="/" component={Layout} />
       </Switch>
     </BrowserRouter>

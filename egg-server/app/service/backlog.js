@@ -17,6 +17,14 @@ class BacklogService extends require('egg').Service {
     return { data: doc }
   }
   /**
+   * 获得指定团队的所有backlogs [Oauth Service使用]
+   * @param {string} teamId 团队Id
+   * @return {object} 所有backlogs
+   */
+  async getBacklogInfo(teamId) {
+    return await this.toPromise(this.BacklogModel.find({ teamId }))
+  }
+  /**
    * 创建一个backlog, payload中包含中间件处理的userId
    * @param {object} payload
    * @return {object} 创建成功的文档

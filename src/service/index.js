@@ -93,4 +93,19 @@ export default new class apiManager extends BaseModule {
   leaveTeam() {
     return this.post('team/leave')
   }
+  /**
+   * Backlog
+   */
+  getBacklogs(teamId) {
+    return this.get(`backlogs?teamId=${teamId}`)
+  }
+  createBacklog(payload) {
+    return this.post('backlog', payload)
+  }
+  deleteBacklog(backlogId) {
+    return this.delete(`backlog/${backlogId}`)
+  }
+  updateBacklog(backlogId, ...payload) {
+    return this.put('backlog', { backlogId, ...payload })
+  }
 }()

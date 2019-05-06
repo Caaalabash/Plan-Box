@@ -15,38 +15,40 @@ class OauthService extends require('egg').Service {
     const userInfo = JSON.parse(JSON.stringify(userInfoRes.data))
     !userInfo.name && (userInfo.name = fallbackUserName)
     !userInfo.email && (userInfo.email = '暂无邮箱')
-    const update = ['name', 'email', 'avatar_url'].reduce((obj, key) => {
+    const update = ['id', 'name', 'email', 'avatar_url'].reduce((obj, key) => {
       obj[key] = userInfo[key] || ''
       return obj
     }, {})
 
     const options = { 'new': true, 'upsert': true }
     const doc =  await this.toPromise(
-      this.OauthModel.findOneAndUpdate({ id: userInfo.id }, update, options)
+      this.OauthModel.findOneAndUpdate({ id: userInfo.id, provider: 'Github' }, update, options)
     )
 
     return { data: doc }
   }
   /**
    * 获取个人信息
-   * @description 如果有team, 在此处获取team信息, 并获取team相关的Sprint信息
+   * @description 如果有team, 在此处获取team信息, 并获取team相关的Sprint信息 任务池信息
    * @param {string} userId 用户Id
-   * @return {object} { userInfo, [teamInfo], [sprintInfo] }
+   * @return {object} { userInfo, [teamInfo], [sprintInfo], [backlogInfo] }
    */
   async getUserInfo({ userId }) {
     const userInfo = await this.toPromise( this.OauthModel.findById(userId) )
     const teamId = userInfo && userInfo.team && userInfo.team.belong
 
     if (teamId) {
-      const [teamInfo, sprintInfo] = await Promise.all([
+      const [teamInfo, sprintInfo, backlogInfo] = await Promise.all([
         this.service.team.getTeamInfo(teamId),
-        this.service.sprint.getSprints(teamId)
+        this.service.sprint.getSprints(teamId),
+        this.service.backlog.getBacklogInfo(teamId)
       ])
       return {
         data: {
           userInfo,
           teamInfo,
-          sprintInfo
+          sprintInfo,
+          backlogInfo
         }
       }
     }

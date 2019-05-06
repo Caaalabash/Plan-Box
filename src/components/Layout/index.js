@@ -10,6 +10,7 @@ import Sprint from 'pages/Sprint'
 import Lane from 'pages/Lane'
 import WorkOrder from 'pages/WorkOrder'
 import Team from 'pages/Team'
+import Backlog from 'pages/Backlog'
 import RightMenu from 'components/RightMenu'
 import Oauth from 'components/Oauth'
 
@@ -56,9 +57,16 @@ class AppLayout extends Component {
             <Menu
               mode="inline"
               defaultSelectedKeys={[pathname]}
-              defaultOpenKeys={['sub1']}
               style={{ height: '100%', borderRight: 0 }}
             >
+              <Menu.Item key="/team">
+                <Icon type="team" />
+                <Link to="/team" style={{ display: 'inline-block' }}>Team</Link>
+              </Menu.Item>
+              <Menu.Item key="/backlog">
+                <Icon type="file-search" />
+                <Link to="/backlog" style={{ display: 'inline-block' }}>Backlog</Link>
+              </Menu.Item>
               <Menu.Item key="/sprint">
                 <Icon type="calendar" />
                 <Link to="/sprint" style={{ display: 'inline-block' }}>Sprint</Link>
@@ -71,10 +79,6 @@ class AppLayout extends Component {
                 <Icon type="form" />
                 <Link to="/workorder" style={{ display: 'inline-block' }}>WorkOrder</Link>
               </Menu.Item>
-              <Menu.Item key="/team">
-                <Icon type="team" />
-                <Link to="/team" style={{ display: 'inline-block' }}>Team</Link>
-              </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ padding: '0 24px 24px' }}>
@@ -83,6 +87,7 @@ class AppLayout extends Component {
               <Route path="/lane" component={Lane} />
               <Route path="/workorder" component={WorkOrder} />
               <Route path="/team" component={Team} />
+              <Route path="/backlog" component={Backlog} />
             </Content>
           </Layout>
         </Layout>
