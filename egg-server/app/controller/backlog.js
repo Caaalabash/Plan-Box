@@ -8,7 +8,7 @@ class BacklogController extends require('egg').Controller {
   }
 
   async deleteBacklog(ctx) {
-    ctx.body = await ctx.service.backlog.deleteBacklog(ctx.request.body)
+    ctx.body = await ctx.service.backlog.deleteBacklog({ ...ctx.request.body, ...ctx.params })
   }
 
   async updateBacklog(ctx) {

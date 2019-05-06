@@ -57,11 +57,11 @@ class BacklogService extends require('egg').Service {
    */
   async updateBacklog({ userId, backlogId, ...payload }) {
     const { title, desc, priority } = payload
-    await this.toPromise(
-      this.BacklogModel.findOneAndUpdate({ _id: backlogId }, { $set: { title, desc, priority }})
+    const doc = await this.toPromise(
+      this.BacklogModel.findOneAndUpdate({ _id: backlogId }, { title, desc, priority }, { 'new': true })
     )
 
-    return { msg: '更新成功' }
+    return { msg: '更新成功', data: doc }
   }
 }
 

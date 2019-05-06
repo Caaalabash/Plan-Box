@@ -13,6 +13,7 @@ import Team from 'pages/Team'
 import Backlog from 'pages/Backlog'
 import RightMenu from 'components/RightMenu'
 import Oauth from 'components/Oauth'
+import InvokeLiteForm from 'components/InvokeLiteForm'
 
 const { Header, Content, Sider } = Layout
 
@@ -92,7 +93,8 @@ class AppLayout extends Component {
           </Layout>
         </Layout>
         <Oauth visible={oauthModalVisible} toggleModal={this.toggleModal} />
-        <RightMenu/>
+        <InvokeLiteForm />
+        <RightMenu />
       </Layout>
     )
   }

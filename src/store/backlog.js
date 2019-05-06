@@ -43,7 +43,7 @@ class BacklogStore {
     const resp = await Service.updateBacklog(backlogId, payload)
     const backlogIndex = this.backlog.findIndex(item => item._id === backlogId)
     if (!resp.errno) {
-      this.backlog[backlogIndex] = { ...this.backlog[backlogIndex], ...payload }
+      this.backlog[backlogIndex] = resp.data
     }
   }
 }

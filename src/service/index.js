@@ -105,7 +105,7 @@ export default new class apiManager extends BaseModule {
   deleteBacklog(backlogId) {
     return this.delete(`backlog/${backlogId}`)
   }
-  updateBacklog(backlogId, ...payload) {
+  updateBacklog(backlogId, payload) {
     return this.put('backlog', { backlogId, ...payload })
   }
 }()

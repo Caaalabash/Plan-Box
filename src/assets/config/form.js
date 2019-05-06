@@ -152,6 +152,43 @@ export const createTaskForm = responsibleList => [
     },
   },
 ]
+export const createBacklogForm = (backlog = {}) => [
+  {
+    key: 'title',
+    label: '任务主题',
+    initialValue: backlog.title || '',
+    rules: [
+      { required: true, message: '请输入任务标题' }
+    ],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
+    key: 'desc',
+    label: '任务描述',
+    initialValue: backlog.desc || '',
+    rules: [],
+    componentOptions: {
+      type: 'input',
+    },
+  },
+  {
+    key: 'priority',
+    label: '任务紧急程度',
+    initialValue: isNaN(backlog.priority) ? '0' : '' + backlog.priority,
+    rules: [],
+    componentOptions: {
+      type: 'select',
+      list: [
+        { label: '建议', value: '0' },
+        { label: '重要', value: '1' },
+        { label: '紧急', value: '2' },
+        { label: '致命', value: '3' },
+      ]
+    },
+  },
+]
 
 /**
  * 创建Issue表单配置

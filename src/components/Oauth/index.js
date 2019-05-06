@@ -7,6 +7,7 @@ import Service from 'service'
 
 @inject('userStore')
 @inject('sprintStore')
+@inject('backlogStore')
 @observer
 class Oauth extends Component {
 
