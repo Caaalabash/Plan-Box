@@ -41,3 +41,5 @@ after_success:
   - docker push caaalabash/plan-box:$TRAVIS_BRANCH-$TRAVIS_BUILD_ID-BE
   # 执行服务器脚本 传递构建Id
   - ssh root@60.205.219.85 -o StrictHostKeyChecking=no "/mynode/plan-box-ci/deploy/startup.sh $TRAVIS_BRANCH-$TRAVIS_BUILD_ID"
+  # 重启nginx
+  - ssh root@60.205.219.85 -o StrictHostKeyChecking=no "nginx -s reload"

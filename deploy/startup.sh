@@ -11,6 +11,3 @@ docker rmi $(docker images |  grep "plan"  | awk '{print $3}')
 # 首先运行后端服务
 cd /mynode/plan-box-ci/deploy
 docker-compose up -d
-
-# 重启Nginx
-nginx -s reload
