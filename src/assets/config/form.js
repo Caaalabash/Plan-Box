@@ -53,17 +53,14 @@ export const createSprintForm = (sprintDefault = {}, responsibleList) => [
       size: 'default'
     },
   },
-
 ]
 /**
  * 创建子任务表单
  * 1. 任务主题
  * 2. 任务描述
- * 3. 任务故事点
- * 4. 任务紧急程度
- * 5. 相关开发
- * 6. 相关产品
- * 7. 相关测试
+ * 3. 任务紧急程度
+ * 4. 任务故事点
+ * 5. 经办人
  * @param {array} responsibleList 成员列表
  * @return {array} 表单配置
  */
@@ -116,35 +113,11 @@ export const createTaskForm = responsibleList => [
     },
   },
   {
-    key: 'rd',
-    label: '相关开发',
+    key: 'responsible',
+    label: '经办人',
     initialValue: '',
     rules: [
-      { required: true, message: '请指定开发' }
-    ],
-    componentOptions: {
-      type: 'select',
-      list: responsibleList
-    },
-  },
-  {
-    key: 'qa',
-    label: '相关测试',
-    initialValue: '',
-    rules: [
-      { required: true, message: '请指定测试' }
-    ],
-    componentOptions: {
-      type: 'select',
-      list: responsibleList
-    },
-  },
-  {
-    key: 'pm',
-    label: '相关产品',
-    initialValue: '',
-    rules: [
-      { required: true, message: '请指定产品' }
+      { required: true, message: '请指定经办人' }
     ],
     componentOptions: {
       type: 'select',
@@ -152,44 +125,6 @@ export const createTaskForm = responsibleList => [
     },
   },
 ]
-export const createBacklogForm = (backlog = {}) => [
-  {
-    key: 'title',
-    label: '任务主题',
-    initialValue: backlog.title || '',
-    rules: [
-      { required: true, message: '请输入任务标题' }
-    ],
-    componentOptions: {
-      type: 'input',
-    },
-  },
-  {
-    key: 'desc',
-    label: '任务描述',
-    initialValue: backlog.desc || '',
-    rules: [],
-    componentOptions: {
-      type: 'input',
-    },
-  },
-  {
-    key: 'priority',
-    label: '任务紧急程度',
-    initialValue: isNaN(backlog.priority) ? '0' : '' + backlog.priority,
-    rules: [],
-    componentOptions: {
-      type: 'select',
-      list: [
-        { label: '建议', value: '0' },
-        { label: '重要', value: '1' },
-        { label: '紧急', value: '2' },
-        { label: '致命', value: '3' },
-      ]
-    },
-  },
-]
-
 /**
  * 创建Issue表单配置
  * 1. Issue标题

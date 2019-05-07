@@ -11,7 +11,7 @@
  * responsible: 开发主要负责人(用户_id)
  * task:
  *   title: 子任务名称
- *   team: 子任务负责人
+ *   responsible: 子任务负责人
  *   storyPoint: 子任务故事点
  * storyPoint(virtual): 总故事点
  */
@@ -32,7 +32,7 @@ module.exports = app => {
     task: [{
       _id: ObjectId,
       title: String,
-      team: String,
+      responsible: String,
       storyPoint: Number,
     }]
   }, { toJSON: { virtuals: true } })

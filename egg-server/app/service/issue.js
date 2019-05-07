@@ -25,7 +25,7 @@ class IssueService extends require('egg').Service {
    * @return {object} success response
    */
   async deleteIssue({ taskId, issueId }) {
-    const doc = await this.toPromise(
+    await this.toPromise(
       this.TaskModel.findOneAndUpdate({ _id: taskId }, { $pull: { issue: { _id: issueId } } }, { 'new': true })
     )
 

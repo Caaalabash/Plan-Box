@@ -67,6 +67,9 @@ class TeamService extends require('egg').Service {
     const { permission, belong } = await this.service.oauth.getTeamInfo(userId)
     if (!['master', 'owner'].includes(permission)) return { errorMsg: '权限不足' }
 
+    const isExist = await this.service.oauth.getTeamInfo(inviteUserId)
+    if (!isExist) return { errorMsg: '该用户不存在' }
+
     await Promise.all([
       this.service.oauth.setTeamInfo(inviteUserId, belong, 'guest'),
       this.toPromise(

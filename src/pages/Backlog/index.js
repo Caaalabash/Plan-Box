@@ -1,17 +1,17 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import { Button, List, Avatar, message } from 'antd'
+import { Button, List, Avatar, message, Popconfirm } from 'antd'
 
 import emitter from 'utils/events'
-import { createBacklogForm } from 'assets/config/form'
+import { createBacklogForm, completeTaskForm } from 'assets/config/backlog'
 import suggestion from 'assets/images/idea.svg'
 import lowPriority from 'assets/images/low_priority.svg'
 import midPriority from 'assets/images/medium_priority.svg'
 import highPriority from 'assets/images/high_priority.svg'
 import './index.scss'
 
-
 @inject('userStore')
+@inject('sprintStore')
 @inject('backlogStore')
 @observer
 class Backlog extends React.Component {
@@ -38,10 +38,6 @@ class Backlog extends React.Component {
     })
   }
 
-  deleteBacklog = backlogId => {
-    this.props.backlogStore.deleteBacklog(backlogId)
-  }
-
   updateBacklog = backlog => {
     emitter.emit('invokeLiteForm', {
       formTitle: '更新子任务',
@@ -51,6 +47,28 @@ class Backlog extends React.Component {
         done()
       }
     })
+  }
+
+  moveIntoSprint = ({ _id, title, desc, priority }) => {
+    const responsibleList = this.props.userStore.responsibleList
+    const sprintList = this.props.sprintStore.sprintListForSelect
+    const baseInfo = { title, desc, priority }
+
+    emitter.emit('invokeLiteForm', {
+      formTitle: '补全子任务',
+      formContent: completeTaskForm(responsibleList, sprintList),
+      onOk: async ({ relateSprint, ...payload }, done) => {
+        await Promise.all([
+          this.props.backlogStore.deleteBacklog(_id),
+          this.props.sprintStore.addTask(relateSprint, { ...payload, ...baseInfo })
+        ])
+        done()
+      }
+    })
+  }
+
+  deleteBacklog = backlogId => {
+    this.props.backlogStore.deleteBacklog(backlogId)
   }
 
   render() {
@@ -67,18 +85,20 @@ class Backlog extends React.Component {
 
     return (
       <div className='backlog-layout'>
-        <div className="backlog-layout-button">
+        <div className="backlog-layout-operate">
           <Button type="default" icon="plus" onClick={this.createBacklog}>新任务</Button>
         </div>
         <List
+          className="backlog-layout-list"
           itemLayout="horizontal"
           dataSource={list}
           renderItem={item => (
             <List.Item actions={[
-              // eslint-disable-next-line
-              <a onClick={this.updateBacklog.bind(this, item)}>修改</a>,
-              // eslint-disable-next-line
-              <a onClick={this.deleteBacklog.bind(this, item._id)}>删除</a>
+              <span className="list-item" onClick={this.updateBacklog.bind(this, item)}>修改</span>,
+              <Popconfirm title="确定要删除这个子任务吗?" onConfirm={this.deleteBacklog.bind(this, item._id)} okText="确认" cancelText="取消">
+                <span className="list-item">删除</span>
+              </Popconfirm>,
+              <span className="list-item" onClick={this.moveIntoSprint.bind(this, item)}>添加进子任务</span>
             ]}>
               <List.Item.Meta
                 avatar={<Avatar src={item.priorityAsset} />}

@@ -1,6 +1,20 @@
 .backlog-layout {
+  &-operate {
+    margin-bottom: 20px;
+  }
+  &-list {
+    padding-left: 30px;
+    padding-right: 30px;
+    box-shadow: 0 0 3px 3px rgb(247, 247, 247);
+    .list-item {
+      color: #1890ff;
+      &:hover {
+        color: #2f54eb;
+      }
+    }
+  }
   &-avatar {
-    width: 30px;
+    width: 20px;
     border-radius: 50%;
   }
 }

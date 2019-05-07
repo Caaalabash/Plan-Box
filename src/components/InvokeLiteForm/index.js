@@ -57,6 +57,7 @@ class InvokeLiteForm extends Component {
     const { modalVisible } = this.state
     return (
       <Modal
+        destroyOnClose
         title={this.formTitle}
         visible={modalVisible}
         onOk={this.invokeModalOk}

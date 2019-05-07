@@ -76,6 +76,7 @@ class OauthService extends require('egg').Service {
     const doc = await this.toPromise(
       this.OauthModel.findOne({ _id: userId })
     )
+    if (!doc) return {}
 
     return doc.team || {}
   }

@@ -34,6 +34,12 @@ class SprintStore {
     return this.sprintList.find(sprint => sprint._id === this.chooseSprintId) || {}
   }
 
+  @computed get sprintListForSelect() {
+    return this.sprintList.map(({ title, _id }) => ({
+      label: title, value: _id
+    }))
+  }
+
   @action
   async setChooseSprintId(sprintId) {
     sprintId = sprintId || this.firstSprintId

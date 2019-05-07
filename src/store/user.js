@@ -1,6 +1,8 @@
 import { observable, action, computed } from 'mobx'
 import Service from 'service'
 
+import { PERMISSION_MAP } from 'utils/constant'
+
 class UserStore {
   /**
    * 用户登录信息
@@ -38,6 +40,13 @@ class UserStore {
     }))
   }
   /**
+   * 获取当前权限的覆盖范围
+   */
+  @computed get permissionRange() {
+    if (!this.permission) return []
+    return PERMISSION_MAP[this.permission]
+  }
+  /**
    * 设置登录信息
    */
   @action
@@ -65,7 +74,9 @@ class UserStore {
   @action
   async inviteUser(inviteUserId) {
     const resp = await Service.inviteUser(inviteUserId)
-    if (!resp.errno) this.team.memberInfo.push(resp.data)
+    if (!resp.errno) {
+      this.team.memberInfo = [...this.team.memberInfo, resp.data]
+    }
   }
   /**
    * 提升成员权限

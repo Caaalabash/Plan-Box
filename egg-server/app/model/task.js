@@ -8,7 +8,7 @@
  * priority: 子任务优先级
  * sequence: 子任务排序
  * status: 子任务状态
- * team: 负责团队
+ * responsible: Task经办人,
  * issue:
  *   priority: issue优先级
  *   title: issue名称
@@ -39,11 +39,7 @@ module.exports = app => {
     priority: { type: Number, default: 0 },
     sequence: { type: Number, default: 0 },
     status: { type: Number, default: 0 },
-    team: {
-      pm: { type: String, default: '' },
-      rd: { type: String, default: '' },
-      qa: { type: String, default: '' },
-    },
+    responsible: String,
     issue: [{
       priority: Number,
       title: String,

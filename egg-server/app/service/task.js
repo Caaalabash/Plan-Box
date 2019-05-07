@@ -40,7 +40,7 @@ class TaskService extends require('egg').Service {
             _id: taskDoc._id,
             title: data.title,
             storyPoint: data.storyPoint,
-            team: data.team.rd,
+            responsible: data.responsible,
           },
         }
       })
@@ -57,7 +57,7 @@ class TaskService extends require('egg').Service {
   async updateTask({ userId, ...data }) {
     const options = { 'new': true, 'upsert': true }
     const { _id, ...update } = data
-    const shouldUpdateSprint = data.title || (data.team && data.team.rd) || data.storyPoint
+    const shouldUpdateSprint = data.title || data.responsible || data.storyPoint
 
     const doc = await this.toPromise(
       this.TaskModel.findByIdAndUpdate(_id, update, options)
@@ -70,7 +70,7 @@ class TaskService extends require('egg').Service {
               _id,
               title: doc.title,
               storyPoint: doc.storyPoint,
-              team: doc.team.rd
+              responsible: doc.responsible
             }
           }
         })

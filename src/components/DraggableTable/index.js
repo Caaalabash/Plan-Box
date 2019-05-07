@@ -21,10 +21,9 @@ const TableHeader = [
   { title: '任务描述', key: 'desc' },
   { title: '故事点', key: 'storyPoint' },
   { title: '优先级', key: 'priority', handler: translatePriority },
-  { title: '负责人', key: 'team', handler: getResponsible }
+  { title: '负责人', key: 'responsible', handler: getResponsible }
 ]
 function getResponsible(val) {
-  val = typeof val === 'string' ? val : val.rd
   const member = this.props.userStore.teamMember.find(member => member._id === val)
   return member ? member.name : '[该成员不在团队内]'
 }

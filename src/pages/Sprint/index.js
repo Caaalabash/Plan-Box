@@ -16,13 +16,10 @@ const processPayload = formData =>
   Object.keys(formData).reduce((payload, key) => {
     switch (key) {
       case 'range': [payload.startTime, payload.endTime] = formData[key].map(moment => moment.valueOf()); break
-      case 'pm': payload.team.pm = formData[key]; break
-      case 'rd': payload.team.rd = formData[key]; break
-      case 'qa': payload.team.qa = formData[key]; break
       default: payload[key] = formData[key]; break
     }
     return payload
-  }, { team: {} })
+  }, {})
 
 @inject('sprintStore')
 @inject('userStore')
