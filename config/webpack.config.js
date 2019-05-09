@@ -562,7 +562,7 @@ module.exports = function(webpackEnv) {
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the Webpack build.
-      isEnvProduction &&
+      // isEnvProduction &&
         // new WorkboxWebpackPlugin.GenerateSW({
         //   skipWaiting: true,
         //   clientsClaim: true,
