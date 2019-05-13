@@ -34,7 +34,7 @@ class SprintService extends require('egg').Service {
    * @return {object} Sprint信息
    */
   async setSprint({ userId, ...data }) {
-    const { belong } = await this.service.oauth.getTeamInfo(userId)
+    const { belong } = await this.service.oauth.getUserProp(userId, 'team')
     if (!belong) return { errorMsg: '请先创建一个团队' }
 
     const checkResult = await this.toPromise( this.SprintModel.findOne({ title: data.title }) )

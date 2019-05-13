@@ -57,8 +57,8 @@ export default new class apiManager extends BaseModule {
     return this.get('oauth/logout')
   }
   // 工单
-  getWorkOrder({ isAdmin = false }) {
-    return this.get(`workorder?isAdmin=${isAdmin}`)
+  getWorkOrder() {
+    return this.get(`workorder`)
   }
   setWorkOrder(data) {
     return this.post('workorder', data)
@@ -66,8 +66,8 @@ export default new class apiManager extends BaseModule {
   updateWorkOrder(data) {
     return this.put('workorder', data)
   }
-  deleteWorkOrder(userId, _id) {
-    return this.delete(`workorder/${_id}?userId=${userId}`)
+  deleteWorkOrder(workorderId) {
+    return this.delete(`workorder/${workorderId}`)
   }
   /**
    * Team 模块请求

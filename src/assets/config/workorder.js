@@ -43,3 +43,37 @@ export const createWorkOrderForm = () => [
     },
   },
 ]
+/**
+ * 回复工单
+ * 1. 工单反馈
+ * @return {array} 表单配置
+ */
+export const createFeedbackForm = () => [
+  {
+    key: 'feedback',
+    label: '工单反馈',
+    initialValue: '',
+    rules: [
+      { required: true, message: '请输入工单反馈' }
+    ],
+    componentOptions: {
+      type: 'input-area',
+    },
+  },
+]
+/**
+ * 查看
+ * 1. 工单反馈
+ * @return {array} 表单配置
+ */
+export const reviewFeedbackForm = (workorder = {}) => [
+  {
+    key: 'feedback',
+    label: '工单反馈',
+    initialValue: workorder.feedback,
+    componentOptions: {
+      type: 'input-area',
+      disabled: true
+    },
+  },
+]

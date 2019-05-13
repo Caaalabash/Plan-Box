@@ -18,36 +18,39 @@ class WorkorderService extends require('egg').Service {
   }
   /**
    * 删除工单
-   * @param {string} orderId 用户
+   * @param {string} ticketId 工单Id
+   * @param {string} userId 用户Id
    * @return {object} success response
    */
-  async deleteWorkOrder({ orderId }) {
+  async deleteWorkOrder({ ticketId, userId }) {
     await this.toPromise(
-      this.TicketModel.findOneAndRemove({ _id: orderId })
+      this.TicketModel.findOneAndRemove({ _id: ticketId, userId })
     )
 
     return { msg: '删除成功' }
   }
   /**
-   * 修改工单, 每次都全量更新
-   * @param {object} payload 工单载体
+   * 增加工单反馈
+   * @param {string} feedback 工单反馈
+   * @param {string} ticketId 工单索引
    * @return {object} success response
    */
-  async updateWorkOrder({ userId, feedback, status, type, title, content }) {
+  async updateWorkOrder({ ticketId, feedback }) {
+    const finished = 2
     const doc = await this.toPromise(
-      this.TicketModel.findOneAndUpdate({ _id: userId }, { $set: { feedback, status, type, title, content} }, { 'new': true })
+      this.TicketModel.findOneAndUpdate({ _id: ticketId }, { $set: { feedback, status: finished } }, { 'new': true })
     )
 
     return { msg: '修改成功', data: doc }
   }
   /**
    * 获取工单
-   * @param {boolean} isAdmin 是否为管理员
    * @param {string} userId 用户Id
    * @return {object} 当前身份下能获得的全部工单
    */
-  async getWorkOrder({ isAdmin = false, userId }){
-    const query = isAdmin ? { } : { userId }
+  async getWorkOrder({ userId }){
+    const isAdmin = await this.service.oauth.getUserProp(userId, 'isAdmin')
+    const query = isAdmin ? {} : { userId }
     const doc = await this.toPromise(
       this.TicketModel.find(query)
     )

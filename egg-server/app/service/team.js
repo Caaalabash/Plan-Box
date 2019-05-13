@@ -49,7 +49,7 @@ class TeamService extends require('egg').Service {
    * @return {object} 团队信息
    */
   async createTeam({ name, userId }) {
-    const { belong } = await this.service.oauth.getTeamInfo(userId)
+    const { belong } = await this.service.oauth.getUserProp(userId, 'team')
     if (belong) return { errorMsg: '只能创建一个TEAM' }
 
     const result = await this.toPromise( this.TeamModel.create({ name, owner: userId }) )
@@ -64,10 +64,10 @@ class TeamService extends require('egg').Service {
    * @return {object} 团队信息
    */
   async inviteTeamMember({ userId, inviteUserId }) {
-    const { permission, belong } = await this.service.oauth.getTeamInfo(userId)
+    const { permission, belong } = await this.service.oauth.getUserProp(userId, 'team')
     if (!['master', 'owner'].includes(permission)) return { errorMsg: '权限不足' }
 
-    const isExist = await this.service.oauth.getTeamInfo(inviteUserId)
+    const isExist = await this.service.oauth.getUserProp(inviteUserId, 'team')
     if (!isExist) return { errorMsg: '该用户不存在' }
 
     await Promise.all([
@@ -102,8 +102,8 @@ class TeamService extends require('egg').Service {
    */
   async setPermission({ userId, enhanceUserId, permission }) {
     const [userTeamInfo, enhanceUserTeamInfo] = await Promise.all([
-      this.service.oauth.getTeamInfo(userId),
-      this.service.oauth.getTeamInfo(enhanceUserId)
+      this.service.oauth.getUserProp(userId, 'team'),
+      this.service.oauth.getUserProp(enhanceUserId, 'team')
     ])
     if (!this.permissionMap[userTeamInfo.permission].includes(enhanceUserTeamInfo.permission)) return { errorMsg: '权限不足' }
 
@@ -118,7 +118,7 @@ class TeamService extends require('egg').Service {
    * @return {object} success response
    */
   async deleteTeamMember({ userId, memberId }) {
-    const { permission, belong } = await this.service.oauth.getTeamInfo(userId)
+    const { permission, belong } = await this.service.oauth.getUserProp(userId, 'team')
     if (permission !== 'owner') return { errorMsg: '权限不足' }
 
     await Promise.all([
@@ -153,7 +153,7 @@ class TeamService extends require('egg').Service {
    * @return success response
    */
   async leave({ userId }) {
-    const { permission, belong } = await this.service.oauth.getTeamInfo(userId)
+    const { permission, belong } = await this.service.oauth.getUserProp(userId, 'team')
     const { heir, member } = await this.service.team.getHeir(belong)
     const isOwner = permission === 'owner'
 

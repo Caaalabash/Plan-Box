@@ -1,10 +1,10 @@
 import React from 'react'
-import { Table, Tag, Button } from 'antd'
+import { Table, Tag, Button, Divider } from 'antd'
 import { inject } from 'mobx-react'
 
 import Service from 'service'
 import emitter from 'utils/events'
-import { createWorkOrderForm } from 'assets/config/workorder'
+import { createWorkOrderForm, createFeedbackForm, reviewFeedbackForm } from 'assets/config/workorder'
 import './index.scss'
 
 const renderWorkorderType = type => {
@@ -29,47 +29,72 @@ const renderWorkorderStatus = status => {
     <span>{label}</span>
   )
 }
-const columns = [
-  {
-    title: '问题',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: '问题内容',
-    dataIndex: 'content',
-    key: 'content',
-  },
-  {
-    title: '提交时间',
-    dataIndex: 'createTime',
-    key: 'createTime',
-  },
-  {
-    title: '问题分类',
-    key: 'type',
-    dataIndex: 'type',
-    render: renderWorkorderType,
-  },
-  {
-    title: '问题状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: renderWorkorderStatus,
-  }
-]
+const renderAction = function (userState, { _id, feedback }) {
+  const { isAdmin } = userState
+  return (
+    <span>
+      <a onClick={() => this.deleteWorkOrder(_id)}>删除</a>
+      { isAdmin && !feedback &&
+        <span>
+          <Divider type="vertical"/>
+          <a onClick={() => this.replyWorkOrder(_id)}>回复</a>
+        </span>
+      }
+      { feedback &&
+        <span>
+          <Divider type="vertical"/>
+          <a onClick={() => this.reviewWorkOrder(feedback)}>查看</a>
+        </span>
+      }
+    </span>
+  )
+}
+const columns = function (userState) {
+  return [
+    {
+      title: '问题',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: '问题内容',
+      dataIndex: 'content',
+      key: 'content',
+    },
+    {
+      title: '提交时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+    },
+    {
+      title: '问题分类',
+      key: 'type',
+      dataIndex: 'type',
+      render: renderWorkorderType,
+    },
+    {
+      title: '问题状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: renderWorkorderStatus,
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: renderAction.bind(this, userState),
+    },
+  ]
+}
 
 @inject('userStore')
 class WorkOrder extends React.Component {
-
-  isAdmin = true
 
   state = {
     tableData: [],
   }
 
   getWorkOrder = async () => {
-    const resp = await Service.getWorkOrder({ isAdmin: this.isAdmin })
+    const resp = await Service.getWorkOrder()
     if (!resp.errno) {
       this.setState({ tableData: resp.data })
     }
@@ -89,21 +114,55 @@ class WorkOrder extends React.Component {
     })
   }
 
-  componentDidMount() {
-    const { userStore } = this.props
-    if (!userStore.isLogin) return
+  deleteWorkOrder = async (id) => {
+    const { tableData } = this.state
+    const res = await Service.deleteWorkOrder(id)
+    if (!res.errno) {
+      const deleteIndex = tableData.findIndex(ticket => ticket._id === id)
+      tableData.splice(deleteIndex, 1)
+      this.setState({ tableData })
+    }
+  }
 
-    this.isAdmin = userStore.user.isAdmin
+  replyWorkOrder = async (id) => {
+    const { tableData } = this.state
+    emitter.emit('invokeLiteForm', {
+      formTitle: '回复工单',
+      formContent: createFeedbackForm(),
+      onOk: async ({ feedback }, done) => {
+        const resp = await Service.updateWorkOrder({ ticketId: id, feedback })
+        if (!resp.errno) {
+          const updateIndex = tableData.findIndex(ticket => ticket._id === id)
+          tableData[updateIndex] = resp.data
+          this.setState({ tableData })
+        }
+        done()
+      }
+    })
+  }
+
+  reviewWorkOrder = (feedback) => {
+    emitter.emit('invokeLiteForm', {
+      formTitle: '查看反馈',
+      formContent: reviewFeedbackForm({ feedback }),
+      onOk: async (params, done) => {
+        done()
+      }
+    })
+  }
+
+  componentDidMount() {
     this.getWorkOrder()
   }
 
   render() {
     const { tableData } = this.state
+    const userState = this.props.userStore.user || {}
 
     return (
       <div className="workorder-layout">
         <Button className="workorder-layout-button" icon="plus" onClick={this.createWorkOrder}>新建工单</Button>
-        <Table columns={columns} dataSource={tableData}/>
+        <Table rowKey="_id" columns={columns.call(this, userState)} dataSource={tableData}/>
       </div>
     )
   }

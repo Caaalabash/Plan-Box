@@ -56,6 +56,19 @@ class OauthService extends require('egg').Service {
     return { data: { userInfo } }
   }
   /**
+   * 获取用户某个字段的信息
+   * @param {string} userId 用户Id
+   * @param {string} prop 键
+   * @return 值
+   */
+  async getUserProp(userId, prop) {
+    const doc = await this.toPromise(this.OauthModel.findOne({ _id: userId }))
+    if (!doc) return
+    const obj = doc.toObject()
+
+    return prop ? obj[prop] : obj
+  }
+  /**
    * 设定团队 [TEAM SERVICE 使用]
    * @param {string} userId 用户Id
    * @param {string} belong 目标TEAM Id
@@ -66,19 +79,6 @@ class OauthService extends require('egg').Service {
     await this.toPromise(
       this.OauthModel.findOneAndUpdate({ _id: userId }, { team: { belong, permission } }, { 'new': true } )
     )
-  }
-  /**
-   * 获取用户TEAM字段信息 [TEAM SERVICE 使用]
-   * @param {string} userId 用户Id
-   * @return {object} team 用户TEAM信息
-   */
-  async getTeamInfo(userId) {
-    const doc = await this.toPromise(
-      this.OauthModel.findOne({ _id: userId })
-    )
-    if (!doc) return {}
-
-    return doc.team || {}
   }
   /**
    * 获取所有用户TEAM相关信息 [TEAM SERVICE 使用]
