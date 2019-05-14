@@ -611,6 +611,7 @@ module.exports = function(webpackEnv) {
             accessKeyId: process.env.PROD_OSS_AK,
             accessKeySecret: process.env.PROD_OSS_SK,
           },
+          exclude: /.*\.(html|map)$/,
           removeMode: false,
         }),
       // TypeScript type checking
