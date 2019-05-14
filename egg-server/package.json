@@ -10,7 +10,8 @@
     "egg-mongoose": "^3.1.1",
     "egg-passport": "^2.0.1",
     "egg-passport-github": "^1.0.0",
-    "egg-scripts": "^2.5.0"
+    "egg-scripts": "^2.5.0",
+    "egg-socket.io": "^4.1.5"
   },
   "devDependencies": {
     "autod": "^3.0.1",
@@ -26,10 +27,10 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --title=egg-server-egg-api",
+    "start": "egg-scripts start --title=egg-server-egg-api --sticky",
     "start:prod": "npm start -- --env prod",
     "stop": "egg-scripts stop --title=egg-server-egg-api",
-    "dev": "egg-bin dev",
+    "dev": "egg-bin dev --sticky",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",

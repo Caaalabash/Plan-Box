@@ -1,13 +1,20 @@
 import { observable, action, computed } from 'mobx'
 import Service from 'service'
+import webSocket from 'socket.io-client'
 
 import { PERMISSION_MAP } from 'utils/constant'
 
 class UserStore {
+  path = process.env.NODE_ENV === 'development' ? 'http://localhost:7001' : 'https://team.calabash.top'
+  ws = null
   /**
    * 用户登录信息
    */
   @observable user = null
+  /**
+   * 是否连接websocket
+   */
+  @observable isConnect = false
   /**
    * 用户团队信息(依赖登录信息)
    */
@@ -52,6 +59,15 @@ class UserStore {
   @action
   setUser(userData) {
     this.user = userData
+    this.ws = webSocket(this.path, {
+      path: '/socket'
+    })
+    this.ws.on('connect', () => {
+      this.isConnect = true
+    })
+    this.ws.on('disconnect', () => {
+      this.isConnect = false
+    })
   }
   /**
    * 设置团队信息
@@ -67,6 +83,8 @@ class UserStore {
   resetUser() {
     this.user = null
     this.team = null
+    this.ws = null
+    this.isConnect = false
   }
   /**
    * 邀请成员

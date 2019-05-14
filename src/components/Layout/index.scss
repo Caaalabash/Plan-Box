@@ -3,5 +3,24 @@
     float: right;
     margin-top: 16px;
     cursor: pointer;
+    overflow: visible;
+    & > img {
+      border-radius: 50%;
+    }
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    &.online:before {
+      background-color: rgb(87, 226, 109);
+    }
+    &.offline:before {
+      background-color: rgb(174, 174, 174);
+    }
   }
 }

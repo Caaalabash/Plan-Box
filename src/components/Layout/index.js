@@ -48,7 +48,12 @@ class AppLayout extends Component {
           {
             userStore.isLogin
               ? (<Dropdown overlay={menu}>
-                  <Avatar className="c-layout-avatar" size={32} src={userStore.user.avatar_url} alt={userStore.user.name} />
+                  <Avatar
+                    className={ userStore.isConnect ? "c-layout-avatar online" : "c-layout-avatar offline" }
+                    size={32}
+                    src={userStore.user.avatar_url}
+                    alt={userStore.user.name}
+                  />
                 </Dropdown>)
               : <Avatar className="c-layout-avatar" size={32} icon="user" onClick={this.toggleModal.bind(this, true)}/>
           }

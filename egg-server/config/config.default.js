@@ -42,4 +42,12 @@ module.exports = appInfo => ({
     callbackURL: process.env.CALLBACK_URL || 'http://localhost:7001/api/plan-box/oauth/github/callback',
     scope: 'read:user'
   },
+  io: {
+    namespace: {
+
+      '/socket': {
+        connectionMiddleware: ['auth'],
+      }
+    }
+  }
 })
