@@ -605,13 +605,13 @@ module.exports = function(webpackEnv) {
         // }),
       isEnvProduction &&
         new AliyunOss({
-          region: 'oss-cn-beijing',
-          bucket: 'calabash-static',
-          ak: process.env.PROD_OSS_AK,
-          sk: process.env.PROD_OSS_SK,
-          filter: function (asset) {
-            return !/(\.html|\.map)$/.test(asset)
+          auth: {
+            region: 'oss-cn-beijing',
+            bucket: 'calabash-static',
+            accessKeyId: process.env.PROD_OSS_AK,
+            accessKeySecret: process.env.PROD_OSS_SK,
           },
+          removeMode: false,
         }),
       // TypeScript type checking
       useTypeScript &&
