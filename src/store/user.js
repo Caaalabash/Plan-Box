@@ -5,7 +5,6 @@ import webSocket from 'socket.io-client'
 import { PERMISSION_MAP } from 'utils/constant'
 
 class UserStore {
-  path = process.env.NODE_ENV === 'development' ? 'http://localhost:7001' : 'https://team.calabash.top'
   ws = null
   /**
    * 用户登录信息
@@ -54,20 +53,35 @@ class UserStore {
     return PERMISSION_MAP[this.permission]
   }
   /**
+   * 初始化WebSocket
+   */
+  @action
+  initWebSocket() {
+    this.ws = webSocket('/')
+    this.ws.on('connect', () => {
+      this.isConnect = true
+    })
+
+    this.ws.on('disconnect', this.closeWebSocket)
+  }
+  /**
+   * 关闭WebSocket
+   */
+  @action
+  closeWebSocket() {
+    if (this.ws) {
+      this.ws.close()
+      this.ws = null
+    }
+    this.isConnect = false
+  }
+  /**
    * 设置登录信息
    */
   @action
   setUser(userData) {
     this.user = userData
-    this.ws = webSocket(this.path, {
-      path: '/socket'
-    })
-    this.ws.on('connect', () => {
-      this.isConnect = true
-    })
-    this.ws.on('disconnect', () => {
-      this.isConnect = false
-    })
+    this.initWebSocket()
   }
   /**
    * 设置团队信息
@@ -83,8 +97,7 @@ class UserStore {
   resetUser() {
     this.user = null
     this.team = null
-    this.ws = null
-    this.isConnect = false
+    this.closeWebSocket()
   }
   /**
    * 邀请成员

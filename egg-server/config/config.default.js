@@ -44,8 +44,7 @@ module.exports = appInfo => ({
   },
   io: {
     namespace: {
-
-      '/socket': {
+      '/': {
         connectionMiddleware: ['auth'],
       }
     }
