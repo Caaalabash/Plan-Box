@@ -1,11 +1,13 @@
 import { observable, action, computed } from 'mobx'
 import Service from 'service'
 import webSocket from 'socket.io-client'
+import { notification } from 'antd'
 
 import { PERMISSION_MAP } from 'utils/constant'
 
 class UserStore {
   ws = null
+  wsPath = process.env.NODE_ENV === 'development' ? '/' : 'https://team.calabash.top/'
   /**
    * 用户登录信息
    */
@@ -57,11 +59,16 @@ class UserStore {
    */
   @action
   initWebSocket() {
-    this.ws = webSocket('/')
+    this.ws = webSocket(this.wsPath)
     this.ws.on('connect', () => {
       this.isConnect = true
     })
-
+    this.ws.on('newTeamMember', data => {
+      notification.open({
+        message: '新成员加入！',
+        description: `用户：【${data.userName}】加入团队！！！`
+      })
+    })
     this.ws.on('disconnect', this.closeWebSocket)
   }
   /**
@@ -89,6 +96,7 @@ class UserStore {
   @action
   setTeam(team) {
     this.team = team
+    this.ws && this.ws.emit('joinTeam', this.team._id)
   }
   /**
    * 清空登录信息
@@ -107,6 +115,7 @@ class UserStore {
     const resp = await Service.inviteUser(inviteUserId)
     if (!resp.errno) {
       this.team.memberInfo = [...this.team.memberInfo, resp.data]
+      this.ws && this.ws.emit('inviteUser', { teamId: this.team._id, userName: resp.data.name })
     }
   }
   /**

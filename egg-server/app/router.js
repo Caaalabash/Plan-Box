@@ -8,6 +8,5 @@ module.exports = app => {
   require('./router/workorder')(app)
   require('./router/team')(app)
   require('./router/backlog')(app)
-
-  app.io.of('/').route('joinTeam', app.io.controller.notify.joinTeam)
+  require('./router/socket')(app)
 }
