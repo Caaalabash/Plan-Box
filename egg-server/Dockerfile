@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:11.15-alpine
 
 MAINTAINER Caaalabash
 
