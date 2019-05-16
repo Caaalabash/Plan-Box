@@ -43,6 +43,9 @@ module.exports = appInfo => ({
     scope: 'read:user'
   },
   io: {
+    init: {
+      path: '/socket'
+    },
     namespace: {
       '/': {
         connectionMiddleware: ['auth'],

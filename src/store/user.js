@@ -59,7 +59,7 @@ class UserStore {
    */
   @action
   initWebSocket() {
-    this.ws = webSocket(this.wsPath)
+    this.ws = webSocket(this.wsPath, { path: '/socket' })
     this.ws.on('connect', () => {
       this.isConnect = true
     })
