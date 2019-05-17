@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { message } from 'antd'
-import userStore  from '../store/user'
+import userStore  from '../store/proxy-user'
 
 const CancelToken = axios.CancelToken
 const source = CancelToken.source()

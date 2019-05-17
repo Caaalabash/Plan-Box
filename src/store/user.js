@@ -1,21 +1,13 @@
 import { observable, action, computed } from 'mobx'
 import Service from 'service'
-import webSocket from 'socket.io-client'
-import { notification } from 'antd'
 
 import { PERMISSION_MAP } from 'utils/constant'
 
 class UserStore {
-  ws = null
-  wsPath = process.env.NODE_ENV === 'development' ? '/' : 'https://team.calabash.top/'
   /**
    * 用户登录信息
    */
   @observable user = null
-  /**
-   * 是否连接websocket
-   */
-  @observable isConnect = false
   /**
    * 用户团队信息(依赖登录信息)
    */
@@ -55,67 +47,36 @@ class UserStore {
     return PERMISSION_MAP[this.permission]
   }
   /**
-   * 初始化WebSocket
-   */
-  @action
-  initWebSocket() {
-    this.ws = webSocket(this.wsPath, { path: '/socket' })
-    this.ws.on('connect', () => {
-      this.isConnect = true
-    })
-    this.ws.on('newTeamMember', data => {
-      notification.open({
-        message: '新成员加入！',
-        description: `用户：【${data.userName}】加入团队！！！`
-      })
-    })
-    this.ws.on('disconnect', this.closeWebSocket)
-  }
-  /**
-   * 关闭WebSocket
-   */
-  @action
-  closeWebSocket() {
-    if (this.ws) {
-      this.ws.close()
-      this.ws = null
-    }
-    this.isConnect = false
-  }
-  /**
-   * 设置登录信息
+   * 设置登录信息 [触发Proxy-User]
    */
   @action
   setUser(userData) {
     this.user = userData
-    this.initWebSocket()
   }
   /**
-   * 设置团队信息
+   * 设置团队信息 [触发Proxy-User]
    */
   @action
   setTeam(team) {
     this.team = team
-    this.ws && this.ws.emit('joinTeam', this.team._id)
   }
   /**
-   * 清空登录信息
+   * 清空登录信息 [触发Proxy-User]
    */
   @action
   resetUser() {
     this.user = null
     this.team = null
-    this.closeWebSocket()
   }
   /**
-   * 邀请成员
+   * 邀请成员 [触发Proxy-User]
    */
   @action
   async inviteUser(inviteUserId) {
     const resp = await Service.inviteUser(inviteUserId)
     if (!resp.errno) {
       this.team.memberInfo = [...this.team.memberInfo, resp.data]
-      this.ws && this.ws.emit('inviteUser', { teamId: this.team._id, userName: resp.data.name })
+      return resp.data
     }
   }
   /**
@@ -168,4 +129,4 @@ class UserStore {
   }
 }
 
-export default new UserStore()
+export default UserStore

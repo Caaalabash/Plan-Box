@@ -5,7 +5,7 @@ import { Provider } from 'mobx-react'
 
 import './assets/styles/normalize.css'
 import './assets/styles/index.css'
-import userStore from './store/user'
+import userStore from './store/proxy-user'
 import sprintStore from './store/sprint'
 import backlogStore from './store/backlog'
 import Layout from './components/Layout'
