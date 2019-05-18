@@ -3,6 +3,7 @@ module.exports = app => {
   const { notify } = io.controller
   const nsp = io.of('/')
 
-  nsp.route('joinTeam', notify.joinTeam)
+  nsp.route('setTeam', notify.joinTeam)
   nsp.route('inviteUser', notify.inviteUser)
+  nsp.route('setPermission', notify.setPermission)
 }

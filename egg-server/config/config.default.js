@@ -48,7 +48,7 @@ module.exports = appInfo => ({
     },
     namespace: {
       '/': {
-        connectionMiddleware: ['auth'],
+        connectionMiddleware: ['record'],
       }
     }
   }

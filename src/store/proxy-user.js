@@ -16,26 +16,31 @@ class SocketProxy extends UserStore {
 
 const handlerMap = {
   setUser() {
-    this.ws = webSocket(this.wsPath, { path: '/socket' })
+    this.ws = webSocket(this.wsPath, { path: '/socket', query: { _id: this.user._id } })
+
     this.ws.on('connect', () => {
       this.isConnect = true
     })
-    this.ws.on('newTeamMember', data => {
-      notification.open({
+    this.ws.on('disconnect', () => {
+      this.ws.close()
+      this.ws = null
+      this.isConnect = false
+    })
+    this.ws.on('handleInviteUser', data => {
+      notification.info({
         message: '新成员加入！',
         description: `用户：【${data.userName}】加入团队！！！`
       })
     })
-    this.ws.on('disconnect', () => {
-      if (this.ws) {
-        this.ws.close()
-        this.ws = null
-      }
-      this.isConnect = false
+    this.ws.on('handleSetPermission', data => {
+      notification.info({
+        message: '您的权限发生了变化！',
+        description: `您的权限已变动成：【${data.permission}】，刷新页面哦！`
+      })
     })
   },
   setTeam() {
-    this.ws && this.ws.emit('joinTeam', this.team._id)
+    this.ws.emit('setTeam', this.team._id)
   },
   resetUser() {
     if (this.ws) {
@@ -45,7 +50,10 @@ const handlerMap = {
     this.isConnect = false
   },
   inviteUser(data) {
-    this.ws && this.ws.emit('inviteUser', { teamId: this.team._id, userName: data.name })
+    this.ws.emit('inviteUser', { teamId: this.team._id, userName: data.name })
+  },
+  setPermission({ enhanceUserId, permission }) {
+    this.ws.emit('setPermission', { userId: enhanceUserId, permission })
   }
 }
 

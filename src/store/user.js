@@ -88,6 +88,7 @@ class UserStore {
     if (!resp.errno) {
       const userIndex = this.team.memberInfo.findIndex(user => user._id === enhanceUserId)
       this.team.memberInfo[userIndex].permission = permission
+      return { enhanceUserId, permission }
     }
   }
   /**
