@@ -109,6 +109,10 @@ class WorkOrder extends React.Component {
         if (!create.errno) {
           this.setState({ tableData: [...this.state.tableData, create.data] })
         }
+        this.props.userStore.ws.emit('WorkOrderNotification', {
+          type: 'newWorkOrder',
+          payload: create.data
+        })
         done()
       }
     })
@@ -136,6 +140,10 @@ class WorkOrder extends React.Component {
           tableData[updateIndex] = resp.data
           this.setState({ tableData })
         }
+        this.props.userStore.ws.emit('WorkOrderNotification', {
+          type: 'replyWorkOrder',
+          payload: resp.data
+        })
         done()
       }
     })

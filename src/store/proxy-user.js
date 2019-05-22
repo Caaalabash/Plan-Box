@@ -45,6 +45,17 @@ const handlerMap = {
     this.ws.on('TeamNotification', ({ message, description }) => {
       notification.info({ message, description })
     })
+    this.ws.on('WorkOrderNotification', ({ message, description }) => {
+      Notification.requestPermission().then(status => {
+        if (status === 'granted') {
+          new Notification(message, {
+            body: description,
+            tag: 'WorkOrderNotification',
+            icon: 'https://team.calabash.top/favicon.ico'
+          })
+        }
+      })
+    })
     this.ws.on('SyncTeamData', data => {
       this.syncTeamData(data)
     })

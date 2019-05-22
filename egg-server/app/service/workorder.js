@@ -19,12 +19,11 @@ class WorkorderService extends require('egg').Service {
   /**
    * 删除工单
    * @param {string} ticketId 工单Id
-   * @param {string} userId 用户Id
    * @return {object} success response
    */
-  async deleteWorkOrder({ ticketId, userId }) {
+  async deleteWorkOrder({ ticketId }) {
     await this.toPromise(
-      this.TicketModel.findOneAndRemove({ _id: ticketId, userId })
+      this.TicketModel.findOneAndRemove({ _id: ticketId })
     )
 
     return { msg: '删除成功' }

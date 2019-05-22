@@ -2,7 +2,9 @@ class NotifyController extends require('egg').Controller {
   constructor(ctx) {
     super(ctx)
     this.nsp = ctx.app.io.of('/')
+    this.toPromise =  ctx.helper.to
     this.socketMap = ctx.app.socketMap
+    this.OauthModel = ctx.model.Oauth
   }
   /**
    * 处理团队通知
@@ -12,7 +14,7 @@ class NotifyController extends require('egg').Controller {
     this[type].call(this, args)
   }
   /**
-   * 数据同步 [供内部使用]
+   * 团队数据同步 [供内部使用]
    * @params {string} teamId 团队ID
    * @params {string} range 广播范围: all / others / self
    * @params {object} socket 指定socket
@@ -32,6 +34,20 @@ class NotifyController extends require('egg').Controller {
         socket.emit('SyncTeamData', teamInfo)
         break
     }
+  }
+  /**
+   * 工单数据 [供内部使用]
+   * @description 一般需要同步管理员socket, 以及提交用户socket
+   * @params {string} userId 用户id
+   * @params {string} adminId 管理员id
+   */
+  async syncWorkOrderData(userId, adminId) {
+    const workOrderList = await Promise.all(
+      [userId, adminId].map(id => this.service.workorder.getWorkOrder({ id }))
+    )
+    ;[this.ctx.socket, this.socketMap.get(adminId)].forEach((socket, index) =>
+      socket && socket.emit('SyncWorkOrderData', workOrderList[index])
+    )
   }
   /**
    * 加入团队房间 [供内部使用]
@@ -110,6 +126,35 @@ class NotifyController extends require('egg').Controller {
       description: `用户：【${userName}】退出了团队！！！`
     })
     this.syncTeamData(teamId, 'all')
+  }
+  /**
+   * 回复工单
+   */
+  async replyWorkOrder({ payload }) {
+    const socket = this.socketMap.get(payload.userId)
+
+    if (socket) {
+      socket.emit('WorkOrderNotification', {
+        message: '您的工单得到反馈！',
+        description: `工单【${payload.title}】得到管理员回复！！！`,
+      })
+    }
+  }
+  /**
+   * 新工单
+   */
+  async newWorkOrder({ payload }) {
+    const { _id } = await this.toPromise(
+      this.OauthModel.findOne({ isAdmin: true }, { _id: 1 })
+    )
+    const socket = this.socketMap.get(_id.toString())
+
+    if (socket) {
+      socket.emit('WorkOrderNotification', {
+        message: '您有新的工单等待处理！',
+        description: `工单【${payload.title}】需要您的处理！！！`,
+      })
+    }
   }
 }
 
