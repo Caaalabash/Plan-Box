@@ -93,6 +93,7 @@ class Team extends React.Component {
       formContent: setPermissionForm(permissionList),
       onOk: async ({ permission }, done) => {
         await Promise.all(this.state.selectedRowKeys.map( id => this.props.userStore.setPermission(id, permission) ))
+        this.setState({ selectedRowKeys: [] })
         done()
       }
     })

@@ -1,17 +1,33 @@
-import { observable } from 'mobx'
+import { observable, action } from 'mobx'
 import webSocket from 'socket.io-client'
 import { notification } from 'antd'
 import UserStore from './user'
 
+/**
+ * 使用SocketProxy拓展UserStore模块
+ * @description
+ *   1. 对于WebSocket的状态在SocketProxy中处理, 例如isConnect
+ *   2. 通过Proxy对UserStore方法调用进行拦截, 正常调用后向Websocket发送通知
+ */
 class SocketProxy extends UserStore {
-  constructor() {
-    super()
-  }
   ws = null
-  wsPath = process.env.NODE_ENV === 'development' ? '/' : 'https://team.calabash.top/'
+  wsPath = '/'
 
   @observable
   isConnect = false
+
+  @action
+  syncTeamData(payload) {
+    this.team = payload
+    if (payload) {
+      const { permission } = payload.memberInfo.find(member => member._id === this.user._id)
+      this.user.team.belong = payload._id
+      this.user.team.permission = permission
+    } else {
+      this.user.team.belong = ''
+      this.user.team.permission = ''
+    }
+  }
 }
 
 const handlerMap = {
@@ -26,21 +42,12 @@ const handlerMap = {
       this.ws = null
       this.isConnect = false
     })
-    this.ws.on('handleInviteUser', data => {
-      notification.info({
-        message: '新成员加入！',
-        description: `用户：【${data.userName}】加入团队！！！`
-      })
+    this.ws.on('TeamNotification', ({ message, description }) => {
+      notification.info({ message, description })
     })
-    this.ws.on('handleSetPermission', data => {
-      notification.info({
-        message: '您的权限发生了变化！',
-        description: `您的权限已变动成：【${data.permission}】，刷新页面哦！`
-      })
+    this.ws.on('SyncTeamData', data => {
+      this.syncTeamData(data)
     })
-  },
-  setTeam() {
-    this.ws.emit('setTeam', this.team._id)
   },
   resetUser() {
     if (this.ws) {
@@ -49,11 +56,35 @@ const handlerMap = {
     }
     this.isConnect = false
   },
-  inviteUser(data) {
-    this.ws.emit('inviteUser', { teamId: this.team._id, userName: data.name })
+  setTeam(data) {
+    this.ws.emit('TeamNotification', {
+      type: 'joinTeam',
+      ...data
+    })
   },
-  setPermission({ enhanceUserId, permission }) {
-    this.ws.emit('setPermission', { userId: enhanceUserId, permission })
+  inviteUser(data) {
+    this.ws.emit('TeamNotification', {
+      type: 'inviteUser',
+      ...data
+    })
+  },
+  setPermission(data) {
+    this.ws.emit('TeamNotification', {
+      type: 'setPermission',
+      ...data
+    })
+  },
+  removeMember(data) {
+    this.ws.emit('TeamNotification', {
+      type: 'removeMember',
+      ...data
+    })
+  },
+  leaveTeam(data) {
+    this.ws.emit('TeamNotification', {
+      type: 'leaveTeam',
+      ...data
+    })
   }
 }
 
@@ -61,6 +92,7 @@ export default new Proxy(new SocketProxy(), {
   get(target, propKey) {
     const result = Reflect.get(target, propKey)
     const webSocketHandler = handlerMap[propKey]
+
     if (typeof result !== 'function' || !webSocketHandler) {
       return result
     }
