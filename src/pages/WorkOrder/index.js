@@ -160,7 +160,7 @@ class WorkOrder extends React.Component {
   }
 
   componentDidMount() {
-    this.getWorkOrder()
+    this.props.userStore.isLogin && this.getWorkOrder()
   }
 
   render() {
