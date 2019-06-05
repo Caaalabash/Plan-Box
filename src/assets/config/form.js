@@ -177,7 +177,7 @@ export const createIssueForm = responsibleList => [
   {
     key: 'issueType',
     label: 'Issue类型',
-    initialValue: '0',
+    initialValue: 'bug',
     rules: [],
     componentOptions: {
       type: 'select',
