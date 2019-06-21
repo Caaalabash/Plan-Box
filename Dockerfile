@@ -1,15 +1,11 @@
 # 测试多阶段构建 -> 构建前端代码
 FROM node:11.15-alpine AS buildfront
 
-LABEL maintainer="caaalabash@gmail.com"
-
 WORKDIR /frontend
 
-COPY frontend/package.json /frontend
+COPY frontend .
 
 RUN npm install
-
-COPY frontend /frontend
 
 RUN npm run build
 
@@ -24,13 +20,12 @@ ENV NODE_ENV=prod PORT=7001
 
 EXPOSE 7001
 
-COPY backend/package.json /app/backend/package.json
+COPY --from=buildfront /frontend/build/ ./frontend/dist
 
-RUN cd /app/backend && \
-    npm install
+COPY backend ./backend
 
-COPY backend /app/backend
+WORKDIR /app/backend
 
-COPY --from=buildfront /frontend/build /app/frontend/dist
+RUN npm install
 
-CMD cd /app/backend && npm run start:prod
+CMD npm run start:prod
