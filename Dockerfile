@@ -14,17 +14,17 @@ FROM node:11.15-alpine AS production
 
 LABEL maintainer="caaalabash@gmail.com"
 
-WORKDIR /app
+WORKDIR /static
 
 ENV NODE_ENV=prod PORT=7001
 
 EXPOSE 7001
 
-COPY --from=buildfront /frontend/build/ ./frontend/dist
+COPY --from=buildfront /frontend/build/ .
 
-COPY backend ./backend
+WORKDIR /app
 
-WORKDIR /app/backend
+COPY backend .
 
 RUN npm install
 
