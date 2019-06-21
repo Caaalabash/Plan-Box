@@ -603,17 +603,17 @@ module.exports = function(webpackEnv) {
         //     },
         //   ]
         // }),
-      isEnvProduction &&
-        new AliyunOss({
-          auth: {
-            region: 'oss-cn-beijing',
-            bucket: 'calabash-static',
-            accessKeyId: process.env.PROD_OSS_AK,
-            accessKeySecret: process.env.PROD_OSS_SK,
-          },
-          exclude: /.*\.(html|map)$/,
-          removeMode: false,
-        }),
+      // isEnvProduction &&
+      //   new AliyunOss({
+      //     auth: {
+      //       region: 'oss-cn-beijing',
+      //       bucket: 'calabash-static',
+      //       accessKeyId: process.env.PROD_OSS_AK,
+      //       accessKeySecret: process.env.PROD_OSS_SK,
+      //     },
+      //     exclude: /.*\.(html|map)$/,
+      //     removeMode: false,
+      //   }),
       // TypeScript type checking
       useTypeScript &&
         new ForkTsCheckerWebpackPlugin({

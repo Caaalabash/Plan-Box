@@ -10,5 +10,6 @@ services:
       - /mynode/plan-box-ci/plan-box.env
     volumes:
       - /etc/localtime:/etc/localtime
+      - /mynode/plan-box-ci/dist:/app/frontend/dist
     network_mode: host
     restart: unless-stopped
