@@ -1,6 +1,8 @@
 ## 毕业设计: 基于React的敏捷团队协作工具 [![Build Status](https://travis-ci.org/Caaalabash/Plan-Box.svg?branch=master)](https://travis-ci.org/Caaalabash/Plan-Box)
 
-线上地址: [Plan-Box](https://team.calabash.top)
+~~线上地址: [Plan-Box](https://team.calabash.top)~~
+
+**毕业了, 下线!**
 
 ### 功能描述
 
@@ -28,7 +30,7 @@
 
   - [x] 工单模块: 使用`HTML5 Notification API`进行通知
 
-  - [x] 团队模块: 使用`Antd Notification`组件进行通知, 并实时同步诗句
+  - [x] 团队模块: 使用`Antd Notification`组件进行通知, 并实时同步
 
   - [ ] 泳道模块
 
